@@ -15,9 +15,9 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
+    "username": "logicsar_shippingcostcalculator_user",
+    "password": "4S6iP6J)e9^}",
+    "database": "logicsar_shippingcostcalculator",
     "host": "127.0.0.1",
     "dialect": "mysql"
   }
