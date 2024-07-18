@@ -1,0 +1,60 @@
+import React, { useCallback, useEffect } from 'react'
+import './App.css';
+import { NavMenu } from '@shopify/app-bridge-react';
+import AppRouter from './AppRouter';
+import { Box, FooterHelp } from '@shopify/polaris';
+import { Link, useLocation } from 'react-router-dom';
+import { useApp } from './providers/AppProvider';
+import axios from 'axios';
+import { request } from './core/api';
+import { endpoints } from './constants';
+
+function App() {
+  const { setStore, setCountries, setStates } = useApp()
+  const location = useLocation()
+
+  const getStore = useCallback(
+    async cancelToken => {
+      const domain = new URLSearchParams(location.search).get("shop")
+      const options = {
+        "method": "GET",
+        "cancelToken": cancelToken
+      }
+      const response = await request(endpoints.store + "?domain=" + domain, options)
+      if (response.store) {
+        setStore(prev => ({ ...response.store }))
+      }
+      if (response.countries) {
+        setCountries([...response.countries])
+        setStates([...response.states])
+      }
+    },
+    [],
+  )
+
+
+  useEffect(() => {
+    const cancelToken = axios.CancelToken.source()
+
+    getStore(cancelToken.token)
+    return () => {
+      cancelToken.cancel()
+    }
+  }, [])
+
+  return (
+    <React.Fragment>
+      <NavMenu>
+        <Link to="/home" rel="home">Home</Link>
+        <Link to="/zones">Zones</Link>
+        <Link to="/help-center">Help Center</Link>
+      </NavMenu>
+      <AppRouter />
+      <Box paddingBlock={400}>
+        <FooterHelp>© Shipping Cost Calculator {new Date().getFullYear()}</FooterHelp>
+      </Box>
+    </React.Fragment>
+  );
+}
+
+export default App;

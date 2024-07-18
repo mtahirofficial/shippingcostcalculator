@@ -1,0 +1,181 @@
+:root {
+    --ta11y-open-duration: 0.5s;
+}
+
+
+a {
+    color: black;
+}
+
+.tota11y-accordion>li>a {
+    padding: 1rem;
+    display: block;
+    color: black;
+    position: relative;
+    cursor: pointer;
+    outline: transparent;
+    text-decoration: none;
+}
+
+.tota11y-accordion>li {
+    max-width: 800px;
+    box-sizing: border-box;
+    margin-top: 10px;
+    border-radius: 1rem;
+    background: white;
+    box-shadow: 0px 0px 0px 0px #333;
+    display: grid;
+    grid-template-rows: min-content 0fr;
+    transition: box-shadow 0.3s 0s ease,
+        grid-template-rows var(--ta11y-open-duration);
+}
+
+.tota11y-accordion>li:focus-within {
+    box-shadow: 0 0 0 4px #000, 0 0 0 6px #a9abb3;
+}
+
+.tota11y-accordion>li:has(.content:target)>a:before,
+.tota11y-accordion>li:has(.content:focus-within)>a:before {
+    transform: rotate(180deg);
+}
+
+.tota11y-accordion>li>a:before {
+    content: "";
+    opacity: 0.6;
+    background-image: url("https://assets.codepen.io/7212043/rounded-arrow.svg");
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 2rem;
+    height: 2rem;
+    position: absolute;
+    top: 1.8rem;
+    right: 1.5rem;
+    transform: rotate(0deg);
+    transform-origin: 1rem 50%;
+    transition: 0.25s transform ease;
+}
+
+.tota11y-accordion>li .content {
+    border-top: none;
+    margin: 0 1rem;
+    padding: 0 0.5rem;
+    border-top: none;
+    color: #a9abb3;
+    visibility: hidden;
+    display: grid;
+    overflow: hidden;
+    transition: margin var(--ta11y-open-duration) linear,
+        padding var(--ta11y-open-duration) linear;
+    max-height: 200px;
+}
+
+.tota11y-accordion>li .content::-webkit-scrollbar {
+    width: 14px;
+}
+
+.tota11y-accordion>li .content::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    background-color: #f5f5f5;
+}
+
+.tota11y-accordion>li .content::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #555;
+}
+
+@keyframes show-scroll {
+    0% {
+        overflow-y: hidden;
+    }
+
+    0.2% {
+        overflow-y: auto;
+    }
+
+    to {
+        overflow-y: auto;
+    }
+}
+
+.tota11y-accordion>li .content:focus {
+    outline: none;
+}
+
+.tota11y-accordion>li:has(.content:target),
+.tota11y-accordion>li:has(.content:focus-within) {
+    grid-template-rows: min-content 1fr;
+}
+
+.tota11y-accordion>li:has(.content:target) .content,
+.tota11y-accordion>li:has(.content:focus-within) .content {
+    visibility: visible;
+    margin: 0.5rem 1rem 2rem 1rem;
+    padding: 0.5rem;
+    animation-duration: calc(2000 * var(--ta11y-open-duration));
+    animation-name: show-scroll;
+    overflow-y: auto;
+
+}
+
+
+
+@media (prefers-reduced-motion) {
+    :root {
+        --ta11y-open-duration: 0s;
+    }
+
+    .tota11y-accordion>li:has(.content:target) .content,
+    .tota11y-accordion>li:has(.content:focus-within) .content {
+        overflow-y: auto;
+    }
+
+    .tota11y-accordion>li>a:before {
+        transition: none;
+    }
+}
+
+label {
+    line-height: 1.5rem;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#tota11y-open-close {
+    height: 1.5rem;
+    width: 1.5rem;
+    vertical-align: middle;
+    accent-color: #555;
+}
+
+
+#tota11y-open-close:checked~ul>li {
+    grid-template-rows: min-content 1fr;
+}
+
+#tota11y-open-close:checked~ul>li>.content {
+    visibility: visible;
+    margin: 0.5rem 1rem 2rem 1rem;
+    padding: 0.5rem;
+    animation-duration: calc(2000 * var(--ta11y-open-duration));
+    animation-name: show-scroll;
+}
+
+
+
+/* we can open all of the accordion items easily with the @media print media query if we wish */
+@media print {
+    .tota11y-accordion>li {
+        grid-template-rows: min-content 1fr;
+    }
+
+    .tota11y-accordion>li .content {
+        visibility: visible;
+        margin: 0.5rem 1rem 2rem 1rem;
+        padding: 0.5rem;
+        max-height: none;
+    }
+
+    /* ideally we would also remove all of the bg-color etc. to save ink, but that is specific to this colour scheme and so not relevant in the demo */
+}
