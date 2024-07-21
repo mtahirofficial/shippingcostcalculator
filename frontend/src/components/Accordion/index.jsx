@@ -7,12 +7,12 @@ import {
 import './style.css'
 const faqs = [
     {
-        "question": "What is Easy Shipping Rates?",
-        "answer": "Easy Shipping Rates is a Shopify app that allows you to define and calculate custom delivery charges for your store's checkout process based on specific rules you set."
+        "question": `What is ${process.env.REACT_APP_APP_NAME}?`,
+        "answer": `${process.env.REACT_APP_APP_NAME} is a Shopify app that allows you to define and calculate custom delivery charges for your store's checkout process based on specific rules you set.`
     },
     {
-        "question": "How do I install Easy Shipping Rates?",
-        "answer": "You can install Easy Shipping Rates from the Shopify App Store. Simply search for our app, click 'Add app,' and follow the installation instructions."
+        "question": `How do I install ${process.env.REACT_APP_APP_NAME}?`,
+        "answer": `You can install ${process.env.REACT_APP_APP_NAME} from the Shopify App Store. Simply search for our app, click 'Add app,' and follow the installation instructions.`
     },
     {
         "question": "What are shipping zones?",
@@ -52,7 +52,7 @@ const faqs = [
     },
     // {
     //     "question": "Where can I find more detailed guides and tutorials?",
-    //     "answer": "Visit our support center at [Support URL] for comprehensive guides, FAQs, and video tutorials to help you make the most of Easy Shipping Rates."
+    //     "answer": `Visit our support center at [Support URL] for comprehensive guides, FAQs, and video tutorials to help you make the most of ${process.env.REACT_APP_APP_NAME}.`
     // }
 ]
 //  accordionitem component

@@ -15,7 +15,7 @@ const Dashboard = () => {
             <BlockStack gap={400}>
                 <Card>
                     <Text>
-                        Welcome {store?.firstLoad ? "back" : "to Easy Shipping Rates"}, {store?.owner}
+                        Welcome {store?.firstLoad ? "back" : `to ${process.env.REACT_APP_APP_NAME}`}, {store?.owner}
                     </Text>
                 </Card>
                 <Card>
