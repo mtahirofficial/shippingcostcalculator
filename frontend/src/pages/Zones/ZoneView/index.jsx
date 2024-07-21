@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Page, BlockStack, Badge, Card, DescriptionList, Text, Button, ResourceItem, Avatar, ResourceList, Box, InlineStack, InlineGrid } from '@shopify/polaris';
 import axios from 'axios'
 import { endpoints } from '../../../constants';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { request } from '../../../core/api';
 import { DeleteIcon, EditIcon } from '@shopify/polaris-icons';
 import { useApp } from '../../../providers/AppProvider'
@@ -184,7 +184,7 @@ const ZoneView = () => {
                                     plural: 'Rates',
                                 }}
                                 renderItem={item => {
-                                    const { id, key, zoneId, userId, storeId, title, description, shipTo, shipToValue, chargeBy, status, price, unit, priceBy, xQty } = item;
+                                    const { id, title, status, price } = item;
                                     const chars = title.split(" ")
                                     let initials = ''
                                     for (const char of chars) {

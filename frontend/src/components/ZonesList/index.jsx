@@ -1,5 +1,5 @@
-import { Badge, Card, Text, Divider, Button, ResourceItem, Avatar, ResourceList, Box, InlineStack } from '@shopify/polaris';
-import { useState, useCallback } from 'react';
+import { Badge, Card, Text, Divider, ResourceItem, Avatar, ResourceList, Box, InlineStack } from '@shopify/polaris';
+import { useState } from 'react';
 import { useZoneContext } from '../../providers/ZoneProvider';
 import { useNavigate } from "react-router-dom";
 import { useApp } from '../../providers/AppProvider';
@@ -66,7 +66,7 @@ const ZonesList = props => {
                     /> : undefined)}
                     loading={props.loading}
                     renderItem={item => {
-                        const { id, key, userId, storeId, name, desc, price, status, states, countries } = item;
+                        const { id, name, price, status } = item;
                         const chars = name.split(" ")
                         let initials = ''
                         for (const char of chars) {

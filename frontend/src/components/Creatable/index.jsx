@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import CreatableSelect from 'react-select/creatable';
 import chroma from 'chroma-js';
 import makeAnimated from 'react-select/animated';

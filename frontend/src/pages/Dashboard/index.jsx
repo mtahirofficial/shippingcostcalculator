@@ -1,5 +1,5 @@
 import React from 'react'
-import { BlockStack, Box, Card, EmptyState, FooterHelp, Page, Text } from '@shopify/polaris'
+import { BlockStack, Box, Card, EmptyState, Page, Text } from '@shopify/polaris'
 import { useApp } from '../../providers/AppProvider'
 import { useNavigate } from 'react-router-dom'
 

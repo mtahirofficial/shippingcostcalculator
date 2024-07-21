@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { DeleteIcon, EditIcon } from '@shopify/polaris-icons';
 import { useApp } from '../../../../providers/AppProvider';
 import { Page, BlockStack, Badge, Card, DescriptionList, Text, Divider, Button, Box, InlineStack, InlineGrid, DataTable } from '@shopify/polaris';
@@ -17,7 +17,6 @@ const RateView = () => {
   const { zones, setZones } = useZoneContext()
   const params = useParams()
   const { store } = useApp()
-  let { state } = useLocation();
   const [rate, setRate] = useState(null)
   const [loading, setLoading] = useState("get")
 

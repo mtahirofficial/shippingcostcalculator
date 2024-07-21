@@ -1,9 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { SaveIcon, UndoIcon, PlusIcon } from '@shopify/polaris-icons';
-import { Page, BlockStack, Select, Card, TextField, InlineGrid, Button, DataTable, Box, FormLayout, Form, Divider, InlineStack } from '@shopify/polaris';
-import { chargeBy, chargeByOptions, endpoints, shipToOptions } from '../../../../constants';
-import Creatable from '../../../../components/Creatable';
-import { useLocation, useNavigate, Navigate, useParams } from 'react-router-dom';
+import { SaveIcon, UndoIcon } from '@shopify/polaris-icons';
+import { Page, BlockStack, Select, Card, TextField, InlineGrid, Button, DataTable, Box, FormLayout, Form } from '@shopify/polaris';
+import { chargeByOptions, endpoints, shipToOptions } from '../../../../constants';
+import { useNavigate, Navigate, useParams } from 'react-router-dom';
 import CardTitle from '../../../../components/CardTitle';
 import EmptyStateShopify from '../../../../components/EmptyStateShopify';
 import { useAppBridge, Modal, TitleBar } from '@shopify/app-bridge-react';
@@ -16,7 +15,7 @@ import axios from 'axios';
 
 const AddRate = () => {
   const shopify = useAppBridge();
-  const { zones, setZones } = useZoneContext()
+  const { setZones } = useZoneContext()
   const { store } = useApp()
   const navigate = useNavigate();
   const params = useParams()
@@ -82,12 +81,6 @@ const AddRate = () => {
   const handleChangeRange = values => {
     setRange(prev => ({ ...prev, ...values }))
   }
-
-  const lbl = <div className="Polaris-Labelled__LabelWrapper">
-    <div className="Polaris-Label">
-      <label id="PolarisTextField2Label" for="PolarisTextField2" className="Polaris-Label__Text">{" "}</label>
-    </div>
-  </div>
 
   const addRate = async () => {
     try {
