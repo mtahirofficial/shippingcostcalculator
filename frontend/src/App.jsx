@@ -51,7 +51,7 @@ function App() {
       </NavMenu>
       <AppRouter />
       <Box paddingBlock={400}>
-        <FooterHelp>© Shipping Cost Calculator {new Date().getFullYear()}</FooterHelp>
+        <FooterHelp>{process.env.REACT_APP_APP_NAME} © {new Date().getFullYear()} | <a className='logicsarcade' href='https://logicsarcade.com/' target='_blank'>LogicsArcade</a></FooterHelp>
       </Box>
     </React.Fragment>
   );

@@ -145,14 +145,14 @@ const RateView = () => {
               headings={[
                 'Min',
                 'Max',
-                'Price $'
+                'Price'
               ]}
-              rows={rate?.ranges.map(r => ([r.from, r.upto, r.price]))}
+              rows={rate?.ranges.map(r => ([r.from, r.upto, store?.moneyFormat.replace("{{amount}}", r.price)]))}
             />
           </> : <EmptyStateShopify
             fullWidth={true}
             heading={"Oops! No Shipping Ranges Added Yet"}
-            message="It looks like you haven't added any shipping ranges for this rate yet. Shipping ranges define the specific criteria, such as weight or order value, that determine the cost of shipping within this rate. By adding shipping ranges, you can set tailored pricing for different conditions within this shipping rate. Edit rate to add shipping ranges."
+            message="It looks like you haven't added any shipping cost ranges for this rate yet. Shipping ranges define the specific criteria, such as weight or order value, that determine the cost of shipping within this rate. By adding shipping cost ranges, you can set tailored pricing for different conditions within this shipping rate. Edit rate to add shipping ranges."
             image={"https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"}
             primaryContent={"Edit rate"}
             primaryAction={() => navigate(`edit`, { "state": { rate, zoneId: rate.zoneId } })}

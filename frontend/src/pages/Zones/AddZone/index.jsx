@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { BlockStack, Card, FormLayout, Page, Select, TextField } from '@shopify/polaris'
 import { SaveIcon, UndoIcon } from '@shopify/polaris-icons';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useApp } from '../../../providers/AppProvider';
 import SelectList from '../../../components/SelectList';
 import { findIntersection } from '../../../utilis';
@@ -14,7 +14,6 @@ import axios from 'axios';
 import Skeleton from '../../../components/Skeleton';
 
 const AddZone = () => {
-    const { state } = useLocation();
     let { id } = useParams();
 
     const shopify = useAppBridge();

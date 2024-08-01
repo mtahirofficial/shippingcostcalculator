@@ -42,7 +42,7 @@ const AddRate = () => {
   })
 
   useEffect(() => {
-    let rangeRows = rate.ranges.map(r => ([r.from, r.upto, r.price]))
+    let rangeRows = rate.ranges.map(r => ([r.from, r.upto, store?.moneyFormat.replace("{{amount}}", r.price)]))
     setRangeRows(rangeRows)
   }, [rate.ranges])
 
@@ -256,7 +256,7 @@ const AddRate = () => {
                   headings={[
                     'Min',
                     'Max',
-                    'Price',
+                    `Price`,
                   ]}
                   rows={rangeRows}
                 />

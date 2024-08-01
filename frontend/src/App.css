@@ -1,0 +1,8 @@
+.logicsarcade {
+    color: black;
+    text-decoration: none;
+}
+
+.logicsarcade:hover {
+    text-decoration: underline;
+}

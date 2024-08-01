@@ -33,9 +33,7 @@ const Dashboard = () => {
                         image={"https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"}
                     >
                         <Box paddingInline={400}>
-                            <p>Zones are designed to simplify your shipping process by grouping regions such as countries and states. Each Zone contains specific shipping rate calculation rules tailored to the regions it encompasses."</p>
-                            <p>Whether you're shipping nationally, internationally, or within specific states, our Zones streamline the process. Customize your shipping strategy efficiently by setting rules for each Zone, ensuring accurate and personalized calculations for the regions that matter to your business.</p>
-
+                            <p>Zones simplify your shipping by grouping regions like countries and states, each with specific rate rules. Whether shipping locally or internationally, customize rules for accurate calculations, optimizing your strategy.</p>
                         </Box>
                     </EmptyState>
                 </Card>

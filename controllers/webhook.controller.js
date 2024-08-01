@@ -71,17 +71,32 @@ class WebhookController extends Controller {
     }
 
 
-    webhookResponse(req, res) {
-        res.status(200).end();
+    async verifyHmac(req, res) {
+        try {
+            const data = req.body
+            const hmac = req.headers['x-shopify-hmac-sha256']
+            const providedHmac = Buffer.from(hmac, 'utf-8');
+
+            const generatedHash = Buffer.from(crypto.createHmac('sha256', API_SECRET).update(JSON.stringify(data)).digest('hex'), 'utf-8');
+
+            const isMatched = crypto.timingSafeEqual(generatedHash, providedHmac)
+            if (isMatched) {
+                res.status(200).send('OK')
+            } else {
+                res.status(401).send('Not Shopify')
+            }
+        } catch (error) {
+            res.status(401).send('Error')
+        }
     }
 
     initializeRoutes() {
         // this._router.post(`${this._path}/app_subscriptions/update`, this.appSubscribe);
         this._router.post(`${this._path}/app/uninstalled`, this.uninstallApp);
 
-        this._router.post(`${this._path}/customers/data_request`, this.webhookResponse);
-        this._router.post(`${this._path}/customers/redact`, this.webhookResponse);
-        this._router.post(`${this._path}/shop/redact`, this.webhookResponse);
+        this._router.post(`${this._path}/customers/data_request`, this.verifyHmac);
+        this._router.post(`${this._path}/customers/redact`, this.verifyHmac);
+        this._router.post(`${this._path}/shop/redact`, this.verifyHmac);
     }
 }
 
