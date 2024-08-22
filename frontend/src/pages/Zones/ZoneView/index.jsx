@@ -97,7 +97,6 @@ const ZoneView = () => {
         return <Skeleton />
     }
 
-    console.log("zone", zone);
 
     return (
         <Page

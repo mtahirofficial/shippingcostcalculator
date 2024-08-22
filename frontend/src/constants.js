@@ -97,4 +97,5 @@ export const weightUnits = {
     "kg": "KG",
     "lb": "LB",
     "oz": "OZ",
+    "g": "Grams",
 }

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { SaveIcon, UndoIcon } from '@shopify/polaris-icons';
-import { Page, BlockStack, Select, Card, TextField, InlineGrid, Button, DataTable, Box, FormLayout, Form } from '@shopify/polaris';
-import { chargeByOptions, endpoints, shipToOptions } from '../../../../constants';
+import { Page, BlockStack, Select, Card, TextField, InlineGrid, Button, DataTable, Box, FormLayout, Form, Text } from '@shopify/polaris';
+import { chargeBy, chargeByOptions, endpoints, shipToOptions, weightUnits } from '../../../../constants';
 import { useNavigate, Navigate, useParams } from 'react-router-dom';
 import CardTitle from '../../../../components/CardTitle';
 import EmptyStateShopify from '../../../../components/EmptyStateShopify';
@@ -21,15 +21,16 @@ const AddRate = () => {
   const params = useParams()
   const [loading, setLoading] = useState(false)
   const [rangeRows, setRangeRows] = useState([])
+  const [rangePrefix, setRangePrefix] = useState("")
 
   const [rate, setRate] = useState({
     "shipTo": "none",
     "price": "",
     "shipToValue": [],
     "chargeBy": "none",
-    "unit": "g",
+    "unit": "kg",
     "priceBy": "flat",
-    "xQty": true,
+    "xQty": false,
     "currency": "$",
     "status": "active",
     "zoneId": params.zoneId,
@@ -45,6 +46,14 @@ const AddRate = () => {
     let rangeRows = rate.ranges.map(r => ([r.from, r.upto, store?.moneyFormat.replace("{{amount}}", r.price)]))
     setRangeRows(rangeRows)
   }, [rate.ranges])
+
+  useEffect(() => {
+    let cb = rate.chargeBy
+    console.log(cb);
+    console.log(cb === "price" ? "$" : (cb === "weight" ? weightUnits[rate.unit] : ""));
+
+    setRangePrefix(cb === "price" ? "$" : (cb === "weight" ? weightUnits[rate.unit] : ""))
+  }, [rate.chargeBy])
 
   const getRate = useCallback(
     async cancelToken => {
@@ -173,61 +182,60 @@ const AddRate = () => {
           </BlockStack>
         </Card>
         <Card>
-          <FormLayout.Group condensed>
-            <Select
-              label="Charge By"
-              options={chargeByOptions}
-              onChange={value => handleChange({ "chargeBy": value })}
-              value={rate.chargeBy}
-            />
-            {/* {
-              rate.chargeBy === "weight" ? <span>
-                {lbl}
-                <Select
-                  label=" "
-                  options={[
-                    { label: "kg", value: 'kg' },
-                    { label: "lb", value: 'lb' },
-                    { label: "oz", value: 'oz' }
-                  ]}
-                  value={rate.unit}
-                  onChange={value => {
-                    handleChange({ "unit": value })
-                  }} />
-              </span> : null
-            }
-            {
-              rate.chargeBy === "price" ? <span>
-                {lbl}
-                <Select
-                  label=" "
-                  options={[
-                    { label: "%", value: '%' },
-                    { label: "Flat", value: 'flat' }
-                  ]}
-                  value={rate.priceBy}
-                  onChange={value => {
-                    handleChange({ "priceBy": value })
-                  }} />
-              </span> : null
-            }
-            {
-              rate.chargeBy === "qty" ? <span>
-                {lbl}
-                <Select
-                  label=" "
-                  options={[
-                    { label: "Multiply with price", value: "multiply" },
-                    { label: "Flat", value: "flat" }
-                  ]}
-                  value={rate.xQty ? "multiply" : "flat"}
-                  onChange={value => {
-                    handleChange({ "xQty": value === "multiply" })
-                  }}
-                />
-              </span> : null
-            } */}
-          </FormLayout.Group>
+          <Select
+            label="Charge By"
+            options={chargeByOptions}
+            onChange={value => handleChange({ "chargeBy": value })}
+            value={rate.chargeBy}
+          />
+          {/* {
+            rate.chargeBy === "weight" ? <div style={{ marginTop: "24px" }}>
+              <Select
+                label="Weight unit"
+                labelHidden
+                options={[
+                  { label: "kg", value: 'kg' },
+                  { label: "lb", value: 'lb' },
+                  { label: "oz", value: 'oz' },
+                  { label: "g", value: 'g' }
+                ]}
+                value={rate.unit}
+                onChange={value => {
+                  handleChange({ "unit": value })
+                }} />
+            </div> : null
+          }
+          {
+            rate.chargeBy === "price" ? <div style={{ marginTop: "24px" }}>
+              <Select
+                label="Price"
+                labelHidden
+                options={[
+                  { label: "%", value: '%' },
+                  { label: "Flat", value: 'flat' }
+                ]}
+                value={rate.priceBy}
+                onChange={value => {
+                  handleChange({ "priceBy": value })
+                }} />
+            </div> : null
+          }
+          {
+            rate.chargeBy === "qty" ? <div style={{ marginTop: "24px" }}>
+              <Select
+                label="Qty"
+                labelHidden
+                options={[
+                  { label: "Cost per Item", value: "multiply" },
+                  { label: "Flat", value: "flat" }
+                ]}
+                value={rate.xQty ? "multiply" : "flat"}
+                onChange={value => {
+                  handleChange({ "xQty": value === "multiply" })
+                }}
+              />
+            </div> : null
+          } */}
         </Card>
         {
           rate.chargeBy !== "none" && <Card>
@@ -267,27 +275,17 @@ const AddRate = () => {
       </BlockStack>
       <Modal id="add-range">
         <Box padding={400}>
+          <Text variant='headingSm' as='h5'>
+            Add {chargeBy[rate.chargeBy]} ranges {rangePrefix}
+          </Text>
+
           <Form>
             <FormLayout>
-              <TextField type='text' label="Min" placeholder='0' value={range.from} onChange={value => handleChangeRange({ "from": value })} />
-              <TextField type='text' label="Max" placeholder='0' value={range.upto} onChange={value => handleChangeRange({ "upto": value })} />
+              <TextField type='text' label="Min" placeholder='0' prefix={rangePrefix} value={range.from} onChange={value => handleChangeRange({ "from": value })} />
+              <TextField type='text' label="Max" placeholder='0' prefix={rangePrefix} value={range.upto} onChange={value => handleChangeRange({ "upto": value })} />
               <TextField type='text' label="Price" placeholder='0' prefix={store?.moneyFormat.replace("{{amount}}", "")} value={range.price} onChange={value => handleChangeRange({ "price": value })} />
             </FormLayout>
           </Form>
-          {/* <form data-save-bar>
-            <label>
-              From:
-              <input name="from" value={range.from} autocomplete="name" onChange={event => handleChangeRange(event)} />
-            </label>
-            <label>
-              Upto:
-              <input name="upto" value={range.upto} autocomplete="name" onChange={event => handleChangeRange(event)} />
-            </label>
-            <label>
-              Price:
-              <input name="price" value={range.price} autocomplete="name" onChange={event => handleChangeRange(event)} />
-            </label>
-          </form> */}
         </Box>
 
         <TitleBar title={`Add range`}>

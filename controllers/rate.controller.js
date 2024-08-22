@@ -149,12 +149,11 @@ class UserController extends Controller {
     for (const z of result) {
       const zonePrice = z.price
       for (const r of z.rates) {
-        console.log(r.price);
-        console.log(r.ranges);
         if (r.ranges.length) {
           for (const range of r.ranges) {
             let cost = range.price;
             if (r.chargeBy === "weight") {
+              console.log({ cost, unit: r.unit, weight: weight[r.unit] });
               cost = cost * weight[r.unit]
             } else if (r.chargeBy === "price") {
               if (r.priceBy === "percent") {
