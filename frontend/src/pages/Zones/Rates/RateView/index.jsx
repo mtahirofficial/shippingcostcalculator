@@ -147,7 +147,7 @@ const RateView = () => {
                 'Max',
                 'Price'
               ]}
-              rows={rate?.ranges.map(r => ([r.from, r.upto, store?.moneyFormat.replace("{{amount}}", r.price)]))}
+              rows={rate?.ranges.map(r => ([r.from, r.upto, r.price ? store?.moneyFormat.replace("{{amount}}", r.price) : '']))}
             />
           </> : <EmptyStateShopify
             fullWidth={true}

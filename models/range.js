@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   // Hook for before creating a new record
-  range.beforeCreate(async (u, options) => {
+  range.beforeCreate(async (r, options) => {
     // Find the most recent record
     const recent = await range.findOne({
       order: [['createdAt', 'DESC']], // Assuming you have a createdAt column
@@ -36,20 +36,19 @@ module.exports = (sequelize, DataTypes) => {
     // Increment the key value of the most recent record
     const incrementedKey = recent ? recent.key + 1 : 1;
     // Set the incremented key for the new record
-    u.key = incrementedKey;
+    r.key = incrementedKey;
+    r.from = recent.from === "" ? null : recent.from
+    r.upto = recent.upto === "" ? null : recent.upto
   });
 
   // Hook for after creating a new record
   range.afterCreate(async (r, options) => {
-    console.log("afterCreate");
-    console.log(r);
     // Perform additional actions or updates after creation
     // For example, you can log, send notifications, etc.
   });
 
   // Hook for before creating a new record
   range.beforeBulkCreate(async (ranges, options) => {
-    console.log(options);
     // Find the most recent record
     const recent = await range.findOne({
       order: [['createdAt', 'DESC']], // Assuming you have a createdAt column
@@ -60,16 +59,15 @@ module.exports = (sequelize, DataTypes) => {
     let incrementedKey = recent ? recent.key + 1 : 1;
     // Set the incremented key for the new record
     for (const r of ranges) {
-      console.log("incrementedKey", incrementedKey);
       r.key = incrementedKey;
+      r.from = r.from === "" ? null : r.from
+      r.upto = r.upto === "" ? null : r.upto
       incrementedKey++;
     }
   });
 
   // Hook for after creating multiple records in a bulk operation
   range.afterBulkCreate(async (r, options) => {
-    console.log("afterBulkCreate");
-    console.log(r);
     // Perform additional actions or updates after bulk creation
     // For example, you can log, send notifications, etc.
   });

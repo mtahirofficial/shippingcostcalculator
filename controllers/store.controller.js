@@ -25,13 +25,11 @@ class StoreController extends Controller {
         value: c.code,
         label: c.name,
       }))
-      console.log(countries);
       let states = countries_list.map(c => ({
         value: c.code,
         label: c.name,
         options: c.provinces.map(p => ({ value: c.code + "." + p.code, label: p.name }))
       }))
-      console.log(states);
       res.json({ store, countries: [...countries], states: [...states] })
     } catch (e) {
       next(new ServerException(e.message));

@@ -37,9 +37,9 @@ const AddRate = () => {
     "ranges": []
   })
   const [range, setRange] = useState({
-    from: "",
-    upto: "",
-    price: "",
+    from: null,
+    upto: null,
+    price: null,
   })
 
   useEffect(() => {
@@ -49,9 +49,6 @@ const AddRate = () => {
 
   useEffect(() => {
     let cb = rate.chargeBy
-    console.log(cb);
-    console.log(cb === "price" ? "$" : (cb === "weight" ? weightUnits[rate.unit] : ""));
-
     setRangePrefix(cb === "price" ? "$" : (cb === "weight" ? weightUnits[rate.unit] : ""))
   }, [rate.chargeBy])
 
