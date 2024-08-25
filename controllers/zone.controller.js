@@ -39,9 +39,7 @@ class UserController extends Controller {
       if (!Object.hasOwnProperty.call(req.body, "zone")) {
         return next(new BadRequestException("Unprocessable entity"));
       }
-      // console.log("create zone");
       const zone = req.body.zone
-      // console.log(zone.states);
       const created = await ZoneService.createZone({ ...zone, storeId: store.storeId })
       created.dataValues.rates = []
       res.json({ zone: created })

@@ -41,8 +41,9 @@ const AddZone = () => {
             setLoading("get")
             const response = await request(endpoints.zone + "/" + id, options)
             if (response.zone) {
-                setValues(prev => ({ ...prev, ...response.zone }))
-                setDefaultStates(response.zone.states.map(s => s.options).flat())
+                let defaultStates = response.zone.states.map(s => s.options).flat()
+                setValues(prev => ({ ...prev, ...response.zone, states: [...defaultStates] }))
+                setDefaultStates([...defaultStates])
 
             }
             setLoading(false)
@@ -179,7 +180,7 @@ const AddZone = () => {
                             onChange={value => handleChange({ "status": value })}
                             value={values.status}
                         />
-                        <TextField type='text' label="Price" name='price' placeholder='0' prefix={store?.moneyFormat.replace("{{amount}}", "")} value={values.price} onChange={value => handleChange({ "price": value })} />
+                        <TextField type='text' label="Price" name='price' placeholder='0' prefix={store?.moneyFormat.replace("{{amount}}", "")} value={values.price} onChange={value => handleChange({ "price": value })} helpText="This price will be added to each shipping rate in the current zone, if you do not want to set zone price then set it to '0' (zero)." />
                     </FormLayout>
                 </Card>
             </BlockStack>
