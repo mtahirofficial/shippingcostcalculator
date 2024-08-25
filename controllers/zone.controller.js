@@ -27,7 +27,6 @@ class UserController extends Controller {
     try {
       const id = req.params.id
       const zone = await ZoneService.getSingleZoneAndRate(id)
-      // console.log(zone);
       res.json({ zone })
     } catch (e) {
       next(new ServerException(e.message));

@@ -182,7 +182,7 @@ const ZoneView = () => {
                                     singular: 'Rate',
                                     plural: 'Rates',
                                 }}
-                                renderItem={item => {
+                                renderItem={item => {                                    
                                     const { id, title, status, price } = item;
                                     const chars = title.split(" ")
                                     let initials = ''

@@ -8,14 +8,27 @@ body {
     background-color: #f2f2f2;
 }
 
-.container {
-    /* max-width: 650px; */
-    /* width: 100%; */
-    /* position: absolute; */
-    /* top: 50%; */
-    /* left: 50%; */
-    /* transform: translate(-50%, -18%); */
-    /* padding: 0 var(--p-space-600); */
+.learn-more {
+    text-decoration: underline;
+    text-decoration-color: currentColor;
+    /* Ensure color transition */
+    color: inherit;
+    font-size: inherit;
+    transition: text-decoration-color 0.3s ease;
+
+}
+
+.learn-more:hover {
+    text-decoration-color: transparent;
+    /* Hide underline on hover */
+}
+
+.arrow-icon .Polaris-Icon {
+    transition: transform 0.7s ease;
+}
+
+.rotate .Polaris-Icon {
+    transform: rotate(180deg);
 }
 
 .wrapper {
@@ -34,7 +47,7 @@ body {
     justify-content: space-between;
     font-weight: 500;
     font-size: 20px;
-    background: transparent;
+    background: ghostwhite;
     border: none;
     cursor: pointer;
 
@@ -42,6 +55,7 @@ body {
 }
 
 .question-container.active {
+    background: white;
     box-shadow: 0 20px 100px -20px #00000073;
     /* background-image: linear-gradient(90deg,
             transparent,
@@ -54,6 +68,8 @@ body {
 }
 
 .wrapper .question-container:hover {
+    background: white;
+
     /* box-shadow: rgba(0, 0, 0, 0.1) 0px 20px 25px -5px, rgba(0, 0, 0, 0.04) 0px 10px 10px -5px; */
     /* background-image: linear-gradient(90deg,
             transparent,

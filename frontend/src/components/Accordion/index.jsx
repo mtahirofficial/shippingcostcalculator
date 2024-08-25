@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import {Icon} from '@shopify/polaris';
+import { Icon } from '@shopify/polaris';
 import {
     ChevronDownIcon,
     ChevronUpIcon
@@ -8,7 +8,8 @@ import './style.css'
 const faqs = [
     {
         "question": `What is ${process.env.REACT_APP_APP_NAME}?`,
-        "answer": `${process.env.REACT_APP_APP_NAME} is a Shopify app that allows you to define and calculate custom delivery charges for your store's checkout process based on specific rules you set.`
+        "answer": `${process.env.REACT_APP_APP_NAME} is a Shopify app that allows you to define and calculate custom shipping charges for your store's checkout process based on specific rules you set.`,
+        "url": "https://youtu.be/sVkT-YTUXS4"
     },
     {
         "question": `How do I install ${process.env.REACT_APP_APP_NAME}?`,
@@ -56,7 +57,7 @@ const faqs = [
     // }
 ]
 //  accordionitem component
-const AccordionItem = ({ question, answer, isOpen, onClick }) => {
+const AccordionItem = ({ question, answer, url, isOpen, onClick }) => {
     const contentHeight = useRef();
     return (
         <div className="wrapper">
@@ -65,10 +66,13 @@ const AccordionItem = ({ question, answer, isOpen, onClick }) => {
                 onClick={onClick}
             >
                 <p className="question-content">{question}</p>
-                <Icon
-                    source={isOpen ? ChevronUpIcon : ChevronDownIcon}
-                    tone="base"
-                />
+                <span className={`arrow-icon${isOpen ? " rotate" : ""}`}>
+                    <Icon
+                        source={ChevronDownIcon}
+                        // source={isOpen ? ChevronUpIcon : ChevronDownIcon}
+                        tone="base"
+                    />
+                </span>
             </button>
 
             <div
@@ -80,7 +84,10 @@ const AccordionItem = ({ question, answer, isOpen, onClick }) => {
                         : { height: "0px" }
                 }
             >
-                <p className="answer-content">{answer}</p>
+                <p className="answer-content">
+                    {answer}{" "}
+                    {url ? <a className="learn-more" href={url} target="_blank">Learn more</a> : null}
+                </p>
             </div>
         </div>
     );
@@ -98,8 +105,7 @@ const Accordion = () => {
             {faqs.map((item, index) => (
                 <AccordionItem
                     key={index}
-                    question={item.question}
-                    answer={item.answer}
+                    {...item}
                     isOpen={activeIndex === index}
                     onClick={() => handleItemClick(index)}
                 />
