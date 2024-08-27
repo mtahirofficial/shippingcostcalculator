@@ -152,24 +152,20 @@ class UserController extends Controller {
         if (r.ranges.length) {
           for (const range of r.ranges) {
             let cost = range.price;
-            if (r.chargeBy === "weight") {
-              console.log({ cost, unit: r.unit, weight: weight[r.unit] });
-              cost = cost * weight[r.unit]
-            } else if (r.chargeBy === "price") {
-              if (r.priceBy === "percent") {
-                cost = (price * cost) / 100
-              }
-            } else if (r.chargeBy === "qty" && r.xQty) {
-              cost = cost * qty
-            }
-            console.log("166", cost);
+            // if (r.chargeBy === "weight") {
+            //   cost = cost * weight[r.unit]
+            // } else if (r.chargeBy === "price") {
+            //   if (r.priceBy === "percent") {
+            //     cost = (price * cost) / 100
+            //   }
+            // } else if (r.chargeBy === "qty" && r.xQty) {
+            //   cost = cost * qty
+            // }
             cost += Number(zonePrice)
-            console.log("168", cost);
             rates.push(prepareRate({ name: r.title, price: cost, description: r.description, currency: store.currency, code: `${z.id}${r.id}${range.id}` }))
           }
         } else {
           let price = Number(r.price) + Number(zonePrice)
-          console.log("price", price);
           rates.push(prepareRate({ name: r.title, price: price, description: r.description, currency: store.currency, code: `${z.id}${r.id}` }))
         }
       }

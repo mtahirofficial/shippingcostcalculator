@@ -49,7 +49,7 @@ module.exports = {
       },
       xQty: {
         type: Sequelize.BOOLEAN,
-        defaultVAlue: true
+        defaultVAlue: false
       },
       createdAt: {
         allowNull: false,
