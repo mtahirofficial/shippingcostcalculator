@@ -88,8 +88,11 @@ class CheckoutService extends Service {
                     "status": "active",
                     "storeId": storeId,
                     "countries": { [Op.like]: `%${country}%` },
-                    "states": { [Op.like]: `%${state}%` }
-                }
+                    [Op.or]: [
+                        { "states": { [Op.like]: `%${state}%` } },
+                        { "states": "" },
+                    ]
+                },
             });
         } catch (e) {
             throw new Error(e.message);
