@@ -49,7 +49,7 @@ const AddRate = () => {
 
   useEffect(() => {
     let cb = rate.chargeBy
-    setRangePrefix(cb === "price" ? store?.moneyFormat.replace("{{amount}}") : (cb === "weight" ? weightUnits[rate.unit] : ""))
+    setRangePrefix(cb === "price" ? store?.moneyFormat.replace("{{amount}}", "") : (cb === "weight" ? weightUnits[rate.unit] : ""))
   }, [rate.chargeBy])
 
   const getRate = useCallback(
