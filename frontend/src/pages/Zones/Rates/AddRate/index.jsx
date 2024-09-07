@@ -49,7 +49,7 @@ const AddRate = () => {
 
   useEffect(() => {
     let cb = rate.chargeBy
-    setRangePrefix(cb === "price" ? "$" : (cb === "weight" ? weightUnits[rate.unit] : ""))
+    setRangePrefix(cb === "price" ? store.currency : (cb === "weight" ? weightUnits[rate.unit] : ""))
   }, [rate.chargeBy])
 
   const getRate = useCallback(
@@ -273,7 +273,7 @@ const AddRate = () => {
       <Modal id="add-range">
         <Box padding={400}>
           <Text variant='headingSm' as='h5'>
-            Add {chargeBy[rate.chargeBy]} ranges {rangePrefix}
+            Add {chargeBy[rate.chargeBy]} ranges
           </Text>
 
           <Form>
