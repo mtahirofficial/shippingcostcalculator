@@ -6,3 +6,7 @@
 .logicsarcade:hover {
     text-decoration: underline;
 }
+
+.no-shadow-card .Polaris-ShadowBevel {
+    --pc-shadow-bevel-content-xs: none !important;
+}

@@ -9,7 +9,7 @@ import {
     AutoSelection,
 } from '@shopify/polaris';
 import { useState, useCallback, useMemo } from 'react';
-const ShopifyCombobox = ({ label, oprions = [], selected = [], category, placeholder, helpText, onChange }) => {
+const ShopifyCombobox = ({ label, oprions = [], selected = [], category, placeholder, helpText, onChange, error }) => {
     const [selectedTags, setSelectedTags] = useState(selected);
     const [value, setValue] = useState('');
     const [suggestion, setSuggestion] = useState('');
@@ -167,6 +167,7 @@ const ShopifyCombobox = ({ label, oprions = [], selected = [], category, placeho
                         verticalContent={verticalContentMarkup}
                         onChange={setValue}
                         helpText={helpText}
+                        error={error}
                     />
                 }
             >

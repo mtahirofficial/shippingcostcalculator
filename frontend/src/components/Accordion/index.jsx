@@ -25,7 +25,7 @@ const faqs = [
     },
     {
         "question": "What are shipping rates?",
-        "answer": "Shipping rates determine the cost of shipping for orders within a specific shipping zone. You can set different rates based on factors like weight, order total, or cart quantity."
+        "answer": "Shipping rates determine the cost of shipping for orders within a specific shipping zone. You can set different rates based on factors like weight, order total price, or cart quantity."
     },
     {
         "question": "How do I add a new shipping rate?",

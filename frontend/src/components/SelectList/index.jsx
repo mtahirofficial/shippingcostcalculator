@@ -3,14 +3,14 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import chroma from 'chroma-js';
 import "./style.css"
-import { Icon } from '@shopify/polaris';
+import { Icon, InlineError } from '@shopify/polaris';
 import { SelectIcon } from '@shopify/polaris-icons';
 
 const animatedComponents = makeAnimated();
 const DropdownIndicator = () => <Icon source={SelectIcon} />
 const IndicatorSeparator = () => null
 
-const SelectList = ({ options, disabled, placeholder, defaults, groupedOptions, handleChange, error }) => {
+const SelectList = ({ options, disabled, placeholder, defaults, groupedOptions, handleChange, error, label }) => {
     const styles = {
         control: (styles) => ({ ...styles, backgroundColor: chroma(error ? "pink" : "white").alpha(0.3).css(), borderColor: chroma(error ? "red" : "B3B3B3").alpha(0.5).css() }),
     };
@@ -37,19 +37,16 @@ const SelectList = ({ options, disabled, placeholder, defaults, groupedOptions, 
         padding: '0.16666666666667em 0.5em',
         textAlign: 'center',
     };
-    return (
+    return (<>
         <Select
             isMulti
+            label={label}
             blurInputOnSelect={false}
             styles={styles}
             isDisabled={disabled}
             placeholder={placeholder}
             closeMenuOnSelect={true}
             closeMenuOnScroll={true}
-            // defaultValue={[{
-            //     "label": "Chile",
-            //     "value": "CL"
-            // }]}
             value={defaults}
             defaultValue={defaults}
             options={groupedOptions ? groupedOptions : options}
@@ -59,7 +56,8 @@ const SelectList = ({ options, disabled, placeholder, defaults, groupedOptions, 
             classNamePrefix="select"
             components={{ animatedComponents, DropdownIndicator, IndicatorSeparator }}
         />
-    );
+        <InlineError message={error} />
+    </>);
 }
 
 export default SelectList

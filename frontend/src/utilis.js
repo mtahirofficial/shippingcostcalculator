@@ -14,3 +14,14 @@ export function findIntersection(arrayFirst, arraySecond) {
     // Return the intersection
     return intersection;
 }
+
+export const validate = (obj, REQUIRED_FIELDS, validationErrors) => {
+    let errors = { ...validationErrors }
+    for (const key in obj) {
+        let val = obj[key]
+        if (REQUIRED_FIELDS.indexOf(key) > -1) {
+            errors[key] = (val === "" || (val instanceof Array && val.length <= 0)) ? "Required" : ""
+        }
+    }
+    return errors
+}

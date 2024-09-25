@@ -9,7 +9,7 @@ const HelpPage = () => {
             title='Help Center'
             primaryAction={{
                 content: "Contact Support",
-                url: "https://wa.me/923078185388",
+                url: "https://wa.me/923457699395",
                 target: "_blank"
             }}
         >

@@ -105,7 +105,7 @@ const RateView = () => {
                   description: <Text as="span" variant="headingLg">{store?.moneyFormat.replace("{{amount}}", "") + rate?.price}</Text>
                 },
                 {
-                  term: 'Charge by',
+                  term: 'Based on',
                   description: <Badge>{chargeBy[rate?.chargeBy]}</Badge>
                 },
                 {

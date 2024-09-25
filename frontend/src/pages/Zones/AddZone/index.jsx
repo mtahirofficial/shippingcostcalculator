@@ -4,7 +4,7 @@ import { SaveIcon, UndoIcon } from '@shopify/polaris-icons';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useApp } from '../../../providers/AppProvider';
 import SelectList from '../../../components/SelectList';
-import { findIntersection } from '../../../utilis';
+import { findIntersection, validate } from '../../../utilis';
 import { request } from '../../../core/api';
 import { endpoints } from '../../../constants';
 import { useAppBridge } from '@shopify/app-bridge-react';
@@ -12,10 +12,12 @@ import { useZoneContext } from '../../../providers/ZoneProvider';
 import { Navigate } from 'react-router-dom'
 import axios from 'axios';
 import Skeleton from '../../../components/Skeleton';
+import ShopifyCombobox from '../../../components/ShopifyCombobox';
+
+const REQUIRED_FIELDS = ["name", "countries", "price"]
 
 const AddZone = () => {
     let { id } = useParams();
-
     const shopify = useAppBridge();
     const navigate = useNavigate();
     const { store, countries, states: statesList } = useApp()
@@ -23,7 +25,7 @@ const AddZone = () => {
     const [states, setStates] = useState([])
     const [defaultStates, setDefaultStates] = useState([])
     const [loading, setLoading] = useState(false)
-    const [errors, setErrors] = useState({ isErr: false, msg: null })
+    const [validationErrors, setValidationErrors] = useState({})
     const [values, setValues] = useState({
         name: "",
         desc: "",
@@ -69,41 +71,50 @@ const AddZone = () => {
 
     }, [values.countries])
 
+
+
     const handleChange = obj => {
+        const errors = validate(obj, REQUIRED_FIELDS, validationErrors)
+        setValidationErrors({ ...errors })
         if (obj.states) {
             setDefaultStates(obj.states)
         }
         setValues(prev => ({ ...prev, ...obj }))
     }
-
     const addZone = async () => {
-        try {
-            const options = {
-                "method": values.id ? "PUT" : "POST",
-                "data": { "zone": { ...values } }
-            }
-            setLoading("saving")
-            const response = await request(endpoints.zone, options, store?.storeId)
-            if (Object.hasOwnProperty.call(response, "zone")) {
-                let message = "Zone added successfully."
-                if (values.id) {
-                    message = "Zone updated successfully."
-                    setZones(prev => {
-                        return prev.map(item => {
-                            return item.id.toString() === values.id.toString() ? response.zone : item
-                        })
-                    })
-                } else {
-                    setZones(prev => ([response.zone, ...prev]))
+        const errors = validate(values, REQUIRED_FIELDS, validationErrors)
+        setValidationErrors({ ...errors })
+        if (Object.values(errors).some(e => e !== "")) {
+            shopify.toast.show("Required fields are missing", { isError: true })
+        } else {
+            try {
+                const options = {
+                    "method": values.id ? "PUT" : "POST",
+                    "data": { "zone": { ...values } }
                 }
-                shopify.toast.show(message)
-                navigate(`/zones${!isNaN(id) ? `/${id}` : ""}`)
+                setLoading("saving")
+                const response = await request(endpoints.zone, options, store?.storeId)
+                if (Object.hasOwnProperty.call(response, "zone")) {
+                    let message = "Zone added successfully."
+                    if (values.id) {
+                        message = "Zone updated successfully."
+                        setZones(prev => {
+                            return prev.map(item => {
+                                return item.id.toString() === values.id.toString() ? response.zone : item
+                            })
+                        })
+                    } else {
+                        setZones(prev => ([response.zone, ...prev]))
+                    }
+                    shopify.toast.show(message)
+                    navigate(`/zones${!isNaN(id) ? `/${id}` : ""}`)
+                }
+            } catch (e) {
+                shopify.toast.show(e.message, { isError: true })
+                console.log(e.message);
+            } finally {
+                setLoading(false)
             }
-        } catch (e) {
-            shopify.toast.show(e.message, { isError: true })
-            console.log(e.message);
-        } finally {
-            setLoading(false)
         }
     }
     if (loading === "get") {
@@ -122,25 +133,25 @@ const AddZone = () => {
             <BlockStack gap={400}>
                 <Card>
                     <FormLayout>
-                        <TextField type='text' placeholder='Zone name' label="Zone name" name='name' value={values.name} onChange={value => handleChange({ "name": value })} />
+                        <TextField type='text' placeholder='Zone name' label={`Zone name${REQUIRED_FIELDS.indexOf("name") > -1 ? "*" : ""}`} name='name' value={values.name} error={validationErrors.name} onChange={value => handleChange({ "name": value })} />
                         <TextField type='text' placeholder='Description' label="Description" name='desc' value={values.desc} onChange={value => handleChange({ "desc": value })} />
                     </FormLayout>
                 </Card>
                 <Card>
                     <FormLayout>
                         {/* <ShopifyCombobox
-                            label={`Select country`}
-                            helpText={"Do not use comma ( , ) in values."}
+                            label={`Select Countries${REQUIRED_FIELDS.indexOf("countries") > -1 ? "*" : ""}`}
                             category={"country"}
                             selected={values.countries}
-                            placeholder={`Write country name here`}
+                            options={countries}
+                            placeholder={`Search countries`}
                             onChange={values => {
-                                const states = findIntersection(values, statesList)
-                                setStates(states)
+                                // const states = findIntersection(values, statesList)
+                                // setStates(states)
                                 handleChange({ "countries": values })
                             }}
-                        />
-                        <ShopifyCombobox
+                        /> */}
+                        {/* <ShopifyCombobox
                             label={"Select states"}
                             helpText={"Do not use comma ( , ) in values."}
                             category={"state"}
@@ -150,7 +161,8 @@ const AddZone = () => {
                         /> */}
                         <SelectList
                             placeholder={`Select Countries`}
-                            error={errors.countries}
+                            label={<p>Select Countries{REQUIRED_FIELDS.indexOf("countries") > -1 ? "*" : ""}</p>}
+                            error={validationErrors.countries}
                             options={countries}
                             defaults={values.countries}
                             handleChange={values => {
@@ -161,7 +173,8 @@ const AddZone = () => {
                         />
                         <SelectList
                             placeholder={`Select States`}
-                            error={errors.states}
+                            label={<p>Select States</p>}
+                            // error={validationErrors.states}
                             groupedOptions={states}
                             defaults={defaultStates.length ? defaultStates : values.states}
                             handleChange={states => { handleChange({ "states": states }) }}
@@ -180,7 +193,11 @@ const AddZone = () => {
                             onChange={value => handleChange({ "status": value })}
                             value={values.status}
                         />
-                        <TextField type='text' label="Price" name='price' placeholder='0' prefix={store?.moneyFormat.replace("{{amount}}", "")} value={values.price} onChange={value => handleChange({ "price": value })} helpText="This price will be added to each shipping rate in the current zone, if you do not want to set zone price then set it to '0' (zero)." />
+                        <TextField type='text' label={`Price${REQUIRED_FIELDS.indexOf("price") > -1 ? "*" : ""}`} name='price' placeholder='0' prefix={store?.moneyFormat.replace("{{amount}}", "")} error={validationErrors.price} value={values.price} onChange={value => handleChange({ "price": value })} helpText="This price will be added to each shipping rate in the current zone, if you do not want to set zone price then set it to '0' (zero)." onBlur={e => {
+                            if (isNaN(e.target.value)) {
+                                handleChange({ "price": "0.00" })
+                            }
+                        }} />
                     </FormLayout>
                 </Card>
             </BlockStack>
