@@ -20,7 +20,11 @@ export const validate = (obj, REQUIRED_FIELDS, validationErrors) => {
     for (const key in obj) {
         let val = obj[key]
         if (REQUIRED_FIELDS.indexOf(key) > -1) {
-            errors[key] = (val === "" || (val instanceof Array && val.length <= 0)) ? "Required" : ""
+            if (val === "" || (val instanceof Array && val.length <= 0)) {
+                errors[key] = "Required"
+            } else {
+                delete errors[key]
+            }
         }
     }
     return errors

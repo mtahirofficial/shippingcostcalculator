@@ -94,7 +94,6 @@ const AddRate = () => {
   const handleChangeRange = values => {
     setRange(prev => {
       let r = { ...prev, ...values }
-      console.log("r", r);
       setRangeError(Object.values(r).every(value => value !== '' && !isNaN(value) && value !== null && value < 1))
       return r
     })
