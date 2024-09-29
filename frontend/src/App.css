@@ -10,3 +10,7 @@
 .no-shadow-card .Polaris-ShadowBevel {
     --pc-shadow-bevel-content-xs: none !important;
 }
+
+.combobox .Polaris-Labelled__Error {
+    display: none !important;
+}

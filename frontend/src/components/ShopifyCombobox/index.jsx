@@ -7,6 +7,8 @@ import {
     Combobox,
     Text,
     AutoSelection,
+    InlineError,
+    Box,
 } from '@shopify/polaris';
 import { useState, useCallback, useMemo } from 'react';
 const ShopifyCombobox = ({ label, oprions = [], selected = [], category, placeholder, helpText, onChange, error }) => {
@@ -153,7 +155,7 @@ const ShopifyCombobox = ({ label, oprions = [], selected = [], category, placeho
         ) : null;
 
     return (
-        <div style={{ maxHeight: '225px' }}>
+        <div className='combobox' style={{ maxHeight: '225px' }}>
             <Combobox
                 allowMultiple
                 activator={
@@ -166,13 +168,17 @@ const ShopifyCombobox = ({ label, oprions = [], selected = [], category, placeho
                         placeholder={placeholder}
                         verticalContent={verticalContentMarkup}
                         onChange={setValue}
-                        helpText={helpText}
+                        // helpText={helpText}
                         error={error}
                     />
                 }
             >
                 {listboxMarkup}
             </Combobox>
+            {
+                (error && error !== "") ? <Box paddingBlock={100}><InlineError message="Required" /></Box> : null
+            }
+            <Text as="p" tone="subdued">{helpText}</Text>
         </div>
     );
 }
