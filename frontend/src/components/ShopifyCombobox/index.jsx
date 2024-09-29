@@ -134,6 +134,9 @@ const ShopifyCombobox = ({ label, oprions = [], selected = [], category, placeho
     const actionMarkup = noResults ? (
         <Listbox.Action value={value}>{`Add "${value}"`}</Listbox.Action>
     ) : null;
+    const messageMarkup = value === "" ? (
+        <Listbox.Action disabled value={value}>{`Write to add.`}</Listbox.Action>
+    ) : null;
 
     const emptyStateMarkup = optionMarkup ? null : (
         <EmptySearchResult
@@ -150,6 +153,7 @@ const ShopifyCombobox = ({ label, oprions = [], selected = [], category, placeho
                 onActiveOptionChange={handleActiveOptionChange}
             >
                 {actionMarkup}
+                {messageMarkup}
                 {optionMarkup}
             </Listbox>
         ) : null;

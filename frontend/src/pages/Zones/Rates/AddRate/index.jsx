@@ -87,10 +87,18 @@ const AddRate = () => {
 
 
   const handleChange = values => {
-    const errors = validate(values, REQUIRED_FIELDS, validationErrors)
-    setValidationErrors({ ...errors })
+    // const errors = validate(values, REQUIRED_FIELDS, validationErrors)
+    let error = ""
+    const [key, value] = Object.entries(values)[0];
+    if (REQUIRED_FIELDS.indexOf(key) > -1) {
+      if (value === "" || (value instanceof Array && value.length <= 0)) {
+        error = "Required"
+      }
+    }
+    setValidationErrors(prev => ({ ...prev, [key]: error }))
     setRate(prev => ({ ...prev, ...values }))
   }
+
   const handleChangeRange = values => {
     setRange(prev => {
       let r = { ...prev, ...values }
@@ -101,11 +109,11 @@ const AddRate = () => {
   }
 
   const addRate = async () => {
-    const errors = validate(rate, REQUIRED_FIELDS, validationErrors)
+    const errors = validate(rate, REQUIRED_FIELDS)
+    console.log("errors", errors);
     setValidationErrors({ ...errors })
     if (Object.values(errors).some(e => e !== "")) {
       shopify.toast.show("Required fields are missing", { isError: true })
-      // } else if (Object.prototype.hasOwnProperty.call(errors, "ranges")) {
     } else if (rate.chargeBy !== "none" && rate.ranges.length === 0) {
       shopify.toast.show("Atleast one range is required", { isError: true })
       addRangeRef.current?.focus()

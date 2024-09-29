@@ -15,8 +15,8 @@ export function findIntersection(arrayFirst, arraySecond) {
     return intersection;
 }
 
-export const validate = (obj, REQUIRED_FIELDS, validationErrors) => {
-    let errors = { ...validationErrors }
+export const validate = (obj, REQUIRED_FIELDS) => {
+    let errors = {}
     for (const key in obj) {
         let val = obj[key]
         if (REQUIRED_FIELDS.indexOf(key) > -1) {
