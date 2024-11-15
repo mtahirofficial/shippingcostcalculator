@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { SaveIcon, UndoIcon } from '@shopify/polaris-icons';
-import { Page, BlockStack, Select, Card, TextField, InlineGrid, Button, DataTable, Box, FormLayout, Form, Text, Banner } from '@shopify/polaris';
+import { Page, BlockStack, Select, Card, TextField, InlineGrid, Button, DataTable, Box, FormLayout, Form, Text, Banner, InlineStack } from '@shopify/polaris';
+import { SaveIcon, UndoIcon, EditIcon, DeleteIcon } from '@shopify/polaris-icons';
 import { chargeBy, chargeByOptions, endpoints, shipToOptions, weightUnits } from '../../../../constants';
 import { useNavigate, Navigate, useParams } from 'react-router-dom';
 import CardTitle from '../../../../components/CardTitle';
@@ -12,7 +12,14 @@ import { request } from '../../../../core/api';
 import { useZoneContext } from '../../../../providers/ZoneProvider';
 import Skeleton from '../../../../components/Skeleton';
 import axios from 'axios';
-import { validate } from '../../../../utilis';
+import { randomStr, validate } from '../../../../utilis';
+import AddRangeForm from '../../../../components/AddRangeForm';
+
+const empty_range = {
+  from: "",
+  upto: "",
+  price: "",
+}
 
 const AddRate = () => {
   const shopify = useAppBridge();
@@ -27,6 +34,8 @@ const AddRate = () => {
   const [validationErrors, setValidationErrors] = useState({})
   const [REQUIRED_FIELDS, setRequiredFields] = useState(["title", "price"])
   const [rangeError, setRangeError] = useState(false)
+  const [range, setRange] = useState({ ...empty_range })
+  const [deleted, setDeleted] = useState([])
   const [rate, setRate] = useState({
     "title": "",
     "shipTo": "none",
@@ -41,14 +50,37 @@ const AddRate = () => {
     "zoneId": params.zoneId,
     "ranges": []
   })
-  const [range, setRange] = useState({
-    from: null,
-    upto: null,
-    price: null,
-  })
+
+  const editRange = useCallback(
+    range => {
+      setRange({ ...range })
+      shopify.modal.show("add-range")
+    },
+    [],
+  )
+
+  const deleteRange = useCallback(
+    (ranges, index) => {
+      let deletedRanges = ranges.splice(index, 1)
+      setDeleted(prev => ([...prev, ...deletedRanges.map(r => r.id)]))
+      handleChange({ "ranges": [...ranges] })
+    },
+    [],
+  )
+
 
   useEffect(() => {
-    let rangeRows = rate.ranges.map(r => ([r.from, r.upto, store?.moneyFormat.replace("{{amount}}", r.price)]))
+    let rangeRows = rate.ranges.map((r, i) => ([
+      r.from,
+      r.upto,
+      store?.moneyFormat.replace("{{amount}}", r.price),
+      <div className='range-actions'>
+        <InlineStack align='center' gap={200}>
+          <Button icon={EditIcon} onClick={() => editRange(r)} accessibilityLabel="Edit shipping range" />
+          <Button icon={DeleteIcon} onClick={() => deleteRange(rate.ranges, i)} tone="critical" accessibilityLabel="Delete shipping range" />
+        </InlineStack>
+      </div>
+    ]))
     setRangeRows(rangeRows)
   }, [rate.ranges])
 
@@ -85,7 +117,6 @@ const AddRate = () => {
     }
   }, [])
 
-
   const handleChange = values => {
     // const errors = validate(values, REQUIRED_FIELDS, validationErrors)
     let error = ""
@@ -105,12 +136,10 @@ const AddRate = () => {
       setRangeError(Object.values(r).every(value => value !== '' && !isNaN(value) && value !== null && value < 1))
       return r
     })
-
   }
 
   const addRate = async () => {
     const errors = validate(rate, REQUIRED_FIELDS)
-    console.log("errors", errors);
     setValidationErrors({ ...errors })
     if (Object.values(errors).some(e => e !== "")) {
       shopify.toast.show("Required fields are missing", { isError: true })
@@ -122,6 +151,9 @@ const AddRate = () => {
         const options = {
           "method": rate.id ? "PUT" : "POST",
           "data": { "rate": { ...rate } }
+        }
+        if (deleted.length) {
+          options.data.deleted = deleted
         }
         setLoading(true)
         const response = await request(endpoints.rate, options, store?.storeId)
@@ -285,8 +317,15 @@ const AddRate = () => {
               <CardTitle title={"Shipping rate ranges"} />
               {
                 rate.ranges.length ? <Button
-                  variant='primary'
-                  onClick={() => shopify.modal.show("add-range")}
+                  variant='secondary'
+                  onClick={() => {
+                    setRange({
+                      from: "",
+                      upto: "",
+                      price: "",
+                    })
+                    shopify.modal.show("add-range")
+                  }}
                   accessibilityLabel="Add range"
                   // icon={PlusIcon}
                   size='slim'
@@ -298,16 +337,8 @@ const AddRate = () => {
             {
               rate.ranges.length ? <>
                 <DataTable
-                  columnContentTypes={[
-                    'text',
-                    'text',
-                    'text',
-                  ]}
-                  headings={[
-                    'Min',
-                    'Max',
-                    `Price`,
-                  ]}
+                  columnContentTypes={['text', 'text', 'text', '']}
+                  headings={['Min', 'Max', `Price`, ``]}
                   rows={rangeRows}
                 />
               </> : <EmptyStateShopify ref={addRangeRef} heading="No shipping rate ranges yet" message={"Menagae your shipping rate rangesaccirding to order price, or order weight, or checkout quantity."} primaryContent="Add range" primaryAction={() => shopify.modal.show("add-range")} />
@@ -315,19 +346,29 @@ const AddRate = () => {
           </Card>
         }
       </BlockStack>
-      <Modal id="add-range">
+
+      <AddRangeForm
+        rate={rate}
+        range={range}
+        empty_range={empty_range}
+        rangeError={rangeError}
+        rangePrefix={rangePrefix}
+        handleChange={handleChange}
+        handleChangeRange={handleChangeRange}
+        setRangeError={setRangeError}
+      />
+
+      {/* <Modal id="add-range">
         <Box padding={400}>
           <BlockStack gap={400}>
             <Text variant='headingSm' as='h5'>
               Add {chargeBy[rate.chargeBy]} ranges
             </Text>
-            {
-              rangeError ? <div className="no-shadow-card"><Card padding={0}>
-                <Banner tone="critical">
-                  <p>'Min', 'Max', and 'Price' are all set to 0, creating an additional range. Set values that are greater than 0, please.</p>
-                </Banner>
-              </Card></div> : null
-            }
+            {rangeError ? <div className="no-shadow-card"><Card padding={0}>
+              <Banner tone="critical">
+                <p>'Min', 'Max', and 'Price' are all set to 0, creating an additional range. Set values that are greater than 0, please.</p>
+              </Banner>
+            </Card></div> : null}
             <Form>
               <FormLayout>
                 <TextField type='text' label="Min" placeholder='0' prefix={rangePrefix} value={range.from} onChange={value => handleChangeRange({ "from": value })} onBlur={e => {
@@ -349,7 +390,7 @@ const AddRate = () => {
             </Form>
           </BlockStack>
         </Box>
-        <TitleBar title={`Add range`}>
+        <TitleBar title={`${range._id ? "Update" : "Add"} range`}>
           <button variant="primary" onClick={() => {
             if (!range.from && !range.upto && !range.price) {
               shopify.toast.show("At least one of 'Min' or 'Max', and the Price must be set.", { isError: true });
@@ -360,20 +401,26 @@ const AddRate = () => {
             } else if (range.from < 1 && range.upto < 1 && range.price < 1) {
               setRangeError(true)
             } else {
-              handleChange({
-                "ranges": [range, ...rate.ranges]
-              })
-              handleChangeRange({ from: "", upto: "", price: "" })
+              let ranges = [...rate.ranges]
+              if (range._id) {
+                ranges = ranges.map(r => {
+                  return range._id === r._id ? range : r
+                })
+              } else {
+                ranges.unshift({ ...range, _id: randomStr(7) })
+              }
+              handleChange({ "ranges": ranges })
+              handleChangeRange({ ...empty_range })
               shopify.modal.hide("add-range")
             }
-          }}>Add</button>
+          }}>{range._id ? "Update" : "Add"}</button>
           <button onClick={() => {
             shopify.modal.hide("add-range")
-            handleChangeRange({ from: "", upto: "", price: "" })
+            handleChangeRange({ ...empty_range })
             setRangeError(false)
           }}>Cancel</button>
         </TitleBar>
-      </Modal>
+      </Modal> */}
     </Page>
   )
 }

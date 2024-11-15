@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   range.init({
+    _id: DataTypes.STRING,
     key: DataTypes.INTEGER,
     rateId: DataTypes.INTEGER,
     from: DataTypes.INTEGER,

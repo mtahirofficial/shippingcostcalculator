@@ -29,3 +29,16 @@ export const validate = (obj, REQUIRED_FIELDS) => {
     }
     return errors
 }
+
+export function randomStr(_length = 8) {
+    let chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  
+    let pw = "";
+  
+    for (let i = 0; i <= _length; i++) {
+      let randomNumber = Math.floor(Math.random() * chars.length);
+      pw += chars.substring(randomNumber, randomNumber + 1);
+    }
+  
+    return pw;
+  }

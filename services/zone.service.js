@@ -82,8 +82,10 @@ class ZoneService extends Service {
         include: [{
           model: models.rate,
           include: [{
-            model: models.range
-          }]
+            model: models.range,
+            order: [['id', 'DESC']]
+          }],
+          order: [['id', 'DESC']]
         }],
         where: { id }
       });

@@ -28,8 +28,6 @@ class UserController extends Controller {
   async getRate(req, res, next) {
     try {
       const id = req.params.id
-      // const user = req.user
-      // const store = req.store
       const rate = await RateService.getSingleRateAndRange(id)
       const zone = await ZoneService.getZoneById(rate.zoneId)
       rate.dataValues.zoneName = zone.name
@@ -67,13 +65,12 @@ class UserController extends Controller {
         return next(new BadRequestException("Unprocessable entity"));
       }
       const rate = req.body.rate
-      // console.log(rate);
+      const deleted = req.body.deleted
       const ranges = rate.ranges ? [...rate.ranges] : null
       delete rate.ranges
       delete rate.createdAt
       delete rate.updatedAt
       const updated = await RateService.updateRate(rate.id, { ...rate, storeId: store.storeId })
-      // console.log(updated);
 
       if (ranges?.length && updated[0]) {
         const newRanges = ranges.filter(r => !r.id)
@@ -86,6 +83,9 @@ class UserController extends Controller {
           delete r.updatedAt
           await RateService.updateRange(r.id, { ...r })
         }
+      }
+      if (deleted.length) {
+        RateService.deleteRanges(deleted)
       }
       const current = await RateService.getSingleRateAndRange(rate.id)
       // console.log(current);
@@ -104,7 +104,7 @@ class UserController extends Controller {
       const id = req.body.id
       const zoneId = req.body.zoneId
       await RateService.deleteRate(id)
-      await RateService.deleteRanges(id)
+      await RateService.deleteRange(id)
       const zone = await ZoneService.getSingleZoneAndRate(zoneId)
       res.status(200).json({ zone })
     } catch (e) {

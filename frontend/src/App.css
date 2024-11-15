@@ -14,3 +14,7 @@
 .combobox .Polaris-Labelled__Error {
     display: none !important;
 }
+
+.range-actions{
+    max-width: 125px;
+}

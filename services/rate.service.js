@@ -43,6 +43,7 @@ class RateService extends Service {
       return await models.rate.findOne({
         include: [{
           model: models.range,
+          order: [['id', 'DESC']]
         }],
         where: { id }
       });
@@ -98,11 +99,21 @@ class RateService extends Service {
       throw new Error(e.message);
     }
   }
-  async deleteRanges(id) {
+  async deleteRange(id) {
     try {
 
       return await models.range.destroy({
         where: { rateId: id }
+      });
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  }
+  async deleteRanges(ids) {
+    try {
+
+      return await models.range.destroy({
+        where: { id: { [Op.in]: ids } }
       });
     } catch (e) {
       throw new Error(e.message);
