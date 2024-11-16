@@ -15,6 +15,10 @@
     display: none !important;
 }
 
-.range-actions{
+.range-actions {
     max-width: 125px;
+}
+
+.social-icon .Polaris-Thumbnail:after {
+    box-shadow: none !important;
 }

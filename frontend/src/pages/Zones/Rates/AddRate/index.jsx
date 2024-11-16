@@ -1,18 +1,18 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import { Page, BlockStack, Select, Card, TextField, InlineGrid, Button, DataTable, Box, FormLayout, Form, Text, Banner, InlineStack } from '@shopify/polaris';
+import { Page, BlockStack, Select, Card, TextField, InlineGrid, Button, DataTable, InlineStack } from '@shopify/polaris';
 import { SaveIcon, UndoIcon, EditIcon, DeleteIcon } from '@shopify/polaris-icons';
-import { chargeBy, chargeByOptions, endpoints, shipToOptions, weightUnits } from '../../../../constants';
+import { chargeByOptions, endpoints, shipToOptions, weightUnits } from '../../../../constants';
 import { useNavigate, Navigate, useParams } from 'react-router-dom';
 import CardTitle from '../../../../components/CardTitle';
 import EmptyStateShopify from '../../../../components/EmptyStateShopify';
-import { useAppBridge, Modal, TitleBar } from '@shopify/app-bridge-react';
+import { useAppBridge } from '@shopify/app-bridge-react';
 import ShopifyCombobox from '../../../../components/ShopifyCombobox';
 import { useApp } from '../../../../providers/AppProvider';
 import { request } from '../../../../core/api';
 import { useZoneContext } from '../../../../providers/ZoneProvider';
 import Skeleton from '../../../../components/Skeleton';
 import axios from 'axios';
-import { randomStr, validate } from '../../../../utilis';
+import { validate } from '../../../../utilis';
 import AddRangeForm from '../../../../components/AddRangeForm';
 
 const empty_range = {

@@ -1,6 +1,4 @@
 import React, { createContext, useContext, useState } from "react";
-import { StatusActiveIcon, AlertCircleIcon, DisabledIcon } from '@shopify/polaris-icons';
-import { Icon } from '@shopify/polaris';
 
 export const ZoneContext = createContext();
 

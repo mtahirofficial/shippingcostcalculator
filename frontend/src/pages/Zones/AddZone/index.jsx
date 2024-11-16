@@ -12,7 +12,6 @@ import { useZoneContext } from '../../../providers/ZoneProvider';
 import { Navigate } from 'react-router-dom'
 import axios from 'axios';
 import Skeleton from '../../../components/Skeleton';
-import ShopifyCombobox from '../../../components/ShopifyCombobox';
 
 const REQUIRED_FIELDS = ["name", "countries", "price"]
 
@@ -21,7 +20,7 @@ const AddZone = () => {
     const shopify = useAppBridge();
     const navigate = useNavigate();
     const { store, countries, states: statesList } = useApp()
-    const { zones, setZones } = useZoneContext()
+    const { setZones } = useZoneContext()
     const [states, setStates] = useState([])
     const [defaultStates, setDefaultStates] = useState([])
     const [loading, setLoading] = useState(false)

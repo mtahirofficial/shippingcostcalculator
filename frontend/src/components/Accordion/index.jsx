@@ -2,7 +2,6 @@ import React, { useRef, useState } from "react";
 import { Icon } from '@shopify/polaris';
 import {
     ChevronDownIcon,
-    ChevronUpIcon
 } from '@shopify/polaris-icons';
 import './style.css'
 const faqs = [
@@ -49,7 +48,7 @@ const faqs = [
     },
     {
         "question": "How can I contact support?",
-        "answer": "If you need help, you can reach our support team by clicking on 'Contact Support' in the app"
+        "answer": "If you need help, you can reach our support team using Chat option"
     },
     // {
     //     "question": "Where can I find more detailed guides and tutorials?",
@@ -86,7 +85,7 @@ const AccordionItem = ({ question, answer, url, isOpen, onClick }) => {
             >
                 <p className="answer-content">
                     {answer}{" "}
-                    {url ? <a className="learn-more" href={url} target="_blank">Learn more</a> : null}
+                    {url ? <a className="learn-more" href={url} target="_blank" rel="noreferrer">Learn more</a> : null}
                 </p>
             </div>
         </div>
