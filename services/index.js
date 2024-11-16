@@ -1,5 +1,5 @@
 // const TodoService = require("./todo.service");
-// const MailerService = require("./mailer.service");
+const MailerService = require("./mailer.service");
 // const ChatService = require("./chat.service");
 const UserService = require("./user.service");
 const AuthService = require("./auth.service");
@@ -11,7 +11,7 @@ const CheckoutService = require("./checkout.service");
 
 module.exports = {
 	// TodoService,
-	// MailerService,
+	MailerService,
 	// ChatService,
 	UserService,
 	AuthService,

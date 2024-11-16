@@ -19,9 +19,11 @@ class MailerService extends Service {
 
   configTransporter() {
     this._transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
+      host: "mail.logicsarcade.com",
+      // host: "smtp.gmail.com",
       // host: "smtp.ethereal.email",
-      port: 587,
+      // port: 587,
+      port: 465, // logcsarcade
       secure: false, // true for 465, false for other ports
       auth: {
         user: process.env.MAILER_USER,

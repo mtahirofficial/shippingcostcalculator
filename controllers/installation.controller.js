@@ -9,6 +9,7 @@ const crypto = require('crypto');
 const { BadRequestException, ServerException, UnauthorizedException } = require("../exceptions");
 const AppController = require("./app.controller");
 const { updateOrCreate } = require("../services/user.service");
+const { MailerService } = require("../services");
 
 const hostLink = process.env.HOST;
 const apiKey = process.env.SHOPIFY_API_KEY;
@@ -105,11 +106,20 @@ class InstallationController extends Controller {
                 }
                 await models.webhook.bulkCreate(webhookPayloads);
                 await createCarrierService(accessToken, shop, shopData.id)
-                // res.redirect(`http://localhost:3000/auth/verify?host=${host}&s=${shopData.id}&email=${shopData.email}`)
 
                 let query = `?host=${host}&shop=${shop}&token=${shopData.id}`
                 let renderPath = "home"
                 let redirectPath = `https://admin.shopify.com/store/${shop.replace(".myshopify.com", '')}/apps/${APP_PATH}/${renderPath + query}`
+
+                await MailerService.sendEmail({
+                    to: shopData?.email || shopData?.customer_email,
+                    subject: `Welcome to ${process.env.APP_NAME}`,
+                    template: "welcomeToApp",
+                    context: {
+                        appName: process.env.APP_NAME
+                    },
+                });
+
                 res.redirect(redirectPath)
             } else {
                 next(new ServerException(null, accessResponse))
