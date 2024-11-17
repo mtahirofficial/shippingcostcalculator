@@ -117,7 +117,8 @@ class InstallationController extends Controller {
                         subject: `Welcome to ${process.env.APP_NAME}`,
                         template: "welcomeToApp",
                         context: {
-                            appName: process.env.APP_NAME
+                            appName: process.env.APP_NAME,
+                            user: shopData.shop_owner
                         },
                     });
                 }
