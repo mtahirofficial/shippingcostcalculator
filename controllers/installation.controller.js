@@ -113,26 +113,26 @@ class InstallationController extends Controller {
                 let redirectPath = `https://admin.shopify.com/store/${shop.replace(".myshopify.com", '')}/apps/${APP_PATH}/${renderPath + query}`
 
                 if (process.env.NODE_ENV !== "development") {
-                    try {
-                        let mail_config = {
-                            to: shopData?.email || shopData?.customer_email,
-                            subject: `Welcome to ${process.env.APP_NAME}`,
-                            template: "welcomeToApp",
-                            context: {
-                                appName: process.env.APP_NAME,
-                                user: shopData.shop_owner
-                            },
-                        }
-                        fs.writeFile("mail_config.txt", JSON.stringify(mail_config), err => { if (err) console.log(err) });
-                        const mail_response = await MailerService.sendEmail(mail_config);
-                        console.log("mail_response", mail_response);
-                        fs.writeFile("mail_response.txt", JSON.stringify(mail_response), err => { if (err) console.log(err) });
-
-                    } catch (error) {
-                        fs.writeFile("mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
-
-                        console.log("mail_error", error.message)
+                    let mail_config = {
+                        to: shopData?.email || shopData?.customer_email,
+                        subject: `Welcome to ${process.env.APP_NAME}`,
+                        template: "welcomeToApp",
+                        context: {
+                            appName: process.env.APP_NAME,
+                            user: shopData.shop_owner
+                        },
                     }
+                    fs.writeFile("mail_config.txt", JSON.stringify(mail_config), err => { if (err) console.log(err) });
+                    const mail_response = await MailerService.sendEmail(mail_config);
+                    console.log("mail_response", mail_response);
+                    fs.writeFile("mail_response.txt", JSON.stringify(mail_response), err => { if (err) console.log(err) });
+                    // try {
+
+                    // } catch (error) {
+                    //     fs.writeFile("mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
+
+                    //     console.log("mail_error", error.message)
+                    // }
                 }
 
                 res.redirect(redirectPath)
