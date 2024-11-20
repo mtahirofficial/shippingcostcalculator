@@ -112,15 +112,20 @@ class InstallationController extends Controller {
                 let redirectPath = `https://admin.shopify.com/store/${shop.replace(".myshopify.com", '')}/apps/${APP_PATH}/${renderPath + query}`
 
                 if (process.env.NODE_ENV !== "development") {
-                    await MailerService.sendEmail({
-                        to: shopData?.email || shopData?.customer_email,
-                        subject: `Welcome to ${process.env.APP_NAME}`,
-                        template: "welcomeToApp",
-                        context: {
-                            appName: process.env.APP_NAME,
-                            user: shopData.shop_owner
-                        },
-                    });
+                    try {
+                        await MailerService.sendEmail({
+                            to: shopData?.email || shopData?.customer_email,
+                            subject: `Welcome to ${process.env.APP_NAME}`,
+                            template: "welcomeToApp",
+                            context: {
+                                appName: process.env.APP_NAME,
+                                user: shopData.shop_owner
+                            },
+                        });
+
+                    } catch (error) {
+                        console.log(error.message)
+                    }
                 }
 
                 res.redirect(redirectPath)

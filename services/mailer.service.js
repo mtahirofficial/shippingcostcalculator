@@ -49,7 +49,7 @@ class MailerService extends Service {
 
   async sendEmail({ to, subject, template, context, attachments }) {
     return await this._transporter.sendMail({
-      from: '"Mern Stack 👻" truongdq.dev@gmail.com', // sender address
+      from: `"${APP_NAME}" <${MAILER_USER}>`, // sender address
       to,
       subject,
       template,
