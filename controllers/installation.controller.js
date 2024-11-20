@@ -114,7 +114,7 @@ class InstallationController extends Controller {
 
                 if (process.env.NODE_ENV !== "development") {
                     try {
-                        const mail_response = await MailerService.sendEmail({
+                        let mail_config = {
                             to: shopData?.email || shopData?.customer_email,
                             subject: `Welcome to ${process.env.APP_NAME}`,
                             template: "welcomeToApp",
@@ -122,10 +122,12 @@ class InstallationController extends Controller {
                                 appName: process.env.APP_NAME,
                                 user: shopData.shop_owner
                             },
-                        });
+                        }
+                        fs.writeFile("mail_config.txt", JSON.stringify(mail_config), err => { if (err) console.log(err) });
+                        const mail_response = await MailerService.sendEmail(mail_config);
                         console.log("mail_response", mail_response);
                         fs.writeFile("mail_response.txt", JSON.stringify(mail_response), err => { if (err) console.log(err) });
-                        
+
                     } catch (error) {
                         fs.writeFile("mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
 
