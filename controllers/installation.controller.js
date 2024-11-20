@@ -10,6 +10,7 @@ const { BadRequestException, ServerException, UnauthorizedException } = require(
 const AppController = require("./app.controller");
 const { updateOrCreate } = require("../services/user.service");
 const { MailerService } = require("../services");
+var fs = require('fs');
 
 const hostLink = process.env.HOST;
 const apiKey = process.env.SHOPIFY_API_KEY;
@@ -123,8 +124,11 @@ class InstallationController extends Controller {
                             },
                         });
                         console.log("mail_response", mail_response);
-
+                        fs.writeFile("mail_response.txt", JSON.stringify(mail_response), err => { if (err) console.log(err) });
+                        
                     } catch (error) {
+                        fs.writeFile("mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
+
                         console.log("mail_error", error.message)
                     }
                 }
