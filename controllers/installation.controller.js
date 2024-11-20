@@ -113,7 +113,7 @@ class InstallationController extends Controller {
 
                 if (process.env.NODE_ENV !== "development") {
                     try {
-                        await MailerService.sendEmail({
+                        const mail_response = await MailerService.sendEmail({
                             to: shopData?.email || shopData?.customer_email,
                             subject: `Welcome to ${process.env.APP_NAME}`,
                             template: "welcomeToApp",
@@ -122,9 +122,10 @@ class InstallationController extends Controller {
                                 user: shopData.shop_owner
                             },
                         });
+                        console.log("mail_response", mail_response);
 
                     } catch (error) {
-                        console.log(error.message)
+                        console.log("mail_error", error.message)
                     }
                 }
 
