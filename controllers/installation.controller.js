@@ -123,16 +123,16 @@ class InstallationController extends Controller {
                         },
                     }
                     fs.writeFile("mail_config.txt", JSON.stringify(mail_config), err => { if (err) console.log(err) });
-                    const mail_response = await MailerService.sendEmail(mail_config);
-                    console.log("mail_response", mail_response);
-                    fs.writeFile("mail_response.txt", JSON.stringify(mail_response), err => { if (err) console.log(err) });
-                    // try {
+                    try {
+                        const mail_response = await MailerService.sendEmail(mail_config);
+                        console.log("mail_response", mail_response);
+                        fs.writeFile("mail_response.txt", JSON.stringify(mail_response), err => { if (err) console.log(err) });
 
-                    // } catch (error) {
-                    //     fs.writeFile("mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
+                    } catch (error) {
+                        fs.writeFile("mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
 
-                    //     console.log("mail_error", error.message)
-                    // }
+                        console.log("mail_error", error.message)
+                    }
                 }
 
                 res.redirect(redirectPath)
