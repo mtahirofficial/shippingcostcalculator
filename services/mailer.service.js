@@ -24,7 +24,7 @@ class MailerService extends Service {
       // host: "smtp.ethereal.email",
       // port: 587,
       port: 465, // logcsarcade
-      secure: false, // true for 465, false for other ports
+      secure: true, // true for 465, false for other ports
       auth: {
         user: process.env.MAILER_USER,
         pass: process.env.MAILER_PASS,
