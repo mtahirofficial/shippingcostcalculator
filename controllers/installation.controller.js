@@ -47,7 +47,7 @@ class InstallationController extends Controller {
                     // res.redirect(`http://localhost:3000?host=${host}&s=${token}`)
 
                     let query = `?host=${host}&shop=${store.domain}&token=${store.storeId}`
-                    let renderPath = "home"
+                    let renderPath = "zones"
                     let redirectPath = `https://admin.shopify.com/store/${store.name}/apps/${APP_PATH}/${renderPath + query}`
                     if (req.header('sec-fetch-dest') === 'iframe') {
                         redirectPath = renderPath + query
@@ -119,19 +119,17 @@ class InstallationController extends Controller {
                         template: "welcomeToApp",
                         context: {
                             appName: process.env.APP_NAME,
-                            user: shopData.shop_owner
+                            user: shopData.shop_owner,
+                            facebook_page: "https://www.facebook.com/profile.php?id=61567071715420",
+                            youtube: "https://www.youtube.com/@LogicsArcade",
+                            whatsapp_channel: "https://whatsapp.com/channel/0029VawQIp02phHPRwl37x35",
+                            whatsapp: "https://wa.me/923457699395",
                         },
                     }
-                    fs.writeFile("mail_config.txt", JSON.stringify(mail_config), err => { if (err) console.log(err) });
                     try {
-                        const mail_response = await MailerService.sendEmail(mail_config);
-                        console.log("mail_response", mail_response);
-                        fs.writeFile("mail_response.txt", JSON.stringify(mail_response), err => { if (err) console.log(err) });
-
+                        MailerService.sendEmail(mail_config);
                     } catch (error) {
                         fs.writeFile("mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
-
-                        console.log("mail_error", error.message)
                     }
                 }
 

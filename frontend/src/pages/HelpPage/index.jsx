@@ -17,7 +17,7 @@ const HelpPage = () => {
                     <Card>
                         <BlockStack gap={300} align='center' inlineAlign='center'>
                             <Text variant="headingMd" as="h6">
-                                Chat With Us
+                                Live Support
                             </Text>
                             <Button variant='plain' url='https://wa.me/923457699395' target="_blank" rel="noreferrer">
 
@@ -26,7 +26,7 @@ const HelpPage = () => {
                                         <Thumbnail transparent source={chat} size="extraSmall" alt="Chat" />
                                     </span>
                                     <Text variant="bodyLg" as="p">
-                                        Ask anything about the app
+                                        Write us here
                                     </Text>
                                 </InlineStack>
                             </Button>

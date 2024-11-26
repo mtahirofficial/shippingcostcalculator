@@ -4,6 +4,9 @@ const { Controller } = require("../core");
 const { ShopService, PaymentService, PlanService, WebhookService, ProductService, OrderService, OrderItemService, StoreService } = require("../services");
 const { getPayment } = require("./shopify.controller");
 const { calculateTrial } = require("../utils");
+
+const hostLink = process.env.HOST;
+
 class WebhookController extends Controller {
     _path = "/webhook"
     _router = express.Router();
@@ -64,6 +67,27 @@ class WebhookController extends Controller {
             // console.log("uninstallApp", shopFromShopify.id);
             StoreService.update({ active: false }, shopFromShopify.id)
             WebhookService.delete('storeId', shopFromShopify.id)
+            if (process.env.NODE_ENV !== "development") {
+                let mail_config = {
+                    to: shopFromShopify?.email || shopFromShopify?.customer_email,
+                    subject: `We're Sorry to See You Go – Share Your Feedback`,
+                    template: "uninstall",
+                    context: {
+                        appName: process.env.APP_NAME,
+                        user: shopFromShopify.shop_owner,
+                        feedbackFormLink: `${hostLink}/feedback?store_url=${shopFromShopify.domain}`,
+                        facebook_page: "https://www.facebook.com/profile.php?id=61567071715420",
+                        youtube: "https://www.youtube.com/@LogicsArcade",
+                        whatsapp_channel: "https://whatsapp.com/channel/0029VawQIp02phHPRwl37x35",
+                        whatsapp: "https://wa.me/923457699395",
+                    },
+                }
+                try {
+                    MailerService.sendEmail(mail_config);
+                } catch (error) {
+                    fs.writeFile("mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
+                }
+            }
         } catch (error) {
             console.log("catch uninstallApp", error);
         }
