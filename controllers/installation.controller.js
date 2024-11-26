@@ -10,7 +10,7 @@ const { BadRequestException, ServerException, UnauthorizedException } = require(
 const AppController = require("./app.controller");
 const { updateOrCreate } = require("../services/user.service");
 const { MailerService } = require("../services");
-var fs = require('fs');
+const fs = require('fs');
 
 const hostLink = process.env.HOST;
 const apiKey = process.env.SHOPIFY_API_KEY;
