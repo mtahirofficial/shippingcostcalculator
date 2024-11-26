@@ -43,6 +43,10 @@ class AppServer {
 	initMiddleWares() {
 		this._app.use(cors(this.buildCorsOpt()));
 		this._app.use(bodyParser.json());
+		// this._app.use((req, res, next) => {
+		// 	res.setHeader('Access-Control-Allow-Origin', 'https://logicsarcade.com')
+		// 	next();
+		// });
 	}
 
 	loadSSRView() {

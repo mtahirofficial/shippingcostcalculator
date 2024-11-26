@@ -7,6 +7,7 @@ const StoreController = require("./store.controller");
 const ShopifyController = require("./shopify.controller");
 const AppController = require("./app.controller");
 const WebhookController = require("./webhook.controller");
+const FeedbackController = require("./feedback.controller");
 
 module.exports = {
   installationController,
@@ -18,4 +19,5 @@ module.exports = {
   ShopifyController,
   AppController,
   WebhookController,
+  FeedbackController,
 };

@@ -9,6 +9,7 @@ const {
   ShopifyController,
   AppController,
   WebhookController,
+  FeedbackController,
 } = require("./controllers");
 
 const app = new AppServer([
@@ -21,6 +22,7 @@ const app = new AppServer([
   new ShopifyController(),
   new AppController(),
   new WebhookController(),
+  new FeedbackController(),
 ]);
 
 app.startListening();
