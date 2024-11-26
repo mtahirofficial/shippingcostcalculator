@@ -75,7 +75,7 @@ class WebhookController extends Controller {
                     context: {
                         appName: process.env.APP_NAME,
                         user: shopFromShopify.shop_owner,
-                        feedbackFormLink: `${hostLink}/feedback?store_url=${shopFromShopify.domain}`,
+                        feedbackFormLink: `logicsarcade.com/feedback?store_url=${shopFromShopify.domain}`,
                         facebook_page: "https://www.facebook.com/profile.php?id=61567071715420",
                         youtube: "https://www.youtube.com/@LogicsArcade",
                         whatsapp_channel: "https://whatsapp.com/channel/0029VawQIp02phHPRwl37x35",
