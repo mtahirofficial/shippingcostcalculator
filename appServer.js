@@ -34,7 +34,7 @@ class AppServer {
 		return {
 			origin: configCors.toString().split(","),
 			methods: "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
-			preflightContinue: false,
+			preflightContinue: true,
 			optionsSuccessStatus: 204,
 			credentials: true,
 		};
@@ -43,6 +43,7 @@ class AppServer {
 	initMiddleWares() {
 		this._app.use(cors(this.buildCorsOpt()));
 		this._app.use(bodyParser.json());
+		app.options('*', cors(this.buildCorsOpt()));
 		this._app.use((req, res, next) => {
 			res.setHeader('Access-Control-Allow-Origin', 'https://logicsarcade.com')
 			next();
