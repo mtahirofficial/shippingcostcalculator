@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const { Controller } = require("../core");
-const { ShopService, PaymentService, PlanService, WebhookService, ProductService, OrderService, OrderItemService, StoreService } = require("../services");
+const { ShopService, PaymentService, PlanService, WebhookService, ProductService, OrderService, OrderItemService, StoreService, MailerService } = require("../services");
 const { getPayment } = require("./shopify.controller");
 const { calculateTrial } = require("../utils");
 
@@ -83,9 +83,10 @@ class WebhookController extends Controller {
                     },
                 }
                 try {
-                    MailerService.sendEmail(mail_config);
+                    const sent = await MailerService.sendEmail(mail_config);
+                    fs.writeFile("uninstallApp sent.txt", JSON.stringify(sent), err => { if (err) console.log(err) });
                 } catch (error) {
-                    fs.writeFile("mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
+                    fs.writeFile("uninstallApp mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
                 }
             }
         } catch (error) {
