@@ -45,7 +45,6 @@ const Zones = () => {
 
     return (
         <Page
-            narrowWidth
             title='Zones'
             primaryAction={{
                 content: "Add Zone",

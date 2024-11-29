@@ -123,7 +123,8 @@ const AddZone = () => {
         <Page
             narrowWidth
             title={`${!isNaN(id) ? "Edit" : "Add"} zone`}
-            backAction={{ content: 'Zones', onAction: () => navigate(`/zones${!isNaN(id) ? `/${id}` : ""}`) }}
+            backAction={{ content: 'Zones', onAction: () => navigate(-1) }}
+            // backAction={{ content: 'Zones', onAction: () => navigate(`/zones${!isNaN(id) ? `/${id}` : ""}`) }}
             primaryAction={{ content: !isNaN(id) ? "Update" : 'Save', loading: loading === "saving", disabled: loading === "saving", icon: SaveIcon, onAction: addZone }}
             secondaryActions={[
                 { content: 'Cancel', destructive: true, icon: UndoIcon, onAction: () => navigate(`/zones${!isNaN(id) ? `/${id}` : ""}`) },

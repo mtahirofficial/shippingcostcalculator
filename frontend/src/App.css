@@ -22,3 +22,50 @@
 .social-icon .Polaris-Thumbnail:after {
     box-shadow: none !important;
 }
+
+.zone-name {
+    text-decoration: none;
+    color: black;
+}
+
+.zone-card-header {
+    height: 100px;
+    margin-bottom: 10px;
+}
+
+.country-list .Polaris-InlineStack .Polaris-InlineStack {
+    overflow: hidden;
+    overflow-y: auto;
+    max-height: 72px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 0.125rem;
+}
+
+.country-list .Polaris-InlineStack .Polaris-InlineStack::-webkit-scrollbar {
+    display: none;
+}
+
+.zone-price {
+    margin-top: 5px;
+}
+
+#status-badge {
+    cursor: pointer;
+}
+
+#status-badge .Polaris-Badge__Pip {
+    margin: 0 !important;
+    display: none;
+}
+
+#status-badge .Polaris-Badge {
+    padding: 1px !important;
+}
+
+/* .country-list .Polaris-InlineStack .Polaris-InlineStack {
+    display: -webkit-box;
+    line-clamp: 3;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+} */

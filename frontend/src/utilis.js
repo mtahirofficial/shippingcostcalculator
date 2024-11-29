@@ -32,13 +32,16 @@ export const validate = (obj, REQUIRED_FIELDS) => {
 
 export function randomStr(_length = 8) {
     let chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  
+
     let pw = "";
-  
+
     for (let i = 0; i <= _length; i++) {
-      let randomNumber = Math.floor(Math.random() * chars.length);
-      pw += chars.substring(randomNumber, randomNumber + 1);
+        let randomNumber = Math.floor(Math.random() * chars.length);
+        pw += chars.substring(randomNumber, randomNumber + 1);
     }
-  
+
     return pw;
-  }
+}
+
+export const capitalize = text => text?.toLowerCase()?.replace(/^./, str => str?.toUpperCase())
+export const numbers = length => Array.from({ length: length }, (_, i) => i + 1);

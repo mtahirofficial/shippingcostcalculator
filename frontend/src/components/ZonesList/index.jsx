@@ -1,12 +1,16 @@
-import { Badge, Card, Text, Divider, ResourceItem, Avatar, ResourceList, Box, InlineStack } from '@shopify/polaris';
+import { Badge, Card, Text, Divider, ResourceItem, Avatar, ResourceList, Box, InlineStack, InlineGrid, Popover, ActionList, Button, BlockStack } from '@shopify/polaris';
 import { useState } from 'react';
 import { useZoneContext } from '../../providers/ZoneProvider';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useApp } from '../../providers/AppProvider';
 import { request } from '../../core/api';
 import { endpoints } from '../../constants';
 import { useAppBridge, Modal, TitleBar } from '@shopify/app-bridge-react';
 import EmptyStateShopify from '../EmptyStateShopify';
+import { MenuHorizontalIcon } from '@shopify/polaris-icons';
+import ZoneCard from '../ZoneCard';
+import { numbers } from '../../utilis';
+import CardSkeleton from '../skeletons/CardSkeleton';
 
 const ZonesList = props => {
     const shopify = useAppBridge();
@@ -37,19 +41,51 @@ const ZonesList = props => {
         }
     }
 
+
     return (
         <>
-            <Card padding={0} roundedAbove="sm">
-                {
-                    zones.length ? <>
-                        <Box padding={400}>
-                            <Text as="h2" variant="headingSm">
-                                Manage your shipping rates in zones
-                            </Text>
-                        </Box>
-                        <Divider />
-                    </> : null
-                }
+            <InlineGrid columns={3} gap={300}>
+                {props.loading ? numbers(5).map(num => <CardSkeleton />) : (
+                    zones.length ? zones?.map((zone, i) => {
+                        const { id, name, price, status } = zone;
+                        const chars = name.split(" ")
+                        let initials = ''
+                        for (const char of chars) {
+                            initials += char[0].toUpperCase()
+                        }
+                        return <ZoneCard zone={zone} initials={initials} loading={loading} setDelZone={setDelZone} />
+                    }) : <EmptyStateShopify
+                        fullWidth={true}
+                        heading={"Oops! No Shipping Zones Added Yet"}
+                        message="It looks like you haven't added any shipping zones yet. Shipping zones define the regions where you offer shipping services. By adding shipping zones, you can set specific shipping rates and rules for different geographical areas."
+                        image={"https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"}
+                        primaryContent={"Add zone"}
+                        primaryAction={() => navigate("new")}
+                    />
+                )}
+            </InlineGrid>
+            {/* <Box
+                padding="400"
+                background="bg-surface-active"
+                borderWidth="025"
+                borderRadius="200"
+                borderColor="border"
+                overflowX="scroll"
+            >
+                <pre>
+                    <code>{JSON.stringify(zones[3] ?? {}, null, 2)}</code>
+                </pre>
+            </Box> */}
+
+            {/* <Card padding={0} roundedAbove="sm">
+                {zones.length ? <>
+                    <Box padding={400}>
+                        <Text as="h2" variant="headingSm">
+                            Manage your shipping rates in zones
+                        </Text>
+                    </Box>
+                    <Divider />
+                </> : null}
                 <ResourceList
                     items={zones}
                     resourceName={{
@@ -77,7 +113,6 @@ const ZonesList = props => {
                         return (
                             <ResourceItem
                                 id={id}
-                                // url={`zones/${id}`}
                                 onClick={() => navigate(`${id}`)}
                                 media={media}
                                 accessibilityLabel={`View details for ${name}`}
@@ -91,7 +126,6 @@ const ZonesList = props => {
                                         loading: loading[id],
                                         disabled: loading[id],
                                         onAction: () => {
-                                            // deleteZone(id)
                                             setDelZone(item)
                                             shopify.modal.show("delete-zone")
                                         }
@@ -102,9 +136,6 @@ const ZonesList = props => {
                                     {name} <Badge tone={status === "active" ? "success" : "info"}>{status}</Badge>
                                 </Text>
                                 <InlineStack gap={800}>
-                                    {/* {
-                                    desc && desc !== "" && <div>{desc}</div>
-                                } */}
                                     <div>Price: <Text variant="bodySm" fontWeight="bold" as="span">
                                         {store?.moneyFormat.replace("{{amount}}", "") + price}
                                     </Text></div>
@@ -113,7 +144,7 @@ const ZonesList = props => {
                         );
                     }}
                 />
-            </Card>
+            </Card> */}
             <Modal id="delete-zone">
                 <Box padding={400}>
                     <p>If you delete this zone, it can't be undone.</p>
