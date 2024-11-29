@@ -40,7 +40,7 @@ const ZonesList = props => {
             setLoading(prev => ({ ...prev, id: false }))
         }
     }
-
+    console.log((zones.length || loading) ? 3 : 1);
 
     return (
         <>
