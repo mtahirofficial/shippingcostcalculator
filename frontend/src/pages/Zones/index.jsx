@@ -47,7 +47,7 @@ const Zones = () => {
         <Page
             title='Zones'
             primaryAction={{
-                content: "Add Zone",
+                content: "Create Zone",
                 onAction: () => navigate('new')
             }}
         >

@@ -44,7 +44,7 @@ const ZonesList = props => {
 
     return (
         <>
-            <InlineGrid columns={zones.length ? 3 : 1} gap={300}>
+            <InlineGrid columns={(zones.length || loading) ? 3 : 1} gap={300}>
                 {props.loading ? numbers(5).map(num => <CardSkeleton />) : (
                     zones.length ? zones?.map((zone, i) => {
                         const { id, name, price, status } = zone;
@@ -54,14 +54,14 @@ const ZonesList = props => {
                             initials += char[0].toUpperCase()
                         }
                         return <ZoneCard zone={zone} initials={initials} loading={loading} setDelZone={setDelZone} />
-                    }) : <EmptyStateShopify
+                    }) : <Card><EmptyStateShopify
                         fullWidth={true}
-                        heading={"Oops! No Shipping Zones Added Yet"}
-                        message="It looks like you haven't added any shipping zones yet. Shipping zones define the regions where you offer shipping services. By adding shipping zones, you can set specific shipping rates and rules for different geographical areas."
+                        heading={"Oops! No Shipping Zones Created Yet"}
+                        message="Start by creating a shipping zone to set your rates and regions!"
                         image={"https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"}
-                        primaryContent={"Add zone"}
+                        primaryContent={"Create zone"}
                         primaryAction={() => navigate("new")}
-                    />
+                    /></Card>
                 )}
             </InlineGrid>
             {/* <Box

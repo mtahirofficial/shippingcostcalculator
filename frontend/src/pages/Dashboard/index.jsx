@@ -23,7 +23,7 @@ const Dashboard = () => {
                         fullWidth
                         heading={"Shipping Zones"}
                         action={{
-                            content: "Add zone",
+                            content: "Create zone",
                             onAction: () => navigate("/zones/new")
                         }}
                         secondaryAction={{
@@ -33,7 +33,7 @@ const Dashboard = () => {
                         image={"https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"}
                     >
                         <Box paddingInline={400}>
-                            <p>Zones simplify your shipping by grouping regions like countries and states, each with specific rate rules. Whether shipping locally or internationally, customize rules for accurate calculations, optimizing your strategy.</p>
+                            <p>Group regions like countries or states into zones with specific rates. Customize rules for accurate shipping, locally or internationally.</p>
                         </Box>
                     </EmptyState>
                 </Card>
