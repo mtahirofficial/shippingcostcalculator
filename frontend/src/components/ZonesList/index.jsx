@@ -40,11 +40,10 @@ const ZonesList = props => {
             setLoading(prev => ({ ...prev, id: false }))
         }
     }
-    console.log((zones.length || loading) ? 3 : 1);
 
     return (
         <>
-            <InlineGrid columns={(zones.length || loading) ? 3 : 1} gap={300}>
+            <InlineGrid columns={(zones.length || !loading) ? 3 : 1} gap={300}>
                 {props.loading ? numbers(5).map(num => <CardSkeleton />) : (
                     zones.length ? zones?.map((zone, i) => {
                         const { id, name, price, status } = zone;
