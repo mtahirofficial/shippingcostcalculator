@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { Badge, Card, Text, Avatar, InlineStack, InlineGrid, Popover, ActionList, Button, BlockStack, Thumbnail, Icon, Divider, Tooltip } from '@shopify/polaris';
+import { Badge, Card, Text, InlineStack, InlineGrid, Popover, ActionList, Button, BlockStack, Thumbnail, Icon, Divider, Tooltip } from '@shopify/polaris';
 import { MenuHorizontalIcon, ViewIcon, EditIcon, DeleteIcon, GlobeFilledIcon, CheckIcon, DisabledIcon } from '@shopify/polaris-icons';
 import { useAppBridge } from '@shopify/app-bridge-react';
 import { Link, useNavigate } from "react-router-dom";
 import { useApp } from '../../providers/AppProvider';
 import { capitalize } from '../../utilis';
 
-const ZoneCard = ({ zone, initials, loading, setDelZone }) => {
+const ZoneCard = ({ zone, loading, setDelZone }) => {
     const shopify = useAppBridge();
     const navigate = useNavigate()
     const { store } = useApp()
@@ -15,7 +15,6 @@ const ZoneCard = ({ zone, initials, loading, setDelZone }) => {
     const handleToggleAction = () => {
         toggleAction(!actionActive);
     };
-
 
     return (
         <Card>
@@ -37,7 +36,6 @@ const ZoneCard = ({ zone, initials, loading, setDelZone }) => {
                                         <Badge tone={zone.status === "active" ? "success" : "base"} ><Icon source={zone.status === "active" ? CheckIcon : DisabledIcon} color={zone.status === "active" ? "success" : "base"} /></Badge>
                                     </Tooltip>
                                 </span>
-                                {/* <Badge tone={zone.status === "active" ? "success" : "info"} progress="complete">{zone.status}</Badge> */}
                                 <Popover
                                     active={actionActive}
                                     activator={<Button variant="plain" icon={MenuHorizontalIcon} onClick={handleToggleAction}></Button>}

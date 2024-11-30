@@ -33,7 +33,7 @@ const Dashboard = () => {
                         image={"https://cdn.shopify.com/s/files/1/0262/4071/2726/files/emptystate-files.png"}
                     >
                         <Box paddingInline={400}>
-                            <p>Group regions like countries or states into zones with specific rates. Customize rules for accurate shipping, locally or internationally.</p>
+                            <p>Group regions like countries or states into zones with specific rates. Customize rates for accurate shipping, locally or internationally.</p>
                         </Box>
                     </EmptyState>
                 </Card>
