@@ -84,8 +84,8 @@ class WebhookController extends Controller {
                     },
                 }
                 try {
-                    const sent = await MailerService.sendEmail(mail_config);
-                    fs.writeFile("uninstallApp_sent.txt", JSON.stringify(sent), err => { if (err) console.log(err) });
+                    MailerService.sendEmail(mail_config);
+                    // fs.writeFile("uninstallApp_sent.txt", JSON.stringify(sent), err => { if (err) console.log(err) });
                 } catch (error) {
                     fs.writeFile("uninstallApp_mail_error.txt", JSON.stringify(error.message), err => { if (err) console.log(err) });
                 }
