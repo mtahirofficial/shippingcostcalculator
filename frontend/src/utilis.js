@@ -45,3 +45,9 @@ export function randomStr(_length = 8) {
 
 export const capitalize = text => text?.toLowerCase()?.replace(/^./, str => str?.toUpperCase())
 export const numbers = length => Array.from({ length: length }, (_, i) => i + 1);
+export const jsonToQueryString = (params) => {
+    const query = Object.entries(params)
+        .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+        .join('&');
+    return query ? `?${query}` : '';
+}

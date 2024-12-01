@@ -106,6 +106,16 @@ class ZoneService extends Service {
       throw new Error(e.message);
     }
   }
+  async countZones(column, value) {
+    try {
+      const count = await models.zone.count({ "where": { [column]: value } });
+
+      return count;
+    } catch (e) {
+      console.log(e.message);
+      return 0
+    }
+  }
 }
 
 module.exports = new ZoneService();

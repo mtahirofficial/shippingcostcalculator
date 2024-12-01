@@ -3,7 +3,7 @@ require("dotenv").config();
 const { ServerException, BadRequestException } = require("../exceptions");
 const { AuthMiddleware } = require("../middleware");
 const { Controller } = require("../core");
-const { StoreService } = require("../services");
+const { StoreService, ZoneService, RateService } = require("../services");
 const models = require("../models");
 const { Op } = require("sequelize");
 const countries_list = require("../data/countries_list.json")
@@ -17,6 +17,25 @@ class StoreController extends Controller {
     this.initializeRoutes();
   }
 
+  async getStores(req, res, next) {
+    try {
+      const query = req.query
+      console.log("query", query);
+      const stores = await StoreService.getAllStore(["accessToken"])
+      for (const store of stores) {
+        console.log("store.id", store.id);
+
+        const zonesCounts = await ZoneService.countZones("storeId", store.storeId)
+        store.dataValues.zones = zonesCounts
+        const ratesCounts = await RateService.countRates("storeId", store.storeId)
+        store.dataValues.rates = ratesCounts
+      }
+      console.log("stores.length", stores.length);
+      res.json({ stores })
+    } catch (e) {
+      next(new ServerException(e.message));
+    }
+  }
   async getStore(req, res, next) {
     try {
       const domain = req.query.domain
@@ -49,6 +68,7 @@ class StoreController extends Controller {
 
   initializeRoutes() {
     this._router.get(`${this._path}`, this.getStore);
+    this._router.get(`${this._path}/list`, this.getStores);
     this._router.post(`${this._path}`, this.addStore);
   }
 }

@@ -23,7 +23,8 @@ export const request = async (
         const res = await axios(config);
         return { ...res.data };
     } catch (e) {
-        return e.response.data
+        console.log(e.message);
+        return e.response?.data
     }
 }
 

@@ -49,13 +49,18 @@ class AppController extends Controller {
             "longitude": shop.longitude,
         }
         const where = { name }
-        if (isInstalled && !isActive) {
-            await models.store.update(data, { where });
-            return await models.store.findOne({ where })
-        } else if (!isInstalled) {
-            return await models.store.create(data);
-        } else {
-            return await models.store.findOne({ where })
+        try {
+            if (isInstalled && !isActive) {
+                await models.store.update(data, { where });
+                return await models.store.findOne({ where })
+            } else if (!isInstalled) {
+                return await models.store.create(data);
+            } else {
+                return await models.store.findOne({ where })
+            }
+        } catch (error) {
+            console.log(error.message);
+            return null
         }
     }
     async getCountries(req, res, next) {

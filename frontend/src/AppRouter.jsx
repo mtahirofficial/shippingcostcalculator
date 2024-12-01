@@ -8,11 +8,14 @@ import AddRate from './pages/Zones/Rates/AddRate';
 import Dashboard from './pages/Dashboard';
 import HelpPage from './pages/HelpPage';
 import NotFoundPage from './pages/NotFoundPage';
+import PrivateRoute from './PrivateRoute';
+import AdminArea from './pages/AdminArea';
 
 const AppRouter = () => {
   return <Routes>
     <Route path='*' element={<NotFoundPage />} />
     <Route exact path={"/home"} element={<Dashboard />} />
+    <Route exact path={"/admin"} element={<PrivateRoute><AdminArea /></PrivateRoute>} />
     <Route exact path={"/help-center"} element={<HelpPage />} />
     <Route exact path={"/zones"}>
       <Route index element={<Zones />}></Route>

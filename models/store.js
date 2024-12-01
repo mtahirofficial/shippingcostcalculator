@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
     planDisplayName: DataTypes.STRING,
     planName: DataTypes.STRING,
     locationId: DataTypes.BIGINT,
-    enabledCurrencies: DataTypes.STRING,
+    enabledCurrencies: DataTypes.TEXT,
     timeZone: DataTypes.STRING,
     primaryLocale: DataTypes.STRING,
     active: DataTypes.BOOLEAN,

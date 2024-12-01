@@ -119,6 +119,15 @@ class RateService extends Service {
       throw new Error(e.message);
     }
   }
+  async countRates(column, value) {
+    try {
+      const count = await models.rate.count({ "where": { [column]: value } });
+      return count;
+    } catch (e) {
+      console.log(e.message);
+      return 0
+    }
+  }
 }
 
 module.exports = new RateService();

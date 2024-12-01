@@ -47,9 +47,9 @@ class StoreService extends Service {
     }
   }
 
-  async getAllStore() {
+  async getAllStore(excludes) {
     try {
-      return await models.store.findAll();
+      return await models.store.findAll({ "attributes": { "exclude": [...excludes] } });
     } catch (e) {
       throw new Error(e.message);
     }
