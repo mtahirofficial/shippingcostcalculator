@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Badge, Card, Text, InlineStack, InlineGrid, Popover, ActionList, Button, BlockStack, Thumbnail, Icon, Divider, Tooltip } from '@shopify/polaris';
+import { Badge, Card, Text, InlineStack, InlineGrid, Popover, ActionList, Button, BlockStack, Thumbnail, Icon, Divider, Tooltip, DescriptionList } from '@shopify/polaris';
 import { MenuHorizontalIcon, ViewIcon, EditIcon, DeleteIcon, GlobeFilledIcon, CheckIcon, DisabledIcon } from '@shopify/polaris-icons';
 import { useAppBridge } from '@shopify/app-bridge-react';
 import { Link, useNavigate } from "react-router-dom";
@@ -33,7 +33,7 @@ const ZoneCard = ({ zone, loading, setDelZone }) => {
                             <InlineStack gap={300} align='end' blockAlign='center'>
                                 <span id='status-badge'>
                                     <Tooltip content={capitalize(zone.status)} dismissOnMouseOut>
-                                        <Badge tone={zone.status === "active" ? "success" : "base"} ><Icon source={zone.status === "active" ? CheckIcon : DisabledIcon} color={zone.status === "active" ? "success" : "base"} /></Badge>
+                                        <Badge tone={zone.status === "active" ? "success" : "base"} ><Icon source={zone.status === "active" ? CheckIcon : DisabledIcon} tone={zone.status === "active" ? "success" : "base"} /></Badge>
                                     </Tooltip>
                                 </span>
                                 <Popover
@@ -61,7 +61,21 @@ const ZoneCard = ({ zone, loading, setDelZone }) => {
                                 </Popover>
                             </InlineStack>
                         </InlineGrid>
-                        <span className="country-list">
+                        <DescriptionList
+                            items={[
+                                {
+                                    "term": <Text as="p" fontWeight="medium">Countries:</Text>,
+                                    "description": <span className="country-list"><InlineStack gap={200}> {
+                                        zone?.countries.map(c => (<Badge>{c.label}</Badge>))
+                                    }</InlineStack></span>
+                                },
+                                // {
+                                //     "term": <Text as="p" fontWeight="medium">Shipping Rates:</Text>,
+                                //     "description": zone?.rates?.length
+                                // }
+                            ]}
+                        />
+                        {/* <span className="country-list">
                             <InlineStack wrap={false} gap={200}>
                                 <Text as="p" fontWeight="medium">
                                     Countries:
@@ -70,7 +84,15 @@ const ZoneCard = ({ zone, loading, setDelZone }) => {
                                     {zone.countries.map(c => <Badge>{c.label}</Badge>)}
                                 </InlineStack>
                             </InlineStack>
-                        </span>
+                        </span> */}
+                        {/* <InlineStack wrap={false} gap={200}>
+                            <Text as="p" fontWeight="medium">
+                                Shipping Rates:
+                            </Text>
+                            <InlineStack gap={200}>
+                                {zone?.rates?.length}
+                            </InlineStack>
+                        </InlineStack> */}
                     </BlockStack>
                 </div>
                 <Divider />

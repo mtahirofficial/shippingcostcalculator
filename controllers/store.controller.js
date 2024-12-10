@@ -6,7 +6,8 @@ const { Controller } = require("../core");
 const { StoreService, ZoneService, RateService } = require("../services");
 const models = require("../models");
 const { Op } = require("sequelize");
-const countries_list = require("../data/countries_list.json")
+const countries_list = require("../data/countries_list.json");
+const ShopifyController = require("./shopify.controller");
 // const countries = require("../data/countries.json")
 // const states = require("../data/states.json")
 class StoreController extends Controller {
@@ -65,11 +66,24 @@ class StoreController extends Controller {
     }
   }
 
+  async enableService(req, res, next) {
+    try {
+      const shop = req.shop
+      const isEnabled = await ShopifyController.createCarrierService(shop.accessToken, shop.myshopifyDomain, shop.storeId)
+      if (isEnabled) {
+        res.json({ store: shop })
+      }
+    } catch (error) {
+      next(new ServerException("Internal Server Error"))
+    }
+  }
+
 
   initializeRoutes() {
     this._router.get(`${this._path}`, this.getStore);
     this._router.get(`${this._path}/list`, this.getStores);
     this._router.post(`${this._path}`, this.addStore);
+    this._router.get(`${this._path}/carrier_services`, AuthMiddleware, this.enableService);
   }
 }
 

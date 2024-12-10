@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
-import { Page } from '@shopify/polaris'
+import { Box, Page } from '@shopify/polaris'
 import ZonesList from '../../components/ZonesList'
 import { request } from '../../core/api'
 import axios from 'axios'
@@ -7,6 +7,7 @@ import { useApp } from '../../providers/AppProvider'
 import { endpoints } from '../../constants'
 import { useZoneContext } from '../../providers/ZoneProvider'
 import { useNavigate } from 'react-router-dom'
+import CarrierServiceWarning from '../../components/CarrierServiceWarning'
 
 const Zones = () => {
     const navigate = useNavigate();
@@ -51,6 +52,9 @@ const Zones = () => {
                 onAction: () => navigate('new')
             }}
         >
+            <Box paddingBlockEnd={400}>
+                <CarrierServiceWarning />
+            </Box>
             <ZonesList loading={loading} />
         </Page>
     )

@@ -257,19 +257,18 @@ class ShopifyController extends Controller {
             service = response.data.carrier_service
             await models.store.update({ "serviceId": service.id }, { "where": { "storeId": storeId } })
           }
-          return { message: 'Successfully enabled!', show_warning: false }
+          return true
         })
         .catch(async error => {
           console.log(error.response.data.errors);
-          // let message = error.response.data.errors.base[0];
-          // let show_warning = message !== 'Advance Shipping Rates is already configured'
-          // await models.store.update({ show_warning }, { "where": { "storeId": storeId } })
-          // return { message, show_warning }
+          let message = error.response?.data?.errors?.base[0];
+          let isTrue = message === `${APP_NAME} is already configured` ?? false
+          return isTrue
         })
 
     } catch (error) {
       console.log(error);
-      return error.message
+      return false
     }
   }
 

@@ -2,6 +2,7 @@ import React from 'react'
 import { BlockStack, Box, Card, EmptyState, Page, Text } from '@shopify/polaris'
 import { useApp } from '../../providers/AppProvider'
 import { useNavigate } from 'react-router-dom'
+import CarrierServiceWarning from '../../components/CarrierServiceWarning'
 
 const Dashboard = () => {
     const { store } = useApp()
@@ -18,6 +19,7 @@ const Dashboard = () => {
                         Welcome {store?.firstLoad ? "back" : `to ${process.env.REACT_APP_APP_NAME}`}, {store?.owner}
                     </Text>
                 </Card>
+                <CarrierServiceWarning />
                 <Card>
                     <EmptyState
                         fullWidth

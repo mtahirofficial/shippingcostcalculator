@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { IndexTable, Card, Link, useIndexResourceState, useSetIndexFiltersMode, Text, Badge, EmptySearchResult, Thumbnail, Icon, Button, InlineStack, IndexFilters, Spinner, SkeletonBodyText, } from '@shopify/polaris';
-import { EditIcon, CursorIcon, ImageIcon, MagicIcon, ViewIcon } from '@shopify/polaris-icons';
+import { CheckIcon, XIcon } from '@shopify/polaris-icons';
 // import { ReactComponent as fb_circle } from "../../assets/svg/fb-circle.svg";
 // import universal_placeholder from "../../assets/svg/universal_placeholder.svg";
 // import { useProducts } from '../../context/ProductsContext';
@@ -233,11 +233,12 @@ const StoresList = (props) => {
                     { title: 'Store ID' },
                     { title: 'Name' },
                     { title: 'Active' },
-                    { title: 'Domain' },
+                    { title: 'Carrier' },
+                    { title: 'Plan' },
+                    { title: 'Display Plan' },
                     { title: 'Zones' },
                     { title: 'Rates' },
                     { title: 'Country' },
-                    { title: '' },
                 ]}
                 pagination={{
                     hasNext: !loading && page < totalPages,
@@ -258,7 +259,7 @@ const StoresList = (props) => {
             // }]}
             >
                 {stores?.map((store, i) => {
-                    const { id, myshopifyDomain, domain, name, active, storeId, country, zones, rates } = store
+                    const { id, myshopifyDomain, domain, name, active, storeId, country, zones, rates, serviceId, planName, planDisplayName } = store
                     return <React.Fragment key={i}>
                         <IndexTable.Row
                             id={storeId}
@@ -268,12 +269,12 @@ const StoresList = (props) => {
                         >
                             <IndexTable.Cell>
                                 <Text variant="bodyLg" as="span">
-                                    {storeId}
+                                    <Button variant='plain' url={"https://" + myshopifyDomain} target='_blank'>{storeId}</Button>
                                 </Text>
                             </IndexTable.Cell>
                             <IndexTable.Cell>
                                 <Text variant="bodyLg" as="span">
-                                    {name}
+                                    <Button variant='plain' url={"https://" + domain} target='_blank'>{name}</Button>
                                 </Text>
                             </IndexTable.Cell>
                             {/* <IndexTable.Cell>
@@ -283,22 +284,15 @@ const StoresList = (props) => {
                                     size='small'
                                 />
                             </IndexTable.Cell> */}
-                            <IndexTable.Cell>{<Badge size='small' tone={active ? "success" : "info"}>{active ? "active" : "Deactive"}</Badge>}</IndexTable.Cell>
+                            <IndexTable.Cell>{<Icon source={active ? CheckIcon : XIcon} tone={active ? "success" : "critical"} />}</IndexTable.Cell>
                             <IndexTable.Cell>
-                                <div className='p-title'>
-                                    <Text variant="bodyLg" as="span">
-                                        {myshopifyDomain}
-                                    </Text>
-                                </div>
+                                <Icon source={serviceId ? CheckIcon : XIcon} tone={serviceId ? "success" : "critical"} />
                             </IndexTable.Cell>
+                            <IndexTable.Cell>{planName}</IndexTable.Cell>
+                            <IndexTable.Cell>{planDisplayName}</IndexTable.Cell>
                             <IndexTable.Cell>{zones}</IndexTable.Cell>
                             <IndexTable.Cell>{rates}</IndexTable.Cell>
                             <IndexTable.Cell>{country}</IndexTable.Cell>
-                            <IndexTable.Cell>
-                                <InlineStack gap={100} align='center'>
-                                    <Button icon={ViewIcon} onClick={event => { console.log(name); }}>View Details</Button>
-                                </InlineStack>
-                            </IndexTable.Cell>
                         </IndexTable.Row>
                     </React.Fragment>
                 })}

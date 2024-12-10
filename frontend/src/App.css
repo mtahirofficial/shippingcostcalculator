@@ -33,7 +33,7 @@
     margin-bottom: 10px;
 }
 
-.country-list .Polaris-InlineStack .Polaris-InlineStack {
+.country-list .Polaris-InlineStack {
     overflow: hidden;
     overflow-y: auto;
     max-height: 72px;
@@ -42,7 +42,7 @@
     padding-bottom: 0.125rem;
 }
 
-.country-list .Polaris-InlineStack .Polaris-InlineStack::-webkit-scrollbar {
+.country-list .Polaris-InlineStack::-webkit-scrollbar {
     display: none;
 }
 
@@ -63,9 +63,6 @@
     padding: 1px !important;
 }
 
-/* .country-list .Polaris-InlineStack .Polaris-InlineStack {
-    display: -webkit-box;
-    line-clamp: 3;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-} */
+.Polaris-DescriptionList__Term {
+    padding-right: 0 !important;
+}

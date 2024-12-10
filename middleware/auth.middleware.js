@@ -8,6 +8,7 @@ const {
   ForbiddenException,
   ServerException,
 } = require("../exceptions");
+const ShopifyController = require("../controllers/shopify.controller");
 
 async function AuthMiddleware(req, res, next) {
   try {
@@ -15,40 +16,20 @@ async function AuthMiddleware(req, res, next) {
     if (!tokenClient) {
       return next(new UnauthorizedException());
     }
-    const validToken = jwt.verify(tokenClient, process.env.ACCESS_SECRET);
-    // const validToken = jwt.verify(tokenClient, process.env.ACCESS_SECRET, {
-    //   expiresIn: process.env.JWT_EXPIRED,
-    //   algorithm: "HS256",
-    // });
 
-    if (!validToken) {
-      return next(new UnauthorizedException());
+    const shopData = await models.store.findOne({ where: { storeId: tokenClient } })
+
+    if (!shopData) {
+      return next(new NotFoundException("Shop not found!"));
     }
 
-    const checkingUser = await models.user.findOne({ attributes: { exclude: ["password", "otp", "confirmCode"] }, "where": { "email": validToken.email } });
-    if (!checkingUser) {
-      return next(new UnauthorizedException());
+    const shopResponse = await ShopifyController.getShop(shopData?.myshopifyDomain, shopData?.accessToken);
+
+    if (!Object.hasOwnProperty.call(shopResponse, "shop")) {
+      return next(new UnauthorizedException("App is not installed on your shop!"));
     }
 
-    if (!checkingUser.active) {
-      return next(new ForbiddenException("Please confirm your account!"));
-    }
-
-    // const user = {
-    //   "active": checkingUser.active,
-    //   "avatarUrl": checkingUser.avatarUrl,
-    //   "email": checkingUser.email,
-    //   "firstName": checkingUser.firstName,
-    //   "fullName": checkingUser.fullName,
-    //   "id": checkingUser.id,
-    //   "lastName": checkingUser.lastName,
-    //   "phone": checkingUser.phone,
-    //   "refreshToken": checkingUser.refreshToken,
-    //   "role": checkingUser.role,
-    //   "userName": checkingUser.userName,
-    // }
-
-    req.user = checkingUser
+    req.shop = shopData;
     next();
   } catch (e) {
     if (e.name === 'TokenExpiredError') {
