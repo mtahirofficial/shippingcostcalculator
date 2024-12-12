@@ -53,7 +53,7 @@ const Zones = () => {
             }}
         >
             <Box paddingBlockEnd={400}>
-                <CarrierServiceWarning />
+                {store ? <CarrierServiceWarning /> : null}
             </Box>
             <ZonesList loading={loading} />
         </Page>

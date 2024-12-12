@@ -49,7 +49,6 @@ const CarrierServiceWarning = () => {
             ].map(item => <List.Item>{item}</List.Item>)}</List>
             <p>For more information, contact <Button variant='plain' url='https://help.shopify.com/questions?shpxid=9f5938d3-5963-4218-C826-481D52A62B15' target='_blank'>Shopify Support</Button></p>
         </ShopifyBanner>
-
     )
 }
 
