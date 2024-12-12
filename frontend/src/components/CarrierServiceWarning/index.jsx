@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useApp } from '../../providers/AppProvider'
 import { Box, List, Button } from '@shopify/polaris';
 import ShopifyBanner from '../ShopifyBanner';
@@ -10,6 +10,12 @@ const CarrierServiceWarning = () => {
     const { store, setStore } = useApp()
     const shopify = useAppBridge();
     const [checking, setChecking] = useState(false)
+    const [_store, _setStore] = useState({})
+
+    useEffect(() => {
+        _setStore({ ...store })
+    }, [store])
+
     const checkCompatibility = async () => {
         try {
             const options = {
@@ -19,6 +25,7 @@ const CarrierServiceWarning = () => {
             const response = await request(endpoints.store + "/carrier_services", options, store?.storeId)
             if (Object.hasOwnProperty.call(response, "store")) {
                 setStore({ ...response.store })
+                _setStore({ ...response.store })
                 shopify.toast.show("Carrier service enabled successfully!", { isError: false })
             }
         } catch (error) {
@@ -28,7 +35,7 @@ const CarrierServiceWarning = () => {
         }
     }
     return (
-        store?.serviceId ? null : <ShopifyBanner
+        _store?.serviceId ? null : <ShopifyBanner
             tone={"critical"}
             title={"Your store is not compatible with this app!"}
             actionContent="Enable"

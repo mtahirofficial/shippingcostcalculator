@@ -230,6 +230,34 @@ class ShopifyController extends Controller {
       })
   }
 
+  static async getCarrierService(accessToken, domain, storeId) {
+    const options = {
+      "method": "GET",
+      "url": `https://${domain}/${API_VER}/carrier_services.json`,
+      "headers": {
+        "content-type": "application/json",
+        "X-Shopify-Access-Token": accessToken,
+      },
+      "json": true,
+    };
+
+    return await axios(options)
+      .then(async response => {
+        if (Object.hasOwnProperty.call(response.data, "carrier_services")) {
+          const filtered_service = response.data.carrier_services.filter(carrier_service => Object.hasOwnProperty.call(carrier_service, "callback_url"))
+          if (filtered_service.length) {
+            const service = filtered_service[0]
+            await models.store.update({ "serviceId": service.id }, { "where": { "storeId": storeId } })
+          }
+        }
+      })
+      .catch(async error => {
+        console.log(error.response.data.errors);
+        // let message = error.response?.data?.errors?.base[0];
+      })
+
+  }
+
   static async createCarrierService(accessToken, domain, storeId) {
     try {
       const requestBody = {
@@ -258,11 +286,15 @@ class ShopifyController extends Controller {
             await models.store.update({ "serviceId": service.id }, { "where": { "storeId": storeId } })
           }
           return true
+          // 69025169571
         })
         .catch(async error => {
           console.log(error.response.data.errors);
           let message = error.response?.data?.errors?.base[0];
           let isTrue = message === `${APP_NAME} is already configured` ?? false
+          if (isTrue) {
+            await ShopifyController.getCarrierService(accessToken, domain, service)
+          }
           return isTrue
         })
 

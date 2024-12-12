@@ -71,7 +71,8 @@ class StoreController extends Controller {
       const shop = req.shop
       const isEnabled = await ShopifyController.createCarrierService(shop.accessToken, shop.myshopifyDomain, shop.storeId)
       if (isEnabled) {
-        res.json({ store: shop })
+        const shopData = await models.store.findOne({ where: { storeId: shop.storeId } })
+        res.json({ store: shopData })
       }
     } catch (error) {
       next(new ServerException("Internal Server Error"))
