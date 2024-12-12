@@ -19,7 +19,7 @@ const Dashboard = () => {
                         Welcome {store?.firstLoad ? "back" : `to ${process.env.REACT_APP_APP_NAME}`}, {store?.owner}
                     </Text>
                 </Card>
-                {store ? <CarrierServiceWarning /> : null}
+                {store ? <CarrierServiceWarning store={store} /> : null}
                 <Card>
                     <EmptyState
                         fullWidth

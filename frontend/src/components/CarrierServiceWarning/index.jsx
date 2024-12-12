@@ -6,8 +6,8 @@ import { endpoints } from '../../constants';
 import { request } from '../../core/api';
 import { useAppBridge } from '@shopify/app-bridge-react';
 
-const CarrierServiceWarning = () => {
-    const { store, setStore } = useApp()
+const CarrierServiceWarning = ({ store }) => {
+    const { setStore } = useApp()
     const shopify = useAppBridge();
     const [checking, setChecking] = useState(false)
     const [_store, _setStore] = useState({})
