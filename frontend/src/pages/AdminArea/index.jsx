@@ -31,7 +31,7 @@ const AdminArea = () => {
             }
             const queryString = jsonToQueryString(params);
 
-            const response = await request("https://shippingcostcalculator.logicsarcade.com" + endpoints.store + `/list${queryString}`, options)
+            const response = await request(endpoints.store + `/list${queryString}`, options)
             if (response.stores) {
                 setStores(prev => ([...response.stores]))
             }
