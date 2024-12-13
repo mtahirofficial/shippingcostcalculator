@@ -22,7 +22,7 @@ const ZoneCard = ({ zone, loading, setDelZone }) => {
                 <div className='zone-card-header'>
                     <BlockStack gap={300} align='start'>
                         <InlineGrid columns={2} alignItems='center'>
-                            <InlineStack gap={200} align='start' blockAlign='center'>
+                            <InlineStack gap={200} wrap={false} align='start' blockAlign='center'>
                                 <Thumbnail source={GlobeFilledIcon} alt={zone.name} size='extrasmall' transparent />
                                 <Link to={`${zone.id}`} className='zone-name'>
                                     <Text variant="headingSm" as="h4">
