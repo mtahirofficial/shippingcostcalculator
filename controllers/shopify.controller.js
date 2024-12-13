@@ -247,6 +247,7 @@ class ShopifyController extends Controller {
           const filtered_service = response.data.carrier_services.filter(carrier_service => Object.hasOwnProperty.call(carrier_service, "callback_url"))
           if (filtered_service.length) {
             const service = filtered_service[0]
+            console.log("service", service);
             await models.store.update({ "serviceId": service.id }, { "where": { "storeId": storeId } })
           }
         }
@@ -286,14 +287,13 @@ class ShopifyController extends Controller {
             await models.store.update({ "serviceId": service.id }, { "where": { "storeId": storeId } })
           }
           return true
-          // 69025169571
         })
         .catch(async error => {
           console.log(error.response.data.errors);
           let message = error.response?.data?.errors?.base[0];
           let isTrue = message === `${APP_NAME} is already configured` ?? false
           if (isTrue) {
-            await ShopifyController.getCarrierService(accessToken, domain, service)
+            await ShopifyController.getCarrierService(accessToken, domain, storeId)
           }
           return isTrue
         })

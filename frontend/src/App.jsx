@@ -38,7 +38,6 @@ function App() {
 
   useEffect(() => {
     const cancelToken = axios.CancelToken.source()
-
     getStore(cancelToken.token)
     return () => {
       cancelToken.cancel()

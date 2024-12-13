@@ -30,7 +30,6 @@ const AdminArea = () => {
                 "cancelToken": cancelToken
             }
             const queryString = jsonToQueryString(params);
-            console.log("queryString", queryString);
 
             const response = await request("https://shippingcostcalculator.logicsarcade.com" + endpoints.store + `/list${queryString}`, options)
             if (response.stores) {

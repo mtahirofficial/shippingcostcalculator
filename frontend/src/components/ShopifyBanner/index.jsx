@@ -7,6 +7,7 @@ const ShopifyBanner = ({ title, actionContent, tone, onAction, loading, onDismis
             title={title}
             action={actionContent ? {
                 "content": actionContent,
+                "variant": "primary",
                 "loading": loading,
                 "disabled": loading,
                 "onAction": onAction

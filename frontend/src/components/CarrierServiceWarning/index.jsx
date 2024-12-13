@@ -38,7 +38,7 @@ const CarrierServiceWarning = ({ store }) => {
         _store?.serviceId ? null : <ShopifyBanner
             tone={"critical"}
             title={"Your store is not compatible with this app!"}
-            actionContent="Enable"
+            actionContent="Check availability"
             onAction={checkCompatibility}
             loading={checking}
         >
