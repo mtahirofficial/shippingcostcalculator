@@ -15,7 +15,7 @@ const NotFoundPage = () => {
                         heading={404}
                         message={"Oops! The page you are looking for does not exist."}
                         primaryContent={"Go to Home"}
-                        primaryAction={() => navigate("/home")}
+                        primaryAction={() => navigate("/zones")}
                         image={empty}
                     />
                 </div>

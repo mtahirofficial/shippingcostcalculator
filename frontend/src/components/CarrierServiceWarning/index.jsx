@@ -38,16 +38,21 @@ const CarrierServiceWarning = ({ store }) => {
         _store?.serviceId ? null : <ShopifyBanner
             tone={"critical"}
             title={"Your store is not compatible with this app!"}
-            actionContent="Check availability"
+            actionContent="Enabled"
             onAction={checkCompatibility}
             loading={checking}
         >
-            <p>To use this app, you must enable the carrier service feature on your store. Carrier services (also known as carrier-calculated or shipping services) provide real-time shipping rates to Shopify. Your store must meet one of the following requirements to enable this feature:</p>
+            <p>To use this app, you must enable the carrier service feature on your store. Carrier services (also known as carrier-calculated or shipping services) provide real-time shipping rates to Shopify. Please take these steps to use this app:</p>
             <List>{[
+                <p>Contact <Button variant='plain' url='https://help.shopify.com/questions?shpxid=9f5938d3-5963-4218-C826-481D52A62B15' target='_blank'>Shopify Support</Button> to enable carrier service.</p>,
+                <p>Click <b>Enabled</b> after activation of carrier service.</p>
+            ].map(item => <List.Item>{item}</List.Item>)}</List>
+            {/* Your store must meet one of the following requirements to enable this feature: */}
+            {/* <List>{[
                 "Your store must have Advanced Shopify plan or higher.",
                 "Your store must have Shopify plan with yearly billing, or the carrier service feature has been added to the store for a monthly fee."
-            ].map(item => <List.Item>{item}</List.Item>)}</List>
-            <p>For more information, contact <Button variant='plain' url='https://help.shopify.com/questions?shpxid=9f5938d3-5963-4218-C826-481D52A62B15' target='_blank'>Shopify Support</Button></p>
+            ].map(item => <List.Item>{item}</List.Item>)}</List> */}
+            {/* <p>Please, contact <Button variant='plain' url='https://help.shopify.com/questions?shpxid=9f5938d3-5963-4218-C826-481D52A62B15' target='_blank'>Shopify Support</Button> to enable carrier service.</p> */}
         </ShopifyBanner>
     )
 }
