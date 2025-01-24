@@ -24,7 +24,6 @@ class StoreController extends Controller {
       console.log("query", query);
       const stores = await StoreService.getAllStore(["accessToken"])
       for (const store of stores) {
-        console.log("store.id", store.id);
 
         const zonesCounts = await ZoneService.countZones("storeId", store.storeId)
         store.dataValues.zones = zonesCounts
