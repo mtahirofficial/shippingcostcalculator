@@ -21,7 +21,6 @@ class StoreController extends Controller {
   async getStores(req, res, next) {
     try {
       const query = req.query
-      console.log("query", query);
       const stores = await StoreService.getAllStore(["accessToken"])
       for (const store of stores) {
 
@@ -30,7 +29,6 @@ class StoreController extends Controller {
         const ratesCounts = await RateService.countRates("storeId", store.storeId)
         store.dataValues.rates = ratesCounts
       }
-      console.log("stores.length", stores.length);
       res.json({ stores })
     } catch (e) {
       next(new ServerException(e.message));
