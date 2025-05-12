@@ -48,7 +48,7 @@ const AdminArea = () => {
     }, [searchParams])
 
     return (
-        <Page title='AdminArea'>
+        <Page>
             <StoresList stores={stores} />
             {/* <ShopifyListBox stores={stores} /> */}
         </Page>

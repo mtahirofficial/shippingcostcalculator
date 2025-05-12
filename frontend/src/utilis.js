@@ -51,3 +51,5 @@ export const jsonToQueryString = (params) => {
         .join('&');
     return query ? `?${query}` : '';
 }
+
+export const formatTitle = str => str?.replace("/", "")?.replace(/-/g, " ")?.replace(/\b\w/g, c => c.toUpperCase());

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const { Controller } = require("../core");
-const { ShopService, PaymentService, PlanService, WebhookService, ProductService, OrderService, OrderItemService, StoreService, MailerService } = require("../services");
+const { PaymentService, PlanService, WebhookService, ProductService, OrderService, OrderItemService, StoreService, MailerService } = require("../services");
 const { getPayment } = require("./shopify.controller");
 const { calculateTrial } = require("../utils");
 const fs = require('fs');
@@ -17,41 +17,44 @@ class WebhookController extends Controller {
         this.initializeRoutes();
     }
     async appSubscribe(req, res) {
+        console.log("appSubscribe", req.body.app_subscription);
+
         try {
             const subscription = req.body.app_subscription;
             const paymentId = Number(subscription.admin_graphql_api_id.replace('gid://shopify/AppSubscription/', ''))
             const shop_id = subscription.admin_graphql_api_shop_id.replace('gid://shopify/Shop/', "")
-            const shop_data = await ShopService.findOne("shopId", shop_id)
-            const prevPaymentId = shop_data.paymentId
-            let trialDays = shop_data.trialDays
-            const dataToUpdateShop = {}
-            const dataToUpdatePayment = {}
+            const shop_data = await StoreService.findOne("storeId", shop_id)
+            // const prevPaymentId = shop_data.paymentId
+            // let trialDays = shop_data.trialDays
+            // const dataToUpdateShop = {}
+            // const dataToUpdatePayment = {}
             let isActivePay = subscription.status.toLowerCase() === 'active'
-            if (isActivePay) {
-                const addeddPayment = await PaymentService.findOne("paymentId", paymentId)
-                const plan = await PlanService.findOne("handle", addeddPayment.planHandle)
-                dataToUpdateShop.paymentId = paymentId
-                dataToUpdateShop.planId = plan.id
-            } else if (paymentId !== prevPaymentId) {
-                const prevPaymentResponse = await getPayment(prevPaymentId, shop_data.domain, shop_data.accessToken)
-                if (prevPaymentResponse.recurring_application_charge?.status?.toLowerCase() !== "active") {
-                    dataToUpdatePayment.status = subscription.status
-                    dataToUpdatePayment.cancelledOn = subscription.updated_at
-                    trialDays = calculateTrial(trialDays, subscription.created_at)
-                    dataToUpdateShop.trialDays = trialDays
-                }
-            } else {
-                trialDays = calculateTrial(trialDays, subscription.created_at)
-                dataToUpdateShop.trialDays = trialDays
-                dataToUpdatePayment.status = subscription.status
-                dataToUpdatePayment.cancelledOn = subscription.updated_at
-            }
-            await PaymentService.update(dataToUpdatePayment, "paymentId", paymentId)
-            await ShopService.update(dataToUpdateShop, "shopId", shop_data.shopId)
+            // if (isActivePay) {
+            //     const addeddPayment = await PaymentService.findOne("paymentId", paymentId)
+            //     const plan = await PlanService.findOne("handle", addeddPayment.planHandle)
+            //     dataToUpdateShop.paymentId = paymentId
+            //     dataToUpdateShop.planId = plan.id
+            // } else if (paymentId !== prevPaymentId) {
+            //     const prevPaymentResponse = await getPayment(prevPaymentId, shop_data.domain, shop_data.accessToken)
+            //     if (prevPaymentResponse.recurring_application_charge?.status?.toLowerCase() !== "active") {
+            //         dataToUpdatePayment.status = subscription.status
+            //         dataToUpdatePayment.cancelledOn = subscription.updated_at
+            //         trialDays = calculateTrial(trialDays, subscription.created_at)
+            //         dataToUpdateShop.trialDays = trialDays
+            //     }
+            // } else {
+            //     trialDays = calculateTrial(trialDays, subscription.created_at)
+            //     dataToUpdateShop.trialDays = trialDays
+            //     dataToUpdatePayment.status = subscription.status
+            //     dataToUpdatePayment.cancelledOn = subscription.updated_at
+            // }
+            // await PaymentService.update(dataToUpdatePayment, "paymentId", paymentId)
+            // await ShopService.update(dataToUpdateShop, "shopId", shop_data.shopId)
         } catch (error) {
             console.log('app_subscriptions/update', error);
+        } finally {
+            res.status(200).end();
         }
-        res.status(200).end();
     }
     async uninstallApp(req, res) {
         try {
@@ -102,22 +105,24 @@ class WebhookController extends Controller {
             const data = req.body
             const hmac = req.headers['x-shopify-hmac-sha256']
             const providedHmac = Buffer.from(hmac, 'utf-8');
-
             const generatedHash = Buffer.from(crypto.createHmac('sha256', API_SECRET).update(JSON.stringify(data)).digest('hex'), 'utf-8');
-
             const isMatched = crypto.timingSafeEqual(generatedHash, providedHmac)
+            console.log({ providedHmac, generatedHash });
             if (isMatched) {
-                res.status(200).send('OK')
+                // res.status(200).send('OK')
             } else {
-                res.status(401).send('Not Shopify')
+                // res.status(401).send('Not Shopify')
             }
         } catch (error) {
-            res.status(401).send('Error')
+            console.log(error.message);
+            // res.status(401).send('Error')
+        } finally {
+            res.status(200).send('OK')
         }
     }
 
     initializeRoutes() {
-        // this._router.post(`${this._path}/app_subscriptions/update`, this.appSubscribe);
+        this._router.post(`${this._path}/app_subscriptions/update`, this.appSubscribe);
         this._router.post(`${this._path}/app/uninstalled`, this.uninstallApp);
 
         this._router.post(`${this._path}/customers/data_request`, this.verifyHmac);

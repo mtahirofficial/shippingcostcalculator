@@ -10,6 +10,7 @@ import HelpPage from './pages/HelpPage';
 import NotFoundPage from './pages/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import AdminArea from './pages/AdminArea';
+import Billing from './pages/Billing';
 
 const AppRouter = () => {
   return <Routes>
@@ -17,6 +18,7 @@ const AppRouter = () => {
     <Route exact path={"/home"} element={<Dashboard />} />
     <Route exact path={"/admin"} element={<PrivateRoute><AdminArea /></PrivateRoute>} />
     <Route exact path={"/help-center"} element={<HelpPage />} />
+    <Route exact path={"/billing"} element={<Billing />} />
     <Route exact path={"/zones"}>
       <Route index element={<Zones />}></Route>
       <Route exact path={":id"} element={<ZoneView />} />

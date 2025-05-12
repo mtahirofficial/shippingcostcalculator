@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import './App.css';
-import { NavMenu } from '@shopify/app-bridge-react';
+import { NavMenu, TitleBar } from '@shopify/app-bridge-react';
 import AppRouter from './AppRouter';
 import { Box, FooterHelp } from '@shopify/polaris';
 import { Link, useLocation } from 'react-router-dom';
@@ -8,10 +8,12 @@ import { useApp } from './providers/AppProvider';
 import axios from 'axios';
 import { request } from './core/api';
 import { endpoints } from './constants';
+import { formatTitle } from './utilis';
 
 function App() {
-  const { setStore, setCountries, setStates } = useApp()
+  const { plans, setStore, setCountries, setStates } = useApp()
   const location = useLocation()
+  console.log("location", location);
 
   const [_store, _setStore] = useState({})
 
@@ -35,7 +37,6 @@ function App() {
     [],
   )
 
-
   useEffect(() => {
     const cancelToken = axios.CancelToken.source()
     getStore(cancelToken.token)
@@ -50,12 +51,16 @@ function App() {
         <Link to="/home" rel="home">Home</Link>
         <Link to="/zones">Zones</Link>
         <Link to="/help-center">Help Center</Link>
+        {/* <Link to={"#"} onClick={() => }>Billing</Link> */}
         {
           _store?.email === "hmtahirs1@gmail.com" ? <>
             <Link to="/admin">Admin Area</Link>
           </> : null
         }
       </NavMenu>
+      <TitleBar title={formatTitle(location.pathname)}>
+        <button variant="primary" onClick={() => window.open(`https://admin.shopify.com/store/${_store?.name}/charges/${process.env.REACT_APP_APP_PATH}/pricing_plans`, '_top')}>Billing</button>
+      </TitleBar>
       <AppRouter />
       <Box paddingBlock={400}>
         <FooterHelp>{process.env.REACT_APP_APP_NAME} © {new Date().getFullYear()} | <a className='logicsarcade' href='https://logicsarcade.com/' target='_blank' rel="noreferrer">LogicsArcade</a></FooterHelp>

@@ -11,7 +11,6 @@ const Dashboard = () => {
     return (
         <Page
             narrowWidth
-            title="Dashboard"
         >
             <BlockStack gap={400}>
                 <Card>
@@ -24,10 +23,10 @@ const Dashboard = () => {
                     <EmptyState
                         fullWidth
                         heading={"Shipping Zones"}
-                        action={{
-                            content: "Create zone",
-                            onAction: () => navigate("/zones/new")
-                        }}
+                        // action={{
+                        //     content: "Create zone",
+                        //     onAction: () => navigate("/zones/new")
+                        // }}
                         secondaryAction={{
                             content: 'Zones',
                             onAction: () => navigate("/zones")

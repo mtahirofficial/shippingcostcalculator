@@ -324,13 +324,14 @@ class ShopifyController extends Controller {
     });
     const options = {
       'method': 'POST',
-      'url': `https://${shop}/admin/api/2022-01/graphql.json`,
+      'url': `https://${shop}/${API_VER}/graphql.json`,
       'headers': {
         'content-type': 'application/json',
         'X-Shopify-Access-Token': accessToken,
       },
       data: data
     };
+
     return await axios(options)
       .then(response => {
         return response.data

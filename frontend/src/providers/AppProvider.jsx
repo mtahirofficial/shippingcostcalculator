@@ -7,9 +7,10 @@ export const AppProvider = ({ children }) => {
     const [store, setStore] = useState(null);
     const [countries, setCountries] = useState([])
     const [states, setStates] = useState([])
+    const [plans, setPlans] = useState(`https://admin.shopify.com/store/${store?.name}/charges/${process.env.REACT_APP_APP_PATH}/pricing_plans`)
 
     return (
-        <AppContext.Provider value={{ title, setTitle, store, setStore, countries, setCountries, states, setStates }}>
+        <AppContext.Provider value={{ title, setTitle, store, setStore, countries, plans, setCountries, states, setStates }}>
             {children}
         </AppContext.Provider>
     );
