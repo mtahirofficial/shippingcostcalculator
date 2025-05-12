@@ -27,7 +27,10 @@ module.exports = {
         type: Sequelize.STRING
       },
       shipToValue: {
-        type: Sequelize.STRING
+        type: Sequelize.TEXT
+      },
+      modifiedCodes: {
+        type: Sequelize.TEXT
       },
       chargeBy: {
         type: Sequelize.STRING

@@ -10,6 +10,8 @@ import HelpPage from './pages/HelpPage';
 import NotFoundPage from './pages/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import AdminArea from './pages/AdminArea';
+import RateList from './pages/Rates/List';
+import CreateRate from './pages/Rates/Create';
 
 const AppRouter = () => {
   return <Routes>
@@ -17,7 +19,12 @@ const AppRouter = () => {
     <Route exact path={"/home"} element={<Dashboard />} />
     <Route exact path={"/admin"} element={<PrivateRoute><AdminArea /></PrivateRoute>} />
     <Route exact path={"/help-center"} element={<HelpPage />} />
-    <Route exact path={"/zones"}>
+    <Route exact path={"/rules"}>
+      <Route index element={<RateList />}></Route>
+      <Route exact path={"new"} element={<CreateRate />} />
+      <Route exact path={":id"} element={<CreateRate />} />
+    </Route>
+    {/* <Route exact path={"/zones"}>
       <Route index element={<Zones />}></Route>
       <Route exact path={":id"} element={<ZoneView />} />
       <Route exact path={"new"} element={<AddZone />} />
@@ -25,7 +32,7 @@ const AppRouter = () => {
       <Route exact path={":zoneId/rates/:id"} element={<RateView />} />
       <Route exact path={":zoneId/rates/new"} element={<AddRate />} />
       <Route exact path={":zoneId/rates/:id/edit"} element={<AddRate />} />
-    </Route>
+    </Route> */}
   </Routes>
 }
 

@@ -48,13 +48,13 @@ function App() {
     <React.Fragment>
       <NavMenu>
         <Link to="/home" rel="home">Home</Link>
-        <Link to="/zones">Zones</Link>
+        <Link to="/home">Dashboard</Link>
+        <Link to="/rules">Rules</Link>
+        {/* <Link to="/zones">Zones</Link> */}
         <Link to="/help-center">Help Center</Link>
-        {
-          _store?.email === "hmtahirs1@gmail.com" ? <>
-            <Link to="/admin">Admin Area</Link>
-          </> : null
-        }
+        {_store?.email === "hmtahirs1@gmail.com" ? <>
+          <Link to="/admin">Admin Area</Link>
+        </> : null}
       </NavMenu>
       <AppRouter />
       <Box paddingBlock={400}>

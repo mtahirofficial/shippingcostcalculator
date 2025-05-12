@@ -23,14 +23,15 @@ class RateService extends Service {
       throw new Error(e.message);
     }
   }
-  async getRates(userId, shopId) {
+  async getRates(shopId) {
     try {
 
       return await models.rate.findAll({
         include: [{
           model: models.range
         }],
-        where: { [Op.or]: { "userId": userId, "storeId": shopId } }
+        order: [['id', 'DESC']],
+        where: { [Op.or]: { "storeId": shopId } }
       });
     } catch (e) {
       throw new Error(e.message);

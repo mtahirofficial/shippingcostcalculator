@@ -65,16 +65,18 @@ export const currencies = [
 
 export const chargeBy = {
     "none": "None",
-    "price": "Price",
-    "weight": "Weight",
-    "qty": "Quantity",
+    "price": "Cart Price",
+    "weight": "Cart Weight",
+    "c_qty": "Cart Quantity",
+    "p_qty": "Product Quantity",
 }
 
 export const chargeByOptions = [
     { label: "None", value: "none" },
     { label: "Price", value: "price" },
     { label: "Weight", value: "weight" },
-    { label: "Quantity", value: "qty" },
+    { label: "Cart Quantity", value: "c_qty" },
+    { label: "Product Quantity", value: "p_qty" },
 ]
 
 export const shipTo = {
@@ -83,7 +85,7 @@ export const shipTo = {
     "city": "Cities"
 }
 export const shipToOptions = [
-    { label: "Anywhere in the zone", value: "none" },
+    // { label: "Anywhere in the zone", value: "none" },
     { label: "Zip/Postal codes", value: "zip" },
     { label: "Cities", value: "city" },
 ]

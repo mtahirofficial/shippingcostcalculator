@@ -38,7 +38,7 @@ const HelpPage = () => {
                                 Follow Us
                             </Text>
                             <InlineGrid columns={2} gap={200}>
-                                <Button variant='plain' url='https://www.facebook.com/profile.php?id=61567071715420' target="_blank" rel="noreferrer">
+                                <Button variant='plain' url='https://www.facebook.com/logicsarcade' target="_blank" rel="noreferrer">
                                     <InlineStack gap={200} blockAlign='center' align='center'>
                                         <span className="social-icon">
                                             <Thumbnail transparent source={facebook} size="extraSmall" alt="Facebook" />

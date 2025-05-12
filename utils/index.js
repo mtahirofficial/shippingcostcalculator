@@ -41,7 +41,7 @@ function randomStr(_length = 8) {
 const prepareRate = ({ name, code, price, currency, description }) => ({
   "service_name": name,
   "description": description,
-  "service_code": `scc-${code}-la`,
+  "service_code": `asc-${code}-la`,
   "total_price": price * 100,
   "currency": currency,
 })

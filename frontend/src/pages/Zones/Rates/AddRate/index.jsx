@@ -204,8 +204,8 @@ const AddRate = () => {
     >
       <BlockStack gap={400}>
         <Card>
-          <TextField type='text' placeholder='Title' label="Title" name='title' value={rate.title} error={validationErrors.title} onChange={value => handleChange({ "title": value })} />
-          <TextField type='text' placeholder='Description' label="Description" name='description' value={rate.description} onChange={value => handleChange({ "description": value })} />
+          <TextField type='text' placeholder='Title' label="Title" name='title' helpText="Title displayed to the customers at checkout." value={rate.title} error={validationErrors.title} onChange={value => handleChange({ "title": value })} />
+          <TextField type='text' placeholder='Description' label="Description" name='description' helpText="Description displayed below the shipping method name at checkout." value={rate.description} onChange={value => handleChange({ "description": value })} />
         </Card>
         <Card>
           <Select

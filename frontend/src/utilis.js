@@ -51,3 +51,12 @@ export const jsonToQueryString = (params) => {
         .join('&');
     return query ? `?${query}` : '';
 }
+
+export function getInitials(name, limit = Infinity) {
+    return name
+        .split(' ')
+        .filter(Boolean) // removes any extra spaces
+        .map(word => word[0].toUpperCase())
+        .slice(0, limit)
+        .join('');
+}

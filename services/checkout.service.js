@@ -1,9 +1,9 @@
-const { Service } = require("../core");
+const { Service, ConsoleLogger } = require("../core");
 const models = require("../models");
 const { Op } = require("sequelize");
 
 class CheckoutService extends Service {
-    async getRates({ storeId, country, state, city, zipCode, weight, price, qty }) {
+    async getZones({ storeId, country, state, city, zipCode, weight, price, qty }) {
         const rangeConditions = [
             {
                 [Op.and]: {
@@ -65,7 +65,7 @@ class CheckoutService extends Service {
         ]
         try {
             return await models.zone.findAll({
-                "logging": true,
+                "logging": console.log,
                 "include": [{
                     "model": models.rate,
                     "required": false,
@@ -96,6 +96,103 @@ class CheckoutService extends Service {
             });
         } catch (e) {
             throw new Error(e.message);
+        }
+    }
+
+    async getRates({ storeId, country, state, city, zipCode, weight, price, c_qty, p_qty }) {
+        const rangeConditions = [
+            {
+                [Op.and]: {
+                    '$rate.chargeBy$': 'price',
+                    [Op.or]: [
+                        { 'from': { [Op.lte]: price }, "upto": { [Op.gte]: price } },
+                        { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: price } },
+                        { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: price } }
+                    ]
+                }
+            },
+            {
+                [Op.and]: {
+                    '$rate.chargeBy$': 'c_qty',
+                    [Op.or]: [
+                        { 'from': { [Op.lte]: c_qty }, "upto": { [Op.gte]: c_qty } },
+                        { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: c_qty } },
+                        { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: c_qty } }
+                    ]
+                }
+            },
+            {
+                [Op.and]: {
+                    '$rate.chargeBy$': 'p_qty',
+                    [Op.or]: [
+                        { 'from': { [Op.lte]: p_qty }, "upto": { [Op.gte]: p_qty } },
+                        { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: p_qty } },
+                        { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: p_qty } }
+                    ]
+                }
+            },
+            {
+                [Op.and]: {
+                    '$rate.chargeBy$': 'weight',
+                    [Op.or]: [
+                        {
+                            [Op.and]: {
+                                '$rate.unit$': 'kg',
+                                [Op.or]: [
+                                    { 'from': { [Op.lte]: weight['kg'] }, "upto": { [Op.gte]: weight['kg'] } },
+                                    { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: weight['kg'] } },
+                                    { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: weight['kg'] } }
+                                ]
+                            }
+                        },
+                        {
+                            [Op.and]: {
+                                '$rate.unit$': 'lb',
+                                [Op.or]: [
+                                    { 'from': { [Op.lte]: weight['lb'] }, "upto": { [Op.gte]: weight['lb'] } },
+                                    { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: weight['lb'] } },
+                                    { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: weight['lb'] } }
+                                ]
+                            }
+                        },
+                        {
+                            [Op.and]: {
+                                '$rate.unit$': 'oz',
+                                [Op.or]: [
+                                    { 'from': { [Op.lte]: weight['oz'] }, "upto": { [Op.gte]: weight['oz'] } },
+                                    { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: weight['oz'] } },
+                                    { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: weight['oz'] } }
+                                ]
+                            }
+                        }
+                    ]
+                }
+            },
+        ]
+        try {
+            const cleanCity = city?.replace(/\s+/g, "").replace(/-+/g, "");
+            const cleanZip = zipCode?.replace(/\s+/g, "").replace(/-+/g, "");
+            const cleanSpaceZip = zipCode?.replace(/\s+/g, "");
+            return await models.rate.findAll({
+                "where": {
+                    "status": "active",
+                    "storeId": storeId,
+                    [Op.or]: [
+                        { "shipTo": "none" },
+                        { "shipTo": "zip", "shipToValue": { [Op.like]: `%${zipCode}%` } },
+                        { "shipTo": "zip", "shipToValue": { [Op.like]: `%${cleanZip}%` } },
+                        { "shipTo": "city", "shipToValue": { [Op.like]: `%${city}%` } },
+                        { "shipTo": "city", "shipToValue": { [Op.like]: `%${cleanCity}%` } },
+                    ]
+                },
+                "include": [{
+                    "model": models.range,
+                    "required": false,
+                    "where": { [Op.or]: rangeConditions }
+                }],
+            })
+        } catch (e) {
+            ConsoleLogger.error(e.message)
         }
     }
 }

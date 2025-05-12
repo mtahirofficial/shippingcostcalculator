@@ -4,13 +4,7 @@ const {
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class rate extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      // define association here
       this.belongsTo(models.zone)
       this.hasMany(models.range)
     }
@@ -24,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     shipTo: DataTypes.STRING,
     shipToValue: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       get() {
         let shipToValue = null;
         if (this.getDataValue('shipToValue')) {
@@ -37,6 +31,23 @@ module.exports = (sequelize, DataTypes) => {
           shipToValue = shipToValue.join(",")
         }
         this.setDataValue('shipToValue', shipToValue);
+      }
+    },
+    modifiedCodes: {
+      type: DataTypes.TEXT,
+      get() {
+        let modifiedCodes = null;
+        if (this.getDataValue('modifiedCodes')) {
+          modifiedCodes = this.getDataValue('modifiedCodes').split(",")
+        }
+        return modifiedCodes;
+      },
+      set(modifiedCodes) {
+        let codes = null;
+        if (modifiedCodes && modifiedCodes instanceof Array) {
+          codes = modifiedCodes.filter(code => !(code?.includes("*") || code?.includes(">"))).map(c => c?.replace(/\s+/g, "").replace(/-+/g, ""))
+        }
+        this.setDataValue('modifiedCodes', codes ? codes.join(",") : codes);
       }
     },
     chargeBy: DataTypes.STRING,

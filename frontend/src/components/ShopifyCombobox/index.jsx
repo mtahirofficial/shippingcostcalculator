@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import {
     InlineStack,
     Tag,
@@ -10,11 +10,17 @@ import {
     InlineError,
     Box,
 } from '@shopify/polaris';
-import { useState, useCallback, useMemo } from 'react';
 const ShopifyCombobox = ({ label, oprions = [], selected = [], category, placeholder, helpText, onChange, error }) => {
     const [selectedTags, setSelectedTags] = useState(selected);
     const [value, setValue] = useState('');
     const [suggestion, setSuggestion] = useState('');
+
+    useEffect(() => {
+        if (selected.length) {
+            setSelectedTags(selected)
+        }
+    }, [selected])
+
 
     const handleActiveOptionChange = useCallback(
         (activeOption) => {
