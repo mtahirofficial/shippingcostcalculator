@@ -31,10 +31,10 @@ class UserController extends Controller {
     try {
       const id = req.params.id
       const rate = await RateService.getSingleRateAndRange(id)
-      if (rate.zoneId) {
-        const zone = await ZoneService.getZoneById(rate.zoneId)
-        rate.dataValues.zoneName = zone?.name
-      }
+      // if (rate.zoneId) {
+      //   const zone = await ZoneService.getZoneById(rate.zoneId)
+      //   rate.dataValues.zoneName = zone?.name
+      // }
       res.json({ rate })
     } catch (e) {
       next(new ServerException(e.message));
