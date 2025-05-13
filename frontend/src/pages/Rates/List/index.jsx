@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from "axios";
 import { useApp } from '../../../providers/AppProvider';
-import { Avatar, Badge, Box, Button, Card, EmptyState, InlineStack, Layout, Page, ResourceItem, ResourceList, Text } from '@shopify/polaris';
+import { Avatar, Badge, BlockStack, Box, Button, Card, EmptyState, InlineStack, Layout, Page, ResourceItem, ResourceList, Text } from '@shopify/polaris';
 import { useNavigate, Link } from 'react-router-dom';
 import { capitalize, getInitials } from '../../../utilis';
 import { DuplicateIcon, EditIcon, DeleteIcon } from '@shopify/polaris-icons';
@@ -119,50 +119,52 @@ const RateList = () => {
             title="Shipping Calculation Rules"
             primaryAction={{ content: 'Add Rule', onAction: () => navigateTo("new") }}
         >
-            {!store ? null : <CarrierServiceWarning store={store} />}
-            <Layout>
-                <Layout.Section>
-                    <Card>
-                        <ResourceList
-                            showHeader
-                            resourceName={{ singular: 'rule', plural: 'rules' }}
-                            items={rates}
-                            loading={loading}
-                            emptyState={emptyStateMarkup}
-                            totalItemsCount={rates.length}
-                            renderItem={item => {
-                                return <div className={`resource-item${item.duplicated ? " border-blink" : ""}`}>
-                                    <ResourceItem
-                                        id={item.id}
-                                        media={<Avatar initials={getInitials(item.title, 2)} name={item.title} />}
-                                        onClick={() => { navigateTo(item.id.toString()) }}
-                                    >
-                                        <InlineStack gap={200} align='space-between'>
-                                            <InlineStack gap={200}>
-                                                <Link to={`${item.id.toString()}`} style={{ textDecoration: "none" }}>
-                                                    <Text variant="bodyMd" fontWeight="bold" as="h3" tone="base">
-                                                        {item.title}
-                                                    </Text>
-                                                </Link>
-                                                <Badge tone={item?.status === "active" ? "success" : "info"}>{capitalize(item.status)}</Badge>
+            <BlockStack gap={400}>
+                {!store ? null : <CarrierServiceWarning store={store} />}
+                <Layout>
+                    <Layout.Section>
+                        <Card>
+                            <ResourceList
+                                showHeader
+                                resourceName={{ singular: 'rule', plural: 'rules' }}
+                                items={rates}
+                                loading={loading}
+                                emptyState={emptyStateMarkup}
+                                totalItemsCount={rates.length}
+                                renderItem={item => {
+                                    return <div className={`resource-item${item.duplicated ? " border-blink" : ""}`}>
+                                        <ResourceItem
+                                            id={item.id}
+                                            media={<Avatar initials={getInitials(item.title, 2)} name={item.title} />}
+                                            onClick={() => { navigateTo(item.id.toString()) }}
+                                        >
+                                            <InlineStack gap={200} align='space-between'>
+                                                <InlineStack gap={200}>
+                                                    <Link to={`${item.id.toString()}`} style={{ textDecoration: "none" }}>
+                                                        <Text variant="bodyMd" fontWeight="bold" as="h3" tone="base">
+                                                            {item.title}
+                                                        </Text>
+                                                    </Link>
+                                                    <Badge tone={item?.status === "active" ? "success" : "info"}>{capitalize(item.status)}</Badge>
+                                                </InlineStack>
+                                                <InlineStack gap={200}>
+                                                    <Button variant="plain" icon={DuplicateIcon} loading={loading === "dup"} onClick={event => { event.stopPropagation(); handleDuplicate(item.id) }} >Duplicate</Button>
+                                                    <Button variant="plain" icon={EditIcon} onClick={() => { navigateTo(item.id.toString()) }}>Edit</Button>
+                                                    <Button variant="plain" icon={DeleteIcon} tone="critical" onClick={event => { event.stopPropagation(); setDelRate(item); shopify.modal.show("delete-rate") }}>Delete</Button>
+                                                </InlineStack>
                                             </InlineStack>
-                                            <InlineStack gap={200}>
-                                                <Button variant="plain" icon={DuplicateIcon} loading={loading === "dup"} onClick={event => { event.stopPropagation(); handleDuplicate(item.id) }} >Duplicate</Button>
-                                                <Button variant="plain" icon={EditIcon} onClick={() => { navigateTo(item.id.toString()) }}>Edit</Button>
-                                                <Button variant="plain" icon={DeleteIcon} tone="critical" onClick={event => { event.stopPropagation(); setDelRate(item); shopify.modal.show("delete-rate") }}>Delete</Button>
-                                            </InlineStack>
-                                        </InlineStack>
-                                        <div>{chargeBy[item?.chargeBy]} | {store?.moneyFormat.replace("{{amount}}", item.price)}/-</div>
-                                    </ResourceItem>
-                                </div>
-                            }}
-                        />
-                    </Card>
-                </Layout.Section>
-                {/* <Layout.Section variant="oneThird">
+                                            <div>{chargeBy[item?.chargeBy]} | {store?.moneyFormat.replace("{{amount}}", item.price)}/-</div>
+                                        </ResourceItem>
+                                    </div>
+                                }}
+                            />
+                        </Card>
+                    </Layout.Section>
+                    {/* <Layout.Section variant="oneThird">
                     <Card></Card>
                 </Layout.Section> */}
-            </Layout>
+                </Layout>
+            </BlockStack>
             <Modal id="delete-rate">
                 <Box padding={400}>
                     <p>If you delete this rule, it can't be undone.</p>
