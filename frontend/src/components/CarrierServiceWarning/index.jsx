@@ -28,11 +28,10 @@ const CarrierServiceWarning = ({ store }) => {
                 _setStore({ ...response.store })
                 shopify.toast.show("Carrier service enabled successfully!", { isError: false })
             } else {
-                console.log("response", response);
-
+                shopify.toast.show(response.message, { isError: true })
             }
         } catch (error) {
-            shopify.toast.show("Carrier service not enabled!", { isError: false })
+            shopify.toast.show("Carrier service not enabled!", { isError: true })
         } finally {
             setChecking(false)
         }
