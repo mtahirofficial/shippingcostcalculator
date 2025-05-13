@@ -47,11 +47,12 @@ class InstallationController extends Controller {
                     // res.redirect(`http://localhost:3000?host=${host}&s=${token}`)
 
                     let query = `?host=${host}&shop=${store.domain}&token=${store.storeId}`
-                    let renderPath = "zones"
+                    let renderPath = "rates"
                     let redirectPath = `https://admin.shopify.com/store/${store.name}/apps/${APP_PATH}/${renderPath + query}`
                     if (req.header('sec-fetch-dest') === 'iframe') {
                         redirectPath = renderPath + query
                     }
+                    console.log("redirectPath", redirectPath);
 
                     res.redirect(redirectPath)
                 } else {
