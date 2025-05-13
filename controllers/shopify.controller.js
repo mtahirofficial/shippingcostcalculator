@@ -292,8 +292,7 @@ class ShopifyController extends Controller {
         .catch(async error => {
           console.log(error.response.data.errors);
           let message = error.response?.data?.errors?.base[0];
-          let isTrue = message === `${APP_NAME} is already configured` ? true : false
-          // let isTrue = (message === `${APP_NAME} is already configured` || message === `Shipping Cost Calculator is already configured`) ? true : false
+          let isTrue = (message === `${APP_NAME} is already configured` || message === `Shipping Cost Calculator is already configured`) ? true : false
           if (isTrue) {
             await ShopifyController.getCarrierService(accessToken, domain, storeId)
           }
