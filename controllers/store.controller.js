@@ -8,6 +8,7 @@ const models = require("../models");
 const { Op } = require("sequelize");
 const countries_list = require("../data/countries_list.json");
 const ShopifyController = require("./shopify.controller");
+const { getStore } = require("../services/store.service");
 // const countries = require("../data/countries.json")
 // const states = require("../data/states.json")
 class StoreController extends Controller {
@@ -68,7 +69,8 @@ class StoreController extends Controller {
       const shop = req.shop
       const isEnabled = await ShopifyController.createCarrierService(shop.accessToken, shop.myshopifyDomain, shop.storeId)
       if (isEnabled) {
-        const shopData = await models.store.findOne({ where: { storeId: shop.storeId } })
+        // const shopData = await models.store.findOne({ where: { storeId: shop.storeId } })
+        const shopData = await getStore(shop.domain)
         res.json({ store: shopData })
       } else {
         next(new ForbiddenException("Carrier Service not enabled on this store. Please contact Shopify support."))
