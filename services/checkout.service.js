@@ -65,7 +65,7 @@ class CheckoutService extends Service {
         ]
         try {
             return await models.zone.findAll({
-                "logging": console.log,
+                "logging": false,
                 "include": [{
                     "model": models.rate,
                     "required": false,

@@ -1,6 +1,6 @@
 const express = require("express");
 require("dotenv").config();
-const { ServerException, BadRequestException } = require("../exceptions");
+const { ServerException, BadRequestException, ForbiddenException } = require("../exceptions");
 const { AuthMiddleware } = require("../middleware");
 const { Controller } = require("../core");
 const { StoreService, ZoneService, RateService } = require("../services");
@@ -70,6 +70,8 @@ class StoreController extends Controller {
       if (isEnabled) {
         const shopData = await models.store.findOne({ where: { storeId: shop.storeId } })
         res.json({ store: shopData })
+      } else {
+        next(new ForbiddenException("Carrier Service not enabled on this store. Please contact Shopify support."))
       }
     } catch (error) {
       next(new ServerException("Internal Server Error"))
