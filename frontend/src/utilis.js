@@ -60,3 +60,5 @@ export function getInitials(name, limit = Infinity) {
         .slice(0, limit)
         .join('');
 }
+
+export const formatTitle = str => str?.replace("/", "")?.replace(/-/g, " ")?.replace(/\b\w/g, c => c.toUpperCase());
