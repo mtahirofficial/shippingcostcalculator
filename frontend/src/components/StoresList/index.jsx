@@ -236,8 +236,7 @@ const StoresList = (props) => {
                     { title: 'Carrier' },
                     { title: 'Plan' },
                     { title: 'Display Plan' },
-                    // { title: 'Zones' },
-                    { title: 'Rates' },
+                    { title: 'Rules' },
                     { title: 'Country' },
                 ]}
                 pagination={{
@@ -290,7 +289,6 @@ const StoresList = (props) => {
                             </IndexTable.Cell>
                             <IndexTable.Cell>{planName}</IndexTable.Cell>
                             <IndexTable.Cell>{planDisplayName}</IndexTable.Cell>
-                            {/* <IndexTable.Cell>{zones}</IndexTable.Cell> */}
                             <IndexTable.Cell>{rates}</IndexTable.Cell>
                             <IndexTable.Cell>{country}</IndexTable.Cell>
                         </IndexTable.Row>
