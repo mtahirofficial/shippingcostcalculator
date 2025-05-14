@@ -96,7 +96,9 @@ class InstallationController extends Controller {
                 const shopData = shopResponse.shop
                 await updateOrCreate(shopData)
                 await AppController.saveShop(shop_name, shopData, accessToken, host, InstallationController._isInstalled, InstallationController._isActive) // returns shop object from database
-                // await appSubscriptionCreateWebhook(shop, accessToken) // late for payment
+                const paymentWebhook = await appSubscriptionCreateWebhook(shop, accessToken) // late for payment
+                console.log("paymentWebhook", paymentWebhook);
+
                 const webhookPayloads = []
                 for (const webhook of WEBHOOKS) {
                     const webhookResponse = await createWebhook(accessToken, shop, webhook)
