@@ -48,7 +48,17 @@ class StoreController extends Controller {
         label: c.name,
         options: c.provinces.map(p => ({ value: c.code + "." + p.code, label: p.name }))
       }))
-      res.json({ store, countries: [...countries], states: [...states] })
+      let activePlan = null
+      if (store.activePlan) {
+        activePlan = await models.plans.findOne({
+          logging: false,
+          include: { model: models.features },
+          where: { handle: store.activePlan }
+        });
+      }
+      const features = await models.features.findAll();
+
+      res.json({ activePlan, features, store, countries: [...countries], states: [...states] })
     } catch (e) {
       next(new ServerException(e.message));
     }

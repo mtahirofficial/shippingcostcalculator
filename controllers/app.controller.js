@@ -48,15 +48,17 @@ class AppController extends Controller {
             "latitude": shop.latitude,
             "longitude": shop.longitude,
         }
-        const where = { name }
+        const where = { "storeId": shop.id }
+        const store = await models.store.findOne({ where });
         try {
-            if (isInstalled && !isActive) {
-                await models.store.update(data, { where });
-                return await models.store.findOne({ where })
-            } else if (!isInstalled) {
-                return await models.store.create(data);
+            if (store) {
+                console.log("Updating existing store:", store.name);
+                await store.update(data);
+                return store
             } else {
-                return await models.store.findOne({ where })
+                console.log("Creating new store:", data.name);
+                
+                return await models.store.create(data);
             }
         } catch (error) {
             console.log(error.message);

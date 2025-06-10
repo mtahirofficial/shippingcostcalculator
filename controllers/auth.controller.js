@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { AuthMiddleware, LoggerMiddleware, StoreMiddleware } = require("../middleware");
+const { AuthMiddleware } = require("../middleware");
 const { Controller, ConsoleLogger } = require("../core");
 const { UserService, AuthService, MailerService, StoreService } = require("../services");
 const { generateOTP, getSecondBetween2Date, randomStr, createHash } = require("../utils");

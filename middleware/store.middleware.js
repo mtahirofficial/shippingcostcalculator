@@ -12,9 +12,14 @@ const { findOne } = require("../services/store.service");
 
 async function StoreMiddleware(req, res, next) {
   try {
-    const storeId = req.headers["x-access-token"]
-
-    const store = await findOne("storeId", storeId)
+    const storeId = req.headers["x-access-token"];
+    if (!storeId) {
+      return next(new UnauthorizedException("Something went wrong. Please contact app support."));
+    }
+    // console.log("req.headers", req.headers);
+    // const requestedStore = req.body.store;
+    // console.log("requestedStore", requestedStore);
+    const store = await findOne("storeId", storeId);
 
     if (!store) {
       return next(new UnauthorizedException());
@@ -23,8 +28,7 @@ async function StoreMiddleware(req, res, next) {
     if (!store.active) {
       return next(new ForbiddenException("App is not installed your store!"));
     }
-    // console.log("store mdlwr",store);
-    req.store = store
+    req.store = store;
     next();
   } catch (e) {
     if (e.name === 'TokenExpiredError') {

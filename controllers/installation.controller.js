@@ -52,11 +52,8 @@ class InstallationController extends Controller {
                     if (req.header('sec-fetch-dest') === 'iframe') {
                         redirectPath = renderPath + query
                     }
-                    console.log("redirectPath", redirectPath);
-
                     res.redirect(redirectPath)
                 } else {
-                    // console.log("else");
                     const state = nonce();
                     const redirectUri = `${hostLink}/callback`
                     const installUrl = `https://${domain}/admin/oauth/authorize?client_id=${apiKey}&scope=${SCOPES}&state=${state}&redirect_uri=${redirectUri}`;
@@ -67,7 +64,9 @@ class InstallationController extends Controller {
                 next(new UnauthorizedException())
             }
         } catch (e) {
-            next(new ServerException(null, e.message))
+            // const stackLine = e.stack?.split('\n')[0]?.trim();
+            // console.error(`Error at: ${stackLine}`);
+            next(new ServerException(null, e.message));
         }
     }
 
@@ -97,7 +96,8 @@ class InstallationController extends Controller {
                 await updateOrCreate(shopData)
                 await AppController.saveShop(shop_name, shopData, accessToken, host, InstallationController._isInstalled, InstallationController._isActive) // returns shop object from database
                 const paymentWebhook = await appSubscriptionCreateWebhook(shop, accessToken) // late for payment
-                console.log("paymentWebhook", paymentWebhook);
+                console.log("paymentWebhook", paymentWebhook.data.webhookSubscriptionCreate.webhookSubscription);
+                console.log("paymentWebhook userErrors", paymentWebhook.data.webhookSubscriptionCreate.userErrors);
                 const webhookPayloads = []
                 for (const webhook of WEBHOOKS) {
                     const webhookResponse = await createWebhook(accessToken, shop, webhook)

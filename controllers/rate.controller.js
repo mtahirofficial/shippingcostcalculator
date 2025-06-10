@@ -1,7 +1,7 @@
 const express = require("express");
 require("dotenv").config();
 const { ServerException, BadRequestException } = require("../exceptions");
-const { AuthMiddleware, StoreMiddleware, CheckoutAuthMiddleware } = require("../middleware");
+const { StoreMiddleware, CheckoutAuthMiddleware, PlanMiddleware } = require("../middleware");
 const { Controller } = require("../core");
 const { StoreService, RateService, ZoneService, CheckoutService } = require("../services");
 const { prepareRate } = require("../utils");
@@ -10,7 +10,7 @@ const { duplicateModelWithAssociations } = require("../helpers");
 const models = require("../models");
 
 
-class UserController extends Controller {
+class RateController extends Controller {
   _path = "/rate";
   _router = express.Router();
   constructor() {
@@ -75,6 +75,7 @@ class UserController extends Controller {
       next(new ServerException(e.message));
     }
   }
+
   async updateRate(req, res, next) {
     try {
       const store = req.store
@@ -90,6 +91,7 @@ class UserController extends Controller {
       if (rate.shipTo === "zip") {
         rate.modifiedCodes = rate.shipToValue
       }
+
       const updated = await RateService.updateRate(rate.id, { ...rate, storeId: store.storeId })
 
       if (ranges?.length && updated[0]) {
@@ -195,7 +197,9 @@ class UserController extends Controller {
   }
 
   async shippingMethods(req, res, next) {
+    const activeFeatures = req.activeFeatures
     const rates = []
+    console.log("activeFeatures", activeFeatures);
     const { origin, destination, items } = req.body.rate
     const store = req.store
     const zipCode = destination.postal_code
@@ -215,39 +219,53 @@ class UserController extends Controller {
       "oz": Math.round((grams / OZ) * 100) / 100,
       "g": Math.round((grams / G) * 100) / 100,
     }
-
-    const result = await CheckoutService.getRates({
-      "storeId": store.storeId,
-      "country": country,
-      "state": state,
-      "zipCode": zipCode,
-      "city": city,
-      "weight": weight,
-      "price": price,
-      "c_qty": qty,
-      "p_qty": items.length
-    })
-    for (const r of result) {
-      if (r.ranges.length) {
-        for (const range of r.ranges) {
-          let cost = range.price;
-          // if (r.chargeBy === "weight") {
-          //   cost = cost * weight[r.unit]
-          // } else if (r.chargeBy === "price") {
-          //   if (r.priceBy === "percent") {
-          //     cost = (price * cost) / 100
-          //   }
-          // } else if (r.chargeBy === "qty" && r.xQty) {
-          //   cost = cost * qty
-          // }
-          rates.push(prepareRate({ name: r.title, price: cost, description: r.description, currency: store.currency, code: `${r.id}${range.id}` }))
+    let result = []
+    if (activeFeatures.rules) {
+      result = await CheckoutService.getRates({
+        "storeId": store.storeId,
+        "country": country,
+        "state": state,
+        "zipCode": zipCode,
+        "city": city,
+        "weight": weight,
+        "price": price,
+        "c_qty": qty,
+        "p_qty": items.length,
+        "price_ranges": activeFeatures.price_ranges
+      })
+      if (result.length === 0 && activeFeatures.default_rule) {
+        const defaultRule = await models.default_rule.findOne({
+          where: { storeId: store.storeId, status: "active" },
+          order: [["createdAt", "DESC"]]
+        });
+        if (defaultRule) {
+          result = [defaultRule]
         }
-      } else {
-        let price = Number(r.price)
-        rates.push(prepareRate({ name: r.title, price: price, description: r.description, currency: store.currency, code: `${r.id}` }))
       }
+
+      for (const r of result) {
+        if (r.ranges?.length) {
+          for (const range of r.ranges) {
+            let cost = range.price;
+            // if (r.chargeBy === "weight") {
+            //   cost = cost * weight[r.unit]
+            // } else if (r.chargeBy === "price") {
+            //   if (r.priceBy === "percent") {
+            //     cost = (price * cost) / 100
+            //   }
+            // } else if (r.chargeBy === "qty" && r.xQty) {
+            //   cost = cost * qty
+            // }
+            rates.push(prepareRate({ name: r.title, price: cost, description: r.description, currency: store.currency, code: `${r.id}${range.id}` }))
+          }
+        } else {
+          let price = Number(r.price)
+          rates.push(prepareRate({ name: r.title, price: price, description: r.description, currency: store.currency, code: `${r.id}` }))
+        }
+      }
+      console.log("rates", rates);
     }
-    console.log("rates", rates);
+
 
     res.status(200).send({
       rates
@@ -258,16 +276,12 @@ class UserController extends Controller {
     this._router.get(`${this._path}`, StoreMiddleware, this.getRates);
     this._router.get(`${this._path}/:id`, this.getRate);
     this._router.post(`${this._path}/duplicate/:id`, this.duplicate);
-
     this._router.post(`${this._path}`, StoreMiddleware, this.addRate);
-
     this._router.put(`${this._path}`, StoreMiddleware, this.updateRate);
-
     this._router.delete(`${this._path}`, StoreMiddleware, this.deleteRate);
-
-    this._router.post(`${this._path}/checkout`, CheckoutAuthMiddleware, this.shippingMethods);
+    this._router.post(`${this._path}/checkout`, CheckoutAuthMiddleware, PlanMiddleware, this.shippingMethods);
 
   }
 }
 
-module.exports = UserController;
+module.exports = RateController;

@@ -77,6 +77,14 @@ module.exports = {
       planName: {
         type: Sequelize.STRING
       },
+      activePlan: {
+        type: Sequelize.STRING,
+        defaultValue: null
+      },
+      chargeId: {
+        type: Sequelize.STRING,
+        defaultValue: null
+      },
       locationId: {
         type: Sequelize.BIGINT
       },
