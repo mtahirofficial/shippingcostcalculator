@@ -29,27 +29,25 @@ const FreeShipping = () => {
         status: 'active'
     });
     const [loading, setLoading] = useState(false)
-    const [REQUIRED_FIELDS, setRequiredFields] = useState(["title", "price"])
+    const [REQUIRED_FIELDS, setRequiredFields] = useState(["title", "minSpent"])
     const [validationErrors, setValidationErrors] = useState({})
 
 
     useEffect(() => {
         if (store) {
-            fetchDefaultRule();
+            fetchFreeRule();
         }
     }, [store]);
 
-    const fetchDefaultRule = async () => {
+    const fetchFreeRule = async () => {
         try {
             setLoading(true);
-            const response = await request(endpoints.default_rule, { method: "GET" }, store?.storeId);
-            if (response && response.defaultRule) {
+            const response = await request(endpoints.free_rule, { method: "GET" }, store?.storeId);
+            console.log("response", response);
+
+            if (response && response.freeRule) {
                 setForm({
-                    title: response.defaultRule.title || '',
-                    description: response.defaultRule.description || '',
-                    price: response.defaultRule.price || '',
-                    status: response.defaultRule.status || 'active',
-                    id: response.defaultRule.id // if you use id for updates
+                    ...response.freeRule
                 });
             } else {
                 setForm({
@@ -84,7 +82,7 @@ const FreeShipping = () => {
     };
 
     const handleSubmit = async () => {
-        if (activeFeatures.default_rule || form.id) {
+        if (activeFeatures.free_shipping || form.id) {
             const errors = validate(form, REQUIRED_FIELDS)
             setValidationErrors({ ...errors })
             if (Object.values(errors).some(e => e !== "")) {
@@ -93,13 +91,13 @@ const FreeShipping = () => {
                 try {
                     const options = {
                         "method": form.id ? "PUT" : "POST",
-                        "data": { "defaultRule": { ...form } }
+                        "data": { "freeRule": { ...form } }
                     }
                     setLoading(true)
-                    const response = await request(endpoints.default_rule, options, store?.storeId)
+                    const response = await request(endpoints.free_rule, options, store?.storeId)
                     console.log(response, "response");
-                    if (response.defaultRule && !form.id) {
-                        setForm({ ...response.defaultRule })
+                    if (response.freeRule && !form.id) {
+                        setForm({ ...response.freeRule })
                     }
                     shopify.toast.show("Saved successfully!", { isError: false });
                 } catch (error) {
@@ -141,7 +139,7 @@ const FreeShipping = () => {
                         <form onSubmit={e => { e.preventDefault(); handleSubmit(); }}>
                             <FormLayout>
                                 <TextField
-                                    label="Name"
+                                    label="Title"
                                     value={form.title}
                                     onChange={value => handleChange({ title: value })}
                                     autoComplete="off"
@@ -154,12 +152,12 @@ const FreeShipping = () => {
                                     autoComplete="off"
                                 />
                                 <TextField
-                                    label="Price"
+                                    label="Minimum Spent"
                                     type="number"
-                                    value={form.price}
-                                    onChange={value => handleChange({ price: value })}
+                                    value={form.minSpent}
+                                    onChange={value => handleChange({ minSpent: value })}
                                     autoComplete="off"
-                                    error={validationErrors.price}
+                                    error={validationErrors.minSpent}
                                 />
                                 <Select
                                     label="Status"

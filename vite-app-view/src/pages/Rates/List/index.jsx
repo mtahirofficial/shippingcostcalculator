@@ -131,15 +131,26 @@ const RateList = () => {
             primaryAction={{
                 content: 'Add Rule', onAction: handleAddNew
             }}
-            secondaryActions={[{
-                content: 'Default Rule', onAction: () => {
-                    if (activeFeatures.default_rule) {
-                        navigateTo("/default_rule")
-                    } else {
-                        setModalActive(prev => ({ ...prev, "plans-modal": true }))
+            secondaryActions={[
+                {
+                    content: 'Default Rule', onAction: () => {
+                        if (activeFeatures.default_rule) {
+                            navigateTo("/default_rule")
+                        } else {
+                            setModalActive(prev => ({ ...prev, "plans-modal": true }))
+                        }
+                    }
+                },
+                {
+                    content: 'Free Shipping Rule', onAction: () => {
+                        if (activeFeatures.free_shipping) {
+                            navigateTo("/free_shipping_rule")
+                        } else {
+                            setModalActive(prev => ({ ...prev, "plans-modal": true }))
+                        }
                     }
                 }
-            }]}
+            ]}
         >
             <BlockStack gap={400}>
                 {!store ? null : <CarrierServiceWarning store={store} />}

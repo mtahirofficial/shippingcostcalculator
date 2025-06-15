@@ -7,6 +7,7 @@ export const endpoints = {
     zone: "/zone",
     rate: "/rate",
     default_rule: "/default-rule",
+    free_rule: "/free-rule",
     store: "/store",
     app: "/app",
 }

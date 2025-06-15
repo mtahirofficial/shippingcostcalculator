@@ -9,6 +9,7 @@ const AppController = require("./app.controller");
 const WebhookController = require("./webhook.controller");
 const FeedbackController = require("./feedback.controller");
 const DefaultRuleController = require("./defaultRule.controller");
+const FreeRuleController = require("./freeRule.controller");
 
 module.exports = {
   installationController,
@@ -20,6 +21,7 @@ module.exports = {
   ShopifyController,
   AppController,
   DefaultRuleController,
+  FreeRuleController,
   WebhookController,
   FeedbackController,
 };

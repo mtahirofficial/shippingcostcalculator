@@ -8,7 +8,8 @@ const faqs = [
     {
         "question": `What is ${import.meta.env.VITE_APP_NAME}?`,
         "answer": `${import.meta.env.VITE_APP_NAME} is a Shopify app that allows you to define and calculate custom shipping charges for your store's checkout process based on specific rules you set.`,
-        "url": "https://youtu.be/sVkT-YTUXS4"
+        "url": "https://youtu.be/sVkT-YTUXS4",
+        "linkText": "Learn more in this video"
     },
     {
         "question": `How do I install ${import.meta.env.VITE_APP_NAME}?`,
@@ -26,6 +27,14 @@ const faqs = [
         "question": "What are shipping rules?",
         "answer": "Shipping rules determine the cost of shipping for orders within a specific shipping area. You can set different rules based on factors like weight, order total price, cart quantity, or product quantity."
     },
+    {
+        "question": "What is the Default Rule and how does it work?",
+        "answer": "The Default Rule is a fallback shipping rule that applies when no other specific shipping rules match the customer's cart or shipping address. It ensures that a shipping rate is always available at checkout, preventing situations where customers cannot complete their purchase due to missing shipping options."
+    },
+    {
+        "question": "How does the Free Shipping Rule work?",
+        "answer": "The Free Shipping Rule allows you to offer free shipping when certain conditions are met, such as a minimum order amount. When enabled and the conditions are satisfied, a free shipping option will be shown to the customer at checkout."
+    },
     // {
     //     "question": "How do I add a new shipping rule?",
     //     "answer": "Click 'Add Rate' button Define the criteria and costs for the rate, and save your changes."
@@ -42,6 +51,12 @@ const faqs = [
         "question": "Why aren't my shipping rules showing up at checkout?",
         "answer": "Ensure that you have defined and rules correctly. Also, check that the rules are active and meet the criteria for the order being placed."
     },
+    {
+        "question": "Why are shipping methods from this app not showing up at Shopify checkout, even though my rules are set up correctly?",
+        "answer": "Besides rule configuration, a common reason is that the app’s shipping methods rely on a Shopify 'carrier service' integration. If the carrier service is not enabled for your store, Shopify will not request shipping rates from this app, and your custom shipping methods will not appear at checkout. To resolve this, ensure that the carrier service for this app is enabled in your Shopify shipping settings. If you’re unsure how to do this, please",
+        "url": "https://help.shopify.com/questions?shpxid=9f5938d3-5963-4218-C826-481D52A62B15",
+        "linkText": "contact support"
+    },
     // {
     //     "question": "How do I update or delete a shipping rule?",
     //     "answer": "Go to the 'Zones' or 'Rates' section in specific zone, select the zone or rate you want to update, make your changes, and save. To delete, use the delete option next to the zone or rate."
@@ -56,7 +71,7 @@ const faqs = [
     // }
 ]
 //  accordionitem component
-const AccordionItem = ({ question, answer, url, isOpen, onClick }) => {
+const AccordionItem = ({ question, answer, url, linkText, isOpen, onClick }) => {
     const contentHeight = useRef();
     return (
         <div className="wrapper">
@@ -85,7 +100,7 @@ const AccordionItem = ({ question, answer, url, isOpen, onClick }) => {
             >
                 <p className="answer-content">
                     {answer}{" "}
-                    {url ? <a className="learn-more" href={url} target="_blank" rel="noreferrer">Learn more</a> : null}
+                    {url ? <a className="learn-more" href={url} target="_blank" rel="noreferrer">{linkText}</a> : null}
                 </p>
             </div>
         </div>

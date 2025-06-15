@@ -174,7 +174,7 @@ class CheckoutService extends Service {
             const cleanZip = zipCode?.replace(/\s+/g, "").replace(/-+/g, "");
             const cleanSpaceZip = zipCode?.replace(/\s+/g, "");
             const options = {
-                logging: console.log,
+                logging: false,
                 "where": {
                     "status": "active",
                     "storeId": storeId,
@@ -191,9 +191,9 @@ class CheckoutService extends Service {
             }
             if (price_ranges) {
                 options.include = [{
-                    "model": models.price_range,
+                    "model": models.range,
                     "required": false,
-                    "where": { [Op.or]: price_ranges }
+                    "where": { [Op.or]: rangeConditions }
                 }]
             }
             return await models.rate.findAll(options)

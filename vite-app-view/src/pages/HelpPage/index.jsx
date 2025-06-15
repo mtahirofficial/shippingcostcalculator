@@ -17,7 +17,7 @@ const HelpPage = () => {
                     <Card>
                         <BlockStack gap={300} align='center' inlineAlign='center'>
                             <Text variant="headingMd" as="h6">
-                                Live Support
+                                Live App Support
                             </Text>
                             <Button variant='plain' url='https://wa.me/923457699395' target="_blank" rel="noreferrer">
 

@@ -140,7 +140,7 @@ const DefaultRule = () => {
                         <form onSubmit={e => { e.preventDefault(); handleSubmit(); }}>
                             <FormLayout>
                                 <TextField
-                                    label="Name"
+                                    label="Title"
                                     value={form.title}
                                     onChange={value => handleChange({ title: value })}
                                     autoComplete="off"

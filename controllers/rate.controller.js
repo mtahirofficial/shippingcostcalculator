@@ -197,79 +197,106 @@ class RateController extends Controller {
   }
 
   async shippingMethods(req, res, next) {
-    const activeFeatures = req.activeFeatures
+
     const rates = []
-    console.log("activeFeatures", activeFeatures);
-    const { origin, destination, items } = req.body.rate
-    const store = req.store
-    const zipCode = destination.postal_code
-    const city = destination.city
-    const state = destination.country + "." + destination.province
-    const country = destination.country
-    let grams = 0, price = 0, qty = 0
-    for (const item of items) {
-      qty += item.quantity
-      grams += item.grams * item.quantity
-      price += item.price * item.quantity
-    }
-    price = price / 100
-    const weight = {
-      "kg": Math.round((grams / KG) * 100) / 100,
-      "lb": Math.round((grams / LB) * 100) / 100,
-      "oz": Math.round((grams / OZ) * 100) / 100,
-      "g": Math.round((grams / G) * 100) / 100,
-    }
-    let result = []
-    if (activeFeatures.rules) {
-      result = await CheckoutService.getRates({
-        "storeId": store.storeId,
-        "country": country,
-        "state": state,
-        "zipCode": zipCode,
-        "city": city,
-        "weight": weight,
-        "price": price,
-        "c_qty": qty,
-        "p_qty": items.length,
-        "price_ranges": activeFeatures.price_ranges
-      })
-      if (result.length === 0 && activeFeatures.default_rule) {
-        const defaultRule = await models.default_rule.findOne({
-          where: { storeId: store.storeId, status: "active" },
+    try {
+      const activeFeatures = req.activeFeatures
+      const { origin, destination, items } = req.body.rate
+      const store = req.store
+      const zipCode = destination.postal_code
+      const city = destination.city
+      const state = destination.country + "." + destination.province
+      const country = destination.country
+      let grams = 0, price = 0, qty = 0
+      for (const item of items) {
+        qty += item.quantity
+        grams += item.grams * item.quantity
+        price += item.price * item.quantity
+      }
+      price = price / 100
+      const weight = {
+        "kg": Math.round((grams / KG) * 100) / 100,
+        "lb": Math.round((grams / LB) * 100) / 100,
+        "oz": Math.round((grams / OZ) * 100) / 100,
+        "g": Math.round((grams / G) * 100) / 100,
+      }
+      let result = []
+      let freeRule = null
+      if (activeFeatures.free_shipping) {
+          freeRule = await models.free_rule.findOne({
+          where: {
+            storeId: store.storeId,
+            status: "active",
+            minSpent: { [models.Sequelize.Op.lte]: price } // Only get rules where minSpent <= price
+          },
           order: [["createdAt", "DESC"]]
         });
-        if (defaultRule) {
-          result = [defaultRule]
+        if (freeRule) {
+          rates.push(prepareRate({
+            name: freeRule.title,
+            price: 0,
+            description: freeRule.description,
+            currency: store.currency,
+            code: "free-shipping"
+          }))
         }
       }
-
-      for (const r of result) {
-        if (r.ranges?.length) {
-          for (const range of r.ranges) {
-            let cost = range.price;
-            // if (r.chargeBy === "weight") {
-            //   cost = cost * weight[r.unit]
-            // } else if (r.chargeBy === "price") {
-            //   if (r.priceBy === "percent") {
-            //     cost = (price * cost) / 100
-            //   }
-            // } else if (r.chargeBy === "qty" && r.xQty) {
-            //   cost = cost * qty
-            // }
-            rates.push(prepareRate({ name: r.title, price: cost, description: r.description, currency: store.currency, code: `${r.id}${range.id}` }))
+      if (activeFeatures.rules && !freeRule) {
+          result = await CheckoutService.getRates({
+          "storeId": store.storeId,
+          "country": country,
+          "state": state,
+          "zipCode": zipCode,
+          "city": city,
+          "weight": weight,
+          "price": price,
+          "c_qty": qty,
+          "p_qty": items.length,
+          "price_ranges": activeFeatures.price_ranges
+        })
+        if (result?.length === 0 && activeFeatures.default_rule) {
+          const defaultRule = await models.default_rule.findOne({
+            where: { storeId: store.storeId, status: "active" },
+            order: [["createdAt", "DESC"]]
+          });
+          if (defaultRule) {
+            result = [defaultRule]
           }
-        } else {
-          let price = Number(r.price)
-          rates.push(prepareRate({ name: r.title, price: price, description: r.description, currency: store.currency, code: `${r.id}` }))
+        }
+        for (const r of result) {
+          if (r.ranges?.length) {
+            for (const range of r.ranges) {
+              let cost = range.price;
+              // if (r.chargeBy === "weight") {
+              //   cost = cost * weight[r.unit]
+              // } else if (r.chargeBy === "price") {
+              //   if (r.priceBy === "percent") {
+              //     cost = (price * cost) / 100
+              //   }
+              // } else if (r.chargeBy === "qty" && r.xQty) {
+              //   cost = cost * qty
+              // }
+              rates.push(prepareRate({ name: r.title, price: cost, description: r.description, currency: store.currency, code: `${r.id}${range.id}` }))
+            }
+          } else {
+            let price = Number(r.price)
+            rates.push(prepareRate({ name: r.title, price: price, description: r.description, currency: store.currency, code: `${r.id}` }))
+          }
         }
       }
       console.log("rates", rates);
+      // res.status(200).send({
+      //   rates
+      // })
+    } catch (error) {
+      console.error("Error in shippingMethods:", error);
+      return { rates: [] };
+
+    } finally {
+      res.status(200).send({
+        rates
+      })
     }
-
-
-    res.status(200).send({
-      rates
-    })
   }
 
   initializeRoutes() {
