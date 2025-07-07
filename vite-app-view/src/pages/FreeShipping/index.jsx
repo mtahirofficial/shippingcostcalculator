@@ -115,7 +115,12 @@ const FreeShipping = () => {
     return (
         <Page
             title="Free Shipping Rule"
-            backAction={{ content: 'Rules', onAction: () => navigate(`/rules`) }}
+            backAction={{
+                content: 'Rules', onAction: () => {
+                    // navigate(`/rules`)
+                    window.history.back()
+                }
+            }}
             primaryAction={{
                 content: form.id ? "Update" : "Save",
                 loading: loading,
@@ -130,7 +135,7 @@ const FreeShipping = () => {
                             Free Shipping Rule
                         </Text>
                         <Text tone="subdued" as="p">
-                            Set the values for your free shipping rule.
+                            Free shipping is automatically applied when the cart total exceeds a specified amount. This rule encourages larger orders by offering shipping at no cost once the minimum purchase threshold is met.
                         </Text>
                     </BlockStack>
                 </Layout.Section>

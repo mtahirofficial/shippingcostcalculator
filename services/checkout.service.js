@@ -175,6 +175,7 @@ class CheckoutService extends Service {
             const cleanSpaceZip = zipCode?.replace(/\s+/g, "");
             const options = {
                 logging: false,
+                // logging: console.log,
                 "where": {
                     "status": "active",
                     "storeId": storeId,

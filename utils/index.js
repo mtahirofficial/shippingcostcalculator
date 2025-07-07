@@ -16,7 +16,10 @@ function generateOTP(otp_length = 6) {
   }
   return OTP;
 }
-
+const checkParamIsPresent = obj => {
+  const values = Object.values(obj)
+  return values.some(value => value !== undefined && value !== null && value !== '')
+};
 function getSecondBetween2Date(d1, d2) {
   return (new Date(d2).getTime() - new Date(d1).getTime()) / 1000;
 }
@@ -58,6 +61,13 @@ const removeProps = function (obj, props) {
   }
 };
 
+function isValidState(state) {
+  if (typeof state !== "string") return false;
+  const parts = state.split(".");
+  return parts.length === 2 &&
+    /^[A-Z]{2}$/.test(parts[0]) &&
+    /^[A-Z]{2}$/.test(parts[1]);
+}
 module.exports = {
   isObjectEmpty,
   rejectObjEmpty,
@@ -66,5 +76,7 @@ module.exports = {
   randomStr,
   removeProps,
   createHash,
-  prepareRate
+  prepareRate,
+  checkParamIsPresent,
+  isValidState
 };

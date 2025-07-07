@@ -295,7 +295,7 @@ const CreateRate = () => {
                         </Card>
                         {rate.chargeBy !== "none" && <Card>
                             <InlineGrid columns="1fr auto">
-                                <CardTitle title={"Shipping rate ranges"} />
+                                <CardTitle padding={0} title={"Shipping Price Ranges"} />
                                 {
                                     rate.ranges.length ? <Button
                                         variant='secondary'
@@ -321,7 +321,7 @@ const CreateRate = () => {
                                     headings={['Min', 'Max', `Price`, ``]}
                                     rows={rangeRows}
                                 />
-                            </> : <EmptyStateShopify ref={addRangeRef} image='' heading="No shipping rate ranges yet" message={"Menagae your shipping rate rangesaccirding to order price, or order weight, or checkout quantity."} primaryContent="Add range" primaryAction={() => shopify.modal.show("add-range")} />}
+                            </> : <EmptyStateShopify ref={addRangeRef} image={undefined} heading="No Price ranges yet" message={"Menagae your shipping rate rangesaccirding to order price, or order weight, or checkout quantity."} primaryContent="Add range" primaryAction={() => shopify.modal.show("add-range")} />}
                         </Card>}
 
                     </BlockStack>

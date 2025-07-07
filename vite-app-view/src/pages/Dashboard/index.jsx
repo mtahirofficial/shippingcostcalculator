@@ -4,7 +4,9 @@ import { useApp } from '../../providers/AppProvider'
 import { useNavigate } from 'react-router-dom'
 import CarrierServiceWarning from '../../components/CarrierServiceWarning'
 import anim1 from "../../images/anim1.gif";
+import free_shipping from "../../images/free_shipping.gif";
 import help_anim from "../../images/help_anim.gif";
+import defaultShip from "../../images/default.gif";
 import BillingCard from '../../components/BillingCard'
 
 const Dashboard = () => {
@@ -49,8 +51,45 @@ const Dashboard = () => {
                 >
                     <p>Shipping rules determine the costs associated with shipping to specific regions according to zip/postal codes or cities. By adding shipping rules, you can specify the pricing for different shipping methods, weights, or order totals.</p>
                 </CalloutCard>
+                <CalloutCard
+                    title="Default Shipping Rule"
+                    illustration={defaultShip}
+                    // illustration="https://cdn.shopify.com/s/assets/admin/checkout/settings-customizecart-705f57c725ac05be5a34ec20c05b94298cb8afd10aac7bd9c7ad02030f48cfa0.svg"
+                    primaryAction={{
+                        content: "Set rule",
+                        // variant: "primary",
+                        onAction: () => {
 
-                <MediaCard
+                            if (activeFeatures.default_rule) {
+                                navigate("/default_rule")
+                            } else {
+                                setModalActive(prev => ({ ...prev, "plans-modal": true }))
+                            }
+                        }
+                    }}
+                >
+                    <p>A fallback rate shown at checkout when no other rule matches. No conditions apply.</p>
+                </CalloutCard>
+                <CalloutCard
+                    title="Free Shipping Rule"
+                    illustration={free_shipping}
+                    // illustration="https://cdn.shopify.com/s/assets/admin/checkout/settings-customizecart-705f57c725ac05be5a34ec20c05b94298cb8afd10aac7bd9c7ad02030f48cfa0.svg"
+                    primaryAction={{
+                        content: "Set rule",
+                        // variant: "primary",
+                        onAction: () => {
+
+                            if (activeFeatures.free_shipping) {
+                                navigate("/free_shipping_rule")
+                            } else {
+                                setModalActive(prev => ({ ...prev, "plans-modal": true }))
+                            }
+                        }
+                    }}
+                >
+                    <p>Applies automatically when the cart total meets the minimum threshold.</p>
+                </CalloutCard>
+                {/* <MediaCard
                     portrait
                     title="Grow your business using this app"
                     primaryAction={{
@@ -59,18 +98,15 @@ const Dashboard = () => {
                         external: true
                     }}
                     description="In this video, you’ll learn how to use this app."
-                // popoverActions={[{ content: 'Dismiss', onAction: () => { } }]}
                 >
                     {showVideo ? <iframe width="100%" height="315" src="https://www.youtube.com/embed/sVkT-YTUXS4" frameborder="0" allowfullscreen></iframe> : <VideoThumbnail
-                        // videoLength={80}
                         thumbnailUrl="https://burst.shopifycdn.com/photos/business-woman-smiling-in-office.jpg?width=1850"
                         onClick={() => setShowVideo(true)}
                     />}
-                </MediaCard>
+                </MediaCard> */}
                 <CalloutCard
                     title="Need help?"
                     illustration={help_anim}
-                    // illustration="https://cdn.shopify.com/s/assets/admin/checkout/settings-customizecart-705f57c725ac05be5a34ec20c05b94298cb8afd10aac7bd9c7ad02030f48cfa0.svg"
                     primaryAction={{
                         content: "Get Support",
                         variant: "primary",

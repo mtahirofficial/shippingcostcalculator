@@ -116,7 +116,12 @@ const DefaultRule = () => {
     return (
         <Page
             title="Default Rule"
-            backAction={{ content: 'Rules', onAction: () => navigate(`/rules`) }}
+            backAction={{
+                content: 'Rules', onAction: () => {
+                    // navigate(`/rules`)
+                    window.history.back()
+                }
+            }}
             primaryAction={{
                 content: form.id ? "Update" : "Save",
                 loading: loading,
@@ -131,7 +136,7 @@ const DefaultRule = () => {
                             Default Shipping Rule
                         </Text>
                         <Text tone="subdued" as="p">
-                            Set the values for your default shipping rule.
+                            The default shipping rule applies when no other specific rule matches the customer's location or order criteria. It doesn't rely on any conditions and ensures a fallback shipping price is always shown at checkout.
                         </Text>
                     </BlockStack>
                 </Layout.Section>

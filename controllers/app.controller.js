@@ -4,7 +4,8 @@ const models = require("../models");
 const { Controller } = require("../core");
 const countries_list = require("../data/countries_list.json")
 const countries = require("../data/countries.json")
-const states = require("../data/states.json")
+const states = require("../data/states.json");
+const { success } = require("../core/consoleLogger");
 
 class AppController extends Controller {
     _path = "/app";
@@ -57,7 +58,7 @@ class AppController extends Controller {
                 return store
             } else {
                 console.log("Creating new store:", data.name);
-                
+
                 return await models.store.create(data);
             }
         } catch (error) {
@@ -67,7 +68,7 @@ class AppController extends Controller {
     }
     async getCountries(req, res, next) {
         // const countries = countries_list.map(c => ({ value: c.code, label: c.name, options: c.provinces.map(p => ({ value: c.code + "." + p.code, label: p.name })) }))
-        res.json({ countries, states })
+        res.json({ countries, states, success: true })
     }
 
     initializeRoutes() {
