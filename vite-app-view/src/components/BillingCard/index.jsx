@@ -21,7 +21,10 @@ function BillingCard() {
                         Get premium tools, priority support, and unlock advanced features to supercharge your growth.
                     </Text>
                     <Box>
-                        <Button onClick={() => window.open(billingUrl, '_top')} variant="primary">
+                        <Button onClick={() => {
+                            console.log("billingUrl Button Click", billingUrl);
+                            window.open(billingUrl, '_top')
+                        }} variant="primary">
                             Upgrade Plans
                         </Button>
                     </Box>
