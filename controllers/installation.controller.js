@@ -58,7 +58,16 @@ class InstallationController extends Controller {
                     const redirectUri = `${hostLink}/callback`
                     const installUrl = `https://${domain}/admin/oauth/authorize?client_id=${apiKey}&scope=${SCOPES}&state=${state}&redirect_uri=${redirectUri}`;
                     res.cookie("state", state)
-                    res.redirect(installUrl);
+                    // res.redirect(installUrl);
+                    res.send(`<script>
+                        // This runs when the content is loaded
+                        window.addEventListener('DOMContentLoaded', function () {
+                        // Your function here
+                        // console.log('Page rendered. Run your function here.');
+                        window.parent.location.href = "${installUrl}";
+                        // window?.open("${installUrl}", "_parent")
+                        });
+                    // </script>`);
                 }
             } else {
                 next(new UnauthorizedException())
