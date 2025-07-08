@@ -186,7 +186,15 @@ const CreateRate = () => {
     return (
         <Page
             title={`${!isNaN(params.id) ? "Edit" : "Add"} rule`}
-            backAction={{ content: 'Rules', onAction: () => navigate(`/rules`) }}
+            backAction={{
+                content: 'Rules', onAction: () => {
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        navigate("/home"); // change this to your desired fallback route
+                    }
+                }
+            }}
             primaryAction={{
                 content: !isNaN(params.id) ? "Update" : "Save", loading: loading, disabled: loading, onAction: () => {
 
@@ -198,7 +206,15 @@ const CreateRate = () => {
                 }
             }}
             secondaryActions={[
-                { content: 'Cancel', destructive: true, icon: UndoIcon, onAction: () => navigate(`/rules`) },
+                {
+                    content: 'Cancel', destructive: true, icon: UndoIcon, onAction: () => {
+                        if (window.history.length > 1) {
+                            window.history.back();
+                        } else {
+                            navigate("/home"); // change this to your desired fallback route
+                        }
+                    }
+                },
             ]}
         >
             <Layout>

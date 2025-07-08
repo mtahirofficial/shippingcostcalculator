@@ -18,7 +18,7 @@ export const request = async (
     if (token) {
         config.headers["x-access-token"] = token
     }
-    console.log(config);
+    // console.log(config);
     try {
         const res = await axios(config);
         return { ...res.data };

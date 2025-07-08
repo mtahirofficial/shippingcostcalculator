@@ -117,8 +117,11 @@ const FreeShipping = () => {
             title="Free Shipping Rule"
             backAction={{
                 content: 'Rules', onAction: () => {
-                    // navigate(`/rules`)
-                    window.history.back()
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        navigate("/home"); // change this to your desired fallback route
+                    }
                 }
             }}
             primaryAction={{

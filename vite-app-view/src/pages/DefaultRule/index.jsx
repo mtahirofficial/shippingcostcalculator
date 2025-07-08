@@ -119,7 +119,12 @@ const DefaultRule = () => {
             backAction={{
                 content: 'Rules', onAction: () => {
                     // navigate(`/rules`)
-                    window.history.back()
+                    console.log(window.history);
+                    if (window.history.length > 1) {
+                        window.history.back();
+                    } else {
+                        navigate("/home"); // change this to your desired fallback route
+                    }
                 }
             }}
             primaryAction={{
