@@ -3,6 +3,7 @@ import { useApp } from '../../providers/AppProvider';
 import { RewardIcon } from '@shopify/polaris-icons';
 function BillingCard() {
     const { store, billingUrl } = useApp()
+    console.log("billingUrl", billingUrl);
 
     return (
         <Card>
