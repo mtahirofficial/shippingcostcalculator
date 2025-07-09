@@ -333,25 +333,27 @@ const CreateRate = () => {
                     </BlockStack>
                 </Layout.Section>
                 <Layout.Section variant='oneThird'>
-                    <Card>
-                        <TextField type='text' label="Price" placeholder='0' prefix={store?.moneyFormat.replace("{{amount}}", "")} name='price' value={rate.price} error={validationErrors.price} onChange={value => handleChange({ "price": value })} onBlur={e => {
-                            if (isNaN(e.target.value)) {
-                                handleChange({ "price": "0.00" })
-                            }
-                        }} />
-                    </Card>
-                    <Card>
-                        <Select
-                            label="Status"
-                            name="status"
-                            options={[
-                                { label: 'Active', value: 'active' },
-                                { label: 'Draft', value: 'draft' }
-                            ]}
-                            onChange={value => handleChange({ "status": value })}
-                            value={rate.status}
-                        />
-                    </Card>
+                    <BlockStack gap={400}>
+                        <Card>
+                            <TextField type='text' label="Price" placeholder='0' prefix={store?.moneyFormat.replace("{{amount}}", "")} name='price' value={rate.price} error={validationErrors.price} onChange={value => handleChange({ "price": value })} onBlur={e => {
+                                if (isNaN(e.target.value)) {
+                                    handleChange({ "price": "0.00" })
+                                }
+                            }} />
+                        </Card>
+                        <Card>
+                            <Select
+                                label="Status"
+                                name="status"
+                                options={[
+                                    { label: 'Active', value: 'active' },
+                                    { label: 'Draft', value: 'draft' }
+                                ]}
+                                onChange={value => handleChange({ "status": value })}
+                                value={rate.status}
+                            />
+                        </Card>
+                    </BlockStack>
                 </Layout.Section>
             </Layout>
             <AddRangeForm
