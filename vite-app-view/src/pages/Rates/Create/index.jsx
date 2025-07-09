@@ -224,16 +224,6 @@ const CreateRate = () => {
                             <BlockStack gap={300}>
                                 <TextField type='text' placeholder='Title' label="Title" name='title' helpText="Title displayed to the customers at checkout." value={rate.title} error={validationErrors.title} onChange={value => handleChange({ "title": value })} />
                                 <TextField type='text' placeholder='Description (Optional)' label="Description" name='description' helpText="Description displayed below the shipping method name at checkout." value={rate.description} onChange={value => handleChange({ "description": value })} />
-                                <Select
-                                    label="Status"
-                                    name="status"
-                                    options={[
-                                        { label: 'Active', value: 'active' },
-                                        { label: 'Draft', value: 'draft' }
-                                    ]}
-                                    onChange={value => handleChange({ "status": value })}
-                                    value={rate.status}
-                                />
                             </BlockStack>
                         </Card>
                         <Card>
@@ -349,6 +339,18 @@ const CreateRate = () => {
                                 handleChange({ "price": "0.00" })
                             }
                         }} />
+                    </Card>
+                    <Card>
+                        <Select
+                            label="Status"
+                            name="status"
+                            options={[
+                                { label: 'Active', value: 'active' },
+                                { label: 'Draft', value: 'draft' }
+                            ]}
+                            onChange={value => handleChange({ "status": value })}
+                            value={rate.status}
+                        />
                     </Card>
                 </Layout.Section>
             </Layout>
