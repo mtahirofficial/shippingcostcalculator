@@ -74,6 +74,7 @@ export const chargeBy = {
     "price": "Cart Price",
     "weight": "Cart Weight",
     "c_qty": "Cart Quantity",
+    "cart_items": "Cart Items",
     "p_qty": "Product Quantity",
 }
 
@@ -82,7 +83,8 @@ export const chargeByOptions = [
     { label: "Price", value: "price" },
     { label: "Weight", value: "weight" },
     { label: "Cart Quantity", value: "c_qty" },
-    { label: "Product Quantity", value: "p_qty" },
+    { label: "Cart Items", value: "cart_items" },
+    // { label: "Product Quantity", value: "p_qty" },
 ]
 
 export const shipTo = {

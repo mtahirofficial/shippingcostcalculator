@@ -229,7 +229,7 @@ const CreateRate = () => {
                         <Card>
                             <BlockStack gap={300}>
                                 <Select
-                                    label="Ship to"
+                                    label="Choose the area where to ship"
                                     options={shipToOptions}
                                     onChange={value => {
                                         if (value !== "none") {

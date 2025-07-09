@@ -99,7 +99,7 @@ class CheckoutService extends Service {
         }
     }
 
-    async getRates({ storeId, country, state, city, zipCode, weight, price, c_qty, p_qty, price_ranges }) {
+    async getRates({ storeId, country, state, city, zipCode, weight, price, c_qty, cart_items, price_ranges }) {
         const rangeConditions = [
             {
                 [Op.and]: {
@@ -123,11 +123,11 @@ class CheckoutService extends Service {
             },
             {
                 [Op.and]: {
-                    '$rate.chargeBy$': 'p_qty',
+                    '$rate.chargeBy$': 'cart_items',
                     [Op.or]: [
-                        { 'from': { [Op.lte]: p_qty }, "upto": { [Op.gte]: p_qty } },
-                        { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: p_qty } },
-                        { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: p_qty } }
+                        { 'from': { [Op.lte]: cart_items }, "upto": { [Op.gte]: cart_items } },
+                        { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: cart_items } },
+                        { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: cart_items } }
                     ]
                 }
             },

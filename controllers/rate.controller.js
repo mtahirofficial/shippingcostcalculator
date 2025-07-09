@@ -263,7 +263,7 @@ class RateController extends Controller {
           "weight": weight,
           "price": price,
           "c_qty": qty,
-          "p_qty": items.length,
+          "cart_items": items.length,
           "price_ranges": activeFeatures.price_ranges
         })
         if (result?.length === 0 && activeFeatures.default_rule) {
