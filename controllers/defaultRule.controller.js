@@ -52,7 +52,6 @@ class DefaultRuleController extends Controller {
         where: { id: defaultRule.id },
         // returning: true
       })
-      console.log("updated", updated);
 
       res.status(200).json({ defaultRule: updated })
     } catch (e) {

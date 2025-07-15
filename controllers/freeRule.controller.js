@@ -52,7 +52,6 @@ class FreeRuleController extends Controller {
         where: { id: freeRule.id },
         // returning: true
       })
-      console.log("updated", updated);
 
       res.status(200).json({ freeRule: updated })
     } catch (e) {

@@ -247,6 +247,7 @@ class ShopifyController extends Controller {
           const filtered_service = response.data.carrier_services.filter(carrier_service => Object.hasOwnProperty.call(carrier_service, "callback_url"))
           if (filtered_service.length) {
             const service = filtered_service[0]
+            console.log("domain", domain);
             console.log("service", service);
             await models.store.update({ "serviceId": service.id }, { "where": { "storeId": storeId } })
           }

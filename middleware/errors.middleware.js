@@ -1,5 +1,4 @@
 function ErrorsMiddleware(exception, request, response, next) {
-  console.log("Exception: ", exception);
   const status = exception.status;
   const message = exception.message;
   const errors = exception.errors || null;

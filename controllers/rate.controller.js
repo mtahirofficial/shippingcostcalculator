@@ -208,7 +208,6 @@ class RateController extends Controller {
     try {
       const activeFeatures = req.activeFeatures
       const { origin, destination, items } = req.body.rate
-      console.log("destination", destination);
 
       const store = req.store
       const zipCode = destination.postal_code
@@ -217,7 +216,6 @@ class RateController extends Controller {
       if (!isValidState(destination.province)) {
         state = destination.country + "." + destination.province
       }
-      console.log("state", state);
       const country = destination.country
       let grams = 0, price = 0, qty = 0
       for (const item of items) {
@@ -325,7 +323,6 @@ class RateController extends Controller {
       "province": req.body.state,
       "city": req.body.city,
     }
-    console.log("params", params);
 
     try {
       // const store = req.store

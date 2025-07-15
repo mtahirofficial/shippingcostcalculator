@@ -53,12 +53,9 @@ class AppController extends Controller {
         const store = await models.store.findOne({ where });
         try {
             if (store) {
-                console.log("Updating existing store:", store.name);
                 await store.update(data);
                 return store
             } else {
-                console.log("Creating new store:", data.name);
-
                 return await models.store.create(data);
             }
         } catch (error) {
