@@ -31,6 +31,8 @@ module.exports = (sequelize, DataTypes) => {
     moneyFormat: DataTypes.STRING,
     planDisplayName: DataTypes.STRING,
     planName: DataTypes.STRING,
+    activePlan: DataTypes.STRING,
+    chargeId: DataTypes.STRING,
     locationId: DataTypes.BIGINT,
     enabledCurrencies: DataTypes.TEXT,
     timeZone: DataTypes.STRING,

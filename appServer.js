@@ -41,9 +41,24 @@ class AppServer {
 	}
 
 	initMiddleWares() {
+		this._app.use((req, res, next) => {
+			const origin = req.headers.origin ?? req.headers.host;
+
+			res.setHeader('Access-Control-Allow-Origin', origin);
+			res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+			res.setHeader('Access-Control-Allow-Headers', 'access-control-allow-origin, Content-Type, Authorization');
+
+			if (req.method === 'OPTIONS') {
+				res.status(204).send(); // important for preflight
+			} else {
+				next();
+			}
+		});
+
 		this._app.use(cors(this.buildCorsOpt()));
 		this._app.use(bodyParser.json());
 		this._app.options('*', cors(this.buildCorsOpt()));
+		this._app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
 	}
 
 	loadSSRView() {

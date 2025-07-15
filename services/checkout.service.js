@@ -99,7 +99,7 @@ class CheckoutService extends Service {
         }
     }
 
-    async getRates({ storeId, country, state, city, zipCode, weight, price, c_qty, p_qty }) {
+    async getRates({ storeId, country, state, city, zipCode, weight, price, c_qty, cart_items, price_ranges }) {
         const rangeConditions = [
             {
                 [Op.and]: {
@@ -123,11 +123,11 @@ class CheckoutService extends Service {
             },
             {
                 [Op.and]: {
-                    '$rate.chargeBy$': 'p_qty',
+                    '$rate.chargeBy$': 'cart_items',
                     [Op.or]: [
-                        { 'from': { [Op.lte]: p_qty }, "upto": { [Op.gte]: p_qty } },
-                        { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: p_qty } },
-                        { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: p_qty } }
+                        { 'from': { [Op.lte]: cart_items }, "upto": { [Op.gte]: cart_items } },
+                        { 'from': { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, "upto": { [Op.gte]: cart_items } },
+                        { "upto": { [Op.or]: [{ [Op.is]: null }, { [Op.eq]: 0 }] }, 'from': { [Op.lte]: cart_items } }
                     ]
                 }
             },
@@ -173,7 +173,9 @@ class CheckoutService extends Service {
             const cleanCity = city?.replace(/\s+/g, "").replace(/-+/g, "");
             const cleanZip = zipCode?.replace(/\s+/g, "").replace(/-+/g, "");
             const cleanSpaceZip = zipCode?.replace(/\s+/g, "");
-            return await models.rate.findAll({
+            const options = {
+                logging: false,
+                // logging: console.log,
                 "where": {
                     "status": "active",
                     "storeId": storeId,
@@ -183,14 +185,19 @@ class CheckoutService extends Service {
                         { "shipTo": "zip", "shipToValue": { [Op.like]: `%${cleanZip}%` } },
                         { "shipTo": "city", "shipToValue": { [Op.like]: `%${city}%` } },
                         { "shipTo": "city", "shipToValue": { [Op.like]: `%${cleanCity}%` } },
+                        { "shipTo": "state", "shipToValue": { [Op.like]: `%${state}%` } },
+                        { "shipTo": "country", "shipToValue": { [Op.like]: `%${country}%` } },
                     ]
-                },
-                "include": [{
+                }
+            }
+            if (price_ranges) {
+                options.include = [{
                     "model": models.range,
                     "required": false,
                     "where": { [Op.or]: rangeConditions }
-                }],
-            })
+                }]
+            }
+            return await models.rate.findAll(options)
         } catch (e) {
             ConsoleLogger.error(e.message)
         }

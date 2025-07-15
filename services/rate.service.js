@@ -72,7 +72,9 @@ class RateService extends Service {
         {
           ...rateUpdate,
         },
-        { where: { id } }
+        {
+          where: { id },
+        }
       );
     } catch (e) {
       throw new Error(e.message);

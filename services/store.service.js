@@ -40,7 +40,8 @@ class StoreService extends Service {
       }
       return await models.store.findOne({
         "where": { [Op.or]: where },
-        "attributes": { "exclude": ['accessToken'] }
+        "attributes": { "exclude": ['accessToken'] },
+        "order": [['id', 'DESC']]
       });
     } catch (e) {
       throw new Error(e.message);

@@ -33,9 +33,9 @@ class ShopifyController extends Controller {
     return await axios(options)
       .then(response => response.data)
       .catch(e => {
-        console.log(Object.keys(e.response));
-        console.log(e.response.data);
-        return e.response.data.errors
+        // console.log(Object.keys(e.response));
+        // console.log(e.response.data);
+        return e.response.data?.errors ?? {}
       })
 
   }

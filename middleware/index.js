@@ -4,6 +4,7 @@ const ErrorsMiddleware = require("./errors.middleware");
 const SocketAuthMiddleware = require("./socket-auth.middleware");
 const StoreMiddleware = require("./store.middleware");
 const CheckoutAuthMiddleware = require("./checkout.auth.middleware");
+const PlanMiddleware = require("./plan.middleware");
 
 module.exports = {
 	AuthMiddleware,
@@ -11,5 +12,6 @@ module.exports = {
 	ErrorsMiddleware,
 	StoreMiddleware,
 	SocketAuthMiddleware,
-	CheckoutAuthMiddleware
+	CheckoutAuthMiddleware,
+	PlanMiddleware
 };

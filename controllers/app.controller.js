@@ -4,7 +4,8 @@ const models = require("../models");
 const { Controller } = require("../core");
 const countries_list = require("../data/countries_list.json")
 const countries = require("../data/countries.json")
-const states = require("../data/states.json")
+const states = require("../data/states.json");
+const { success } = require("../core/consoleLogger");
 
 class AppController extends Controller {
     _path = "/app";
@@ -48,15 +49,17 @@ class AppController extends Controller {
             "latitude": shop.latitude,
             "longitude": shop.longitude,
         }
-        const where = { name }
+        const where = { "storeId": shop.id }
+        const store = await models.store.findOne({ where });
         try {
-            if (isInstalled && !isActive) {
-                await models.store.update(data, { where });
-                return await models.store.findOne({ where })
-            } else if (!isInstalled) {
-                return await models.store.create(data);
+            if (store) {
+                console.log("Updating existing store:", store.name);
+                await store.update(data);
+                return store
             } else {
-                return await models.store.findOne({ where })
+                console.log("Creating new store:", data.name);
+
+                return await models.store.create(data);
             }
         } catch (error) {
             console.log(error.message);
@@ -65,7 +68,7 @@ class AppController extends Controller {
     }
     async getCountries(req, res, next) {
         // const countries = countries_list.map(c => ({ value: c.code, label: c.name, options: c.provinces.map(p => ({ value: c.code + "." + p.code, label: p.name })) }))
-        res.json({ countries, states })
+        res.json({ countries, states, success: true })
     }
 
     initializeRoutes() {

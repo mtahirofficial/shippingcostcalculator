@@ -10,6 +10,8 @@ const {
   AppController,
   WebhookController,
   FeedbackController,
+  DefaultRuleController,
+  FreeRuleController,
 } = require("./controllers");
 
 const app = new AppServer([
@@ -23,6 +25,8 @@ const app = new AppServer([
   new AppController(),
   new WebhookController(),
   new FeedbackController(),
+  new DefaultRuleController(),
+  new FreeRuleController(),
 ]);
 
 app.startListening();
