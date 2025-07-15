@@ -4,3 +4,5 @@ node_modules
 build
 asc.sql
 *.sql
+package-lock.json
+.htaccess
