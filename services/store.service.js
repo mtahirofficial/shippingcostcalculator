@@ -50,7 +50,7 @@ class StoreService extends Service {
 
   async getAllStore(excludes) {
     try {
-      return await models.store.findAll({ "attributes": { "exclude": [...excludes] } });
+      return await models.store.findAll({ "attributes": { "exclude": [...excludes] }, order: [['id', 'DESC']] });
     } catch (e) {
       throw new Error(e.message);
     }

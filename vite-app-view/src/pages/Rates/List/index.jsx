@@ -153,7 +153,7 @@ const RateList = () => {
             ]}
         >
             <BlockStack gap={400}>
-                {!store ? null : <CarrierServiceWarning store={store} />}
+                {store?.chargeId && <CarrierServiceWarning store={store} />}
                 <Layout>
                     <Layout.Section>
                         <Card>

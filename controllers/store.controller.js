@@ -24,9 +24,8 @@ class StoreController extends Controller {
       const query = req.query
       const stores = await StoreService.getAllStore(["accessToken"])
       for (const store of stores) {
-
-        const zonesCounts = await ZoneService.countZones("storeId", store.storeId)
-        store.dataValues.zones = zonesCounts
+        // const zonesCounts = await ZoneService.countZones("storeId", store.storeId)
+        // store.dataValues.zones = zonesCounts
         const ratesCounts = await RateService.countRates("storeId", store.storeId)
         store.dataValues.rates = ratesCounts
       }

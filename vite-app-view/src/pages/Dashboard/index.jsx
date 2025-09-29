@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BlockStack, Box, CalloutCard, Card, EmptyState, MediaCard, Page, Text, VideoThumbnail } from '@shopify/polaris'
+import { BlockStack, Box, CalloutCard, Card, Icon, InlineStack, MediaCard, Page, Text, VideoThumbnail } from '@shopify/polaris'
 import { useApp } from '../../providers/AppProvider'
 import { useNavigate } from 'react-router-dom'
 import CarrierServiceWarning from '../../components/CarrierServiceWarning'
@@ -7,7 +7,8 @@ import anim1 from "../../images/anim1.gif";
 import free_shipping from "../../images/free_shipping.gif";
 import help_anim from "../../images/help_anim.gif";
 import defaultShip from "../../images/default.gif";
-import BillingCard from '../../components/BillingCard'
+import BillingCard from '../../components/BillingCard';
+import { QuestionCircleIcon } from '@shopify/polaris-icons';
 
 const Dashboard = () => {
     const { store, activeFeatures, setModalActive } = useApp()
@@ -21,14 +22,16 @@ const Dashboard = () => {
         >
             <BlockStack gap={400}>
                 <Card>
-                    <Text>
+                    <p className='banner-text'>
                         Welcome {store?.firstLoad ? "back" : `to ${import.meta.env.VITE_APP_NAME}`}, {store?.owner}
-                    </Text>
+                    </p>
                 </Card>
-                {!store ? null : <CarrierServiceWarning store={store} />}
+                {store?.chargeId && <CarrierServiceWarning store={store} />}
                 <BillingCard />
                 <CalloutCard
-                    title="Shipping Calculation Rules"
+                    title={<Text variant="headingMd" as="h2">
+                        Shipping Calculation Rules
+                    </Text>}
                     illustration={anim1}
                     // illustration="https://cdn.shopify.com/s/assets/admin/checkout/settings-customizecart-705f57c725ac05be5a34ec20c05b94298cb8afd10aac7bd9c7ad02030f48cfa0.svg"
                     primaryAction={{
@@ -49,10 +52,12 @@ const Dashboard = () => {
                         onAction: () => navigate("/rules")
                     }}
                 >
-                    <p>Shipping rules determine the costs associated with shipping to specific regions according to zip/postal codes or cities. By adding shipping rules, you can specify the pricing for different shipping methods, weights, or order totals.</p>
+                    <p className='banner-text'>Shipping rules set costs for regions (cities, zip/postal codes, state or country). Each rule specifies the price for that shipping rule, considering order weight, quantity or total.</p>
                 </CalloutCard>
                 <CalloutCard
-                    title="Default Shipping Rule"
+                    title={<Text variant="headingMd" as="h2">
+                        Default Shipping Rule
+                    </Text>}
                     illustration={defaultShip}
                     // illustration="https://cdn.shopify.com/s/assets/admin/checkout/settings-customizecart-705f57c725ac05be5a34ec20c05b94298cb8afd10aac7bd9c7ad02030f48cfa0.svg"
                     primaryAction={{
@@ -68,10 +73,12 @@ const Dashboard = () => {
                         }
                     }}
                 >
-                    <p>A fallback rate shown at checkout when no other rule matches. No conditions apply.</p>
+                    <p className='banner-text'>A fallback rate shown at checkout when no other rule matches. No conditions apply.</p>
                 </CalloutCard>
                 <CalloutCard
-                    title="Free Shipping Rule"
+                    title={<Text variant="headingMd" as="h2">
+                        Free Shipping Rule
+                    </Text>}
                     illustration={free_shipping}
                     // illustration="https://cdn.shopify.com/s/assets/admin/checkout/settings-customizecart-705f57c725ac05be5a34ec20c05b94298cb8afd10aac7bd9c7ad02030f48cfa0.svg"
                     primaryAction={{
@@ -87,7 +94,7 @@ const Dashboard = () => {
                         }
                     }}
                 >
-                    <p>Applies automatically when the cart total meets the minimum threshold.</p>
+                    <p className='banner-text'>Applies automatically when the cart total meets the minimum threshold.</p>
                 </CalloutCard>
                 {/* <MediaCard
                     portrait
@@ -105,7 +112,14 @@ const Dashboard = () => {
                     />}
                 </MediaCard> */}
                 <CalloutCard
-                    title="Need help?"
+                    title={<InlineStack gap={200} align='start' blockAlign='center'>
+                        <Box>
+                            <Icon source={QuestionCircleIcon} tone="highlight" />
+                        </Box>
+                        <Text variant="headingMd" as="h2">
+                            Need help?
+                        </Text>
+                    </InlineStack>}
                     illustration={help_anim}
                     primaryAction={{
                         content: "Get Support",
@@ -118,9 +132,7 @@ const Dashboard = () => {
                         onAction: () => navigate("/help-center")
                     }}
                 >
-                    <p>If something’s not working or you’re unsure what to do next, don’t worry.
-                        You’re not alone — we’re right here with you.
-                        Take a moment, and reach out anytime. We’ll guide you step by step until everything’s back on track.</p>
+                    <p className='banner-text'>Having trouble? We’re here with you. Reach out anytime for step-by-step support.</p>
                 </CalloutCard>
             </BlockStack>
         </Page>

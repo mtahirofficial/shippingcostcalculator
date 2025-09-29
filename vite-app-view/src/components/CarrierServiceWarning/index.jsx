@@ -36,26 +36,22 @@ const CarrierServiceWarning = ({ store }) => {
             setChecking(false)
         }
     }
+    // "74930454769"
     return (
         _store?.serviceId ? null : <ShopifyBanner
-            tone={"critical"}
-            title={"Your store is not compatible with this app!"}
+            tone={"info"}
+            title={"This app will be ready to use once you activate the carrier service"}
             actionContent="Enabled"
             onAction={checkCompatibility}
             loading={checking}
+            actionSize={"large"}
         >
-            <p>To use this app, you must enable the carrier service feature on your store. Carrier services (also known as carrier-calculated or shipping services) provide real-time shipping rates to Shopify. Please take these steps to use this app:</p>
+            <p className='banner-text'>Carrier services (also known as carrier-calculated or shipping services) provide real-time shipping rates to Shopify. Please take these steps to use this app:</p>
             <List>{[
-                <p>Contact <Button variant='plain' url='https://help.shopify.com/questions?shpxid=9f5938d3-5963-4218-C826-481D52A62B15' target='_blank'>Shopify Support</Button> to enable carrier service.</p>,
-                <p>Click <b>Enabled</b> after activation of carrier service.</p>
+                <p className='banner-text'>Contact <Button variant='plain' url='https://help.shopify.com/questions?shpxid=9f5938d3-5963-4218-C826-481D52A62B15' target='_blank'>Shopify Support</Button> to enable carrier service.</p>,
+                <p className='banner-text'>Click <b>Enabled</b> after activation of carrier service.</p>
             ].map(item => <List.Item>{item}</List.Item>)}</List>
-            {/* Your store must meet one of the following requirements to enable this feature: */}
-            {/* <List>{[
-                "Your store must have Advanced Shopify plan or higher.",
-                "Your store must have Shopify plan with yearly billing, or the carrier service feature has been added to the store for a monthly fee."
-            ].map(item => <List.Item>{item}</List.Item>)}</List> */}
-            {/* <p>Please, contact <Button variant='plain' url='https://help.shopify.com/questions?shpxid=9f5938d3-5963-4218-C826-481D52A62B15' target='_blank'>Shopify Support</Button> to enable carrier service.</p> */}
-        </ShopifyBanner>
+        </ShopifyBanner >
     )
 }
 

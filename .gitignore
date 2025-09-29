@@ -6,3 +6,4 @@ asc.sql
 *.sql
 package-lock.json
 .htaccess
+checkout.json

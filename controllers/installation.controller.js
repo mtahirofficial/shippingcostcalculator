@@ -131,7 +131,7 @@ class InstallationController extends Controller {
                         context: {
                             appName: process.env.APP_NAME,
                             user: shopData.shop_owner,
-                            facebook_page: "https://www.facebook.com/profile.php?id=61567071715420",
+                            facebook_page: "https://www.facebook.com/logicsarcade",
                             youtube: "https://www.youtube.com/@LogicsArcade",
                             whatsapp_channel: "https://whatsapp.com/channel/0029VawQIp02phHPRwl37x35",
                             whatsapp: "https://wa.me/923457699395",
