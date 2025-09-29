@@ -17,9 +17,9 @@ function BillingCard() {
                             Upgrade to Pro
                         </Text>
                     </InlineStack>
-                    <Text as="p" tone="subdued">
+                    <p className='banner-text'>
                         Get premium tools, priority support, and unlock advanced features to supercharge your growth.
-                    </Text>
+                    </p>
                     <Box>
                         <Button onClick={() => {
                             console.log("billingUrl Button Click", billingUrl);

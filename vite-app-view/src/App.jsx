@@ -95,6 +95,9 @@ function App() {
           <Link to="/admin">Admin Area</Link>
         </> : null}
       </NavMenu>
+      <TitleBar title=''>
+        <button variant="primary" onClick={() => window.open("https://wa.me/923457699395", "_blank")}>Get Instant Support</button>
+      </TitleBar>
       <AppRouter />
       <Box paddingBlock={400}>
         <FooterHelp>{import.meta.env.VITE_APP_NAME} © {new Date().getFullYear()} | <a className='logicsarcade' href='https://logicsarcade.com/' target='_blank' rel="noreferrer">LogicsArcade</a></FooterHelp>
