@@ -203,13 +203,16 @@ class RateController extends Controller {
   // }
 
   async shippingMethods(req, res, next) {
+    console.log(req?.store?.myshopifyDomain);
+    const isLogged = req?.store?.myshopifyDomain === "domain nx2ixm-di.myshopify.com"
 
     const rates = []
     try {
       const activeFeatures = req.activeFeatures
       const { origin, destination, items } = req.body.rate
-      console.log("destination", destination);
-
+      if (isLogged) {
+        console.log("destination", destination);
+      }
       const store = req.store
       const zipCode = destination.postal_code
       const city = destination.city
@@ -217,7 +220,6 @@ class RateController extends Controller {
       if (!isValidState(destination.province)) {
         state = destination.country + "." + destination.province
       }
-      console.log("state", state);
       const country = destination.country
       let grams = 0, price = 0, qty = 0
       for (const item of items) {
@@ -266,6 +268,7 @@ class RateController extends Controller {
           "cart_items": items.length,
           "price_ranges": activeFeatures.price_ranges
         })
+
         if (result?.length === 0 && activeFeatures.default_rule) {
           const defaultRule = await models.default_rule.findOne({
             where: { storeId: store.storeId, status: "active" },
@@ -275,6 +278,10 @@ class RateController extends Controller {
             result = [defaultRule]
           }
         }
+        if (isLogged) {
+          console.log("result getRates", result);
+        }
+
         for (const r of result) {
           if (r.ranges?.length) {
             for (const range of r.ranges) {
@@ -296,18 +303,20 @@ class RateController extends Controller {
           }
         }
       }
-      // res.status(200).send({
-      //   rates
-      // })
+      if (isLogged) {
+        console.log("rates", rates);
+      }
+      res.status(200).send({
+        rates
+      })
     } catch (error) {
       console.error("Error in shippingMethods:", error);
       return { rates: [] };
 
-    } finally {
-      console.log("rates", rates);
-      res.status(200).send({
-        rates
-      })
+      // } finally {
+      //   res.status(200).send({
+      //     rates
+      //   })
     }
   }
 
