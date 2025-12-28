@@ -200,6 +200,7 @@ class CheckoutService extends Service {
             return await models.rate.findAll(options)
         } catch (e) {
             ConsoleLogger.error(e.message)
+            return []
         }
     }
 }
