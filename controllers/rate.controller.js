@@ -210,6 +210,7 @@ class RateController extends Controller {
     try {
       const activeFeatures = req.activeFeatures
       const { origin, destination, items } = req.body.rate
+
       if (isLogged) {
         console.log("destination", destination);
       }
@@ -268,7 +269,6 @@ class RateController extends Controller {
           "cart_items": items.length,
           "price_ranges": activeFeatures.price_ranges
         })
-
         if (result?.length === 0 && activeFeatures.default_rule) {
           const defaultRule = await models.default_rule.findOne({
             where: { storeId: store.storeId, status: "active" },
@@ -306,17 +306,18 @@ class RateController extends Controller {
       if (isLogged) {
         console.log("rates", rates);
       }
-      res.status(200).send({
-        rates
-      })
+      // res.status(200).send({
+      //   rates
+      // })
     } catch (error) {
       console.error("Error in shippingMethods:", error);
       return { rates: [] };
 
-      // } finally {
-      //   res.status(200).send({
-      //     rates
-      //   })
+    } finally {
+
+      res.status(200).send({
+        rates
+      })
     }
   }
 
