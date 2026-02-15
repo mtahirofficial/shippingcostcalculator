@@ -16,9 +16,9 @@
     "logging": false
   },
   "production": {
-    "username": "logicsar_shippingcostcalculator_user",
+    "username": "u282996469_scc",
     "password": "4S6iP6J)e9^}",
-    "database": "logicsar_shippingcostcalculator",
+    "database": "u282996469_scc",
     "host": "127.0.0.1",
     "dialect": "mysql",
     "logging": false
