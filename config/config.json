@@ -12,15 +12,13 @@
     "password": "!kH)s]c@U.8j",
     "database": "logicsar_devrates",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "logging": false
+    "dialect": "mysql"
   },
   "production": {
-    "username": "u282996469_scc",
+    "username": "logicsar_shippingcostcalculator_user",
     "password": "4S6iP6J)e9^}",
-    "database": "u282996469_scc",
+    "database": "logicsar_shippingcostcalculator",
     "host": "127.0.0.1",
-    "dialect": "mysql",
-    "logging": false
+    "dialect": "mysql"
   }
 }

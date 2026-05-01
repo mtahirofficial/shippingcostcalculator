@@ -171,8 +171,8 @@ const RateList = () => {
                                             media={<Avatar initials={getInitials(item.title, 2)} name={item.title} />}
                                             onClick={() => { navigateTo(item.id.toString()) }}
                                         >
-                                            <InlineStack gap={200} align='space-between'>
-                                                <InlineStack gap={200}>
+                                            <InlineStack gap={200} align='space-between' blockAlign="center">
+                                                <InlineStack gap={200} blockAlign="center">
                                                     <Link to={`${item.id.toString()}`} style={{ textDecoration: "none" }}>
                                                         <Text variant="bodyMd" fontWeight="bold" as="h3" tone="base">
                                                             {item.title}
@@ -180,7 +180,7 @@ const RateList = () => {
                                                     </Link>
                                                     <Badge tone={item.status === "suspend" ? "critical" : (item?.status === "active" ? "success" : "info")}>{capitalize(item.status)}</Badge>
                                                 </InlineStack>
-                                                <InlineStack gap={200}>
+                                                <InlineStack gap={100}>
                                                     <Button variant="plain" icon={DuplicateIcon} loading={loading === "dup"} onClick={event => {
                                                         event.stopPropagation();
 
@@ -194,7 +194,11 @@ const RateList = () => {
                                                     <Button variant="plain" icon={DeleteIcon} tone="critical" onClick={event => { event.stopPropagation(); setDelRate(item); shopify.modal.show("delete-rate") }}>Delete</Button>
                                                 </InlineStack>
                                             </InlineStack>
-                                            <div>Criteria: {chargeBy[item?.chargeBy]} | Cost: {store?.moneyFormat.replace("{{amount}}", item.price)}/-</div>
+                                            <Box paddingBlockStart={100}>
+                                                <Text as="p" variant="bodySm" tone="subdued">
+                                                    Criteria: {chargeBy[item?.chargeBy]} • Cost: {store?.moneyFormat.replace("{{amount}}", item.price)}/-
+                                                </Text>
+                                            </Box>
                                         </ResourceItem>
                                     </div>
                                 }}

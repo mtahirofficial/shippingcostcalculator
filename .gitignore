@@ -1,8 +1,6 @@
 yarn.lock
 node_modules
 .env
-asc.sql
+build
 *.sql
-package-lock.json
-.htaccess
 checkout.json

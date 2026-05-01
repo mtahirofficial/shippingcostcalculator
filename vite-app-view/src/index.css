@@ -1,0 +1,17 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #f6f7fb;
+  color: #0b0f18;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}

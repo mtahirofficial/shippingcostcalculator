@@ -24,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       get() {
         const shipTo = this.getDataValue('shipTo');
-
         let shipToValue = null;
         if (this.getDataValue('shipToValue')) {
           if (shipTo === "state") {

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="420" viewBox="0 0 720 420">
+  <defs>
+    <linearGradient id="bg3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#eef7ff"/>
+      <stop offset="1" stop-color="#f6f0ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="420" rx="24" fill="url(#bg3)"/>
+  <circle cx="520" cy="160" r="90" fill="#6c7bff" opacity="0.12"/>
+  <circle cx="520" cy="160" r="64" fill="#6c7bff" opacity="0.2"/>
+  <circle cx="520" cy="160" r="40" fill="#6c7bff"/>
+  <text x="520" y="172" text-anchor="middle" font-family="Arial, sans-serif" font-size="36" fill="#ffffff">?</text>
+  <rect x="60" y="110" width="320" height="56" rx="14" fill="#ffffff" stroke="#dfe6ff"/>
+  <rect x="60" y="182" width="360" height="44" rx="12" fill="#ffffff" stroke="#dfe6ff"/>
+  <rect x="60" y="242" width="280" height="44" rx="12" fill="#ffffff" stroke="#dfe6ff"/>
+  <rect x="60" y="302" width="220" height="44" rx="12" fill="#ffffff" stroke="#dfe6ff"/>
+  <text x="60" y="360" font-family="Arial, sans-serif" font-size="22" fill="#2e3a3f">Need help?</text>
+  <text x="60" y="388" font-family="Arial, sans-serif" font-size="14" fill="#6b7b86">Fast support and FAQs</text>
+</svg>

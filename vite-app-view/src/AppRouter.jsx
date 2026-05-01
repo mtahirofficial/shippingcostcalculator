@@ -1,19 +1,20 @@
-import React from 'react'
+import React, { lazy } from 'react'
 import { Route, Routes } from "react-router-dom";
-import Zones from './pages/Zones';
-import AddZone from './pages/Zones/AddZone';
-import ZoneView from './pages/Zones/ZoneView';
-import RateView from './pages/Zones/Rates/RateView';
-import AddRate from './pages/Zones/Rates/AddRate';
 import Dashboard from './pages/Dashboard';
-import HelpPage from './pages/HelpPage';
-import NotFoundPage from './pages/NotFoundPage';
-import PrivateRoute from './PrivateRoute';
-import AdminArea from './pages/AdminArea';
-import RateList from './pages/Rates/List';
-import CreateRate from './pages/Rates/Create';
-import DefaultRule from './pages/DefaultRule';
-import FreeShipping from './pages/FreeShipping';
+
+const Zones = lazy(() => import('./pages/Zones'));
+const AddZone = lazy(() => import('./pages/Zones/AddZone'));
+const ZoneView = lazy(() => import('./pages/Zones/ZoneView'));
+const RateView = lazy(() => import('./pages/Zones/Rates/RateView'));
+const AddRate = lazy(() => import('./pages/Zones/Rates/AddRate'));
+const HelpPage = lazy(() => import('./pages/HelpPage'));
+const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const PrivateRoute = lazy(() => import('./PrivateRoute'));
+const AdminArea = lazy(() => import('./pages/AdminArea'));
+const RateList = lazy(() => import('./pages/Rates/List'));
+const CreateRate = lazy(() => import('./pages/Rates/Create'));
+const DefaultRule = lazy(() => import('./pages/DefaultRule'));
+const FreeShipping = lazy(() => import('./pages/FreeShipping'));
 
 const AppRouter = () => {
   return <Routes>

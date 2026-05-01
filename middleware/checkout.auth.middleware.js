@@ -14,7 +14,6 @@ async function CheckoutAuthMiddleware(req, res, next) {
   try {
     const origin = req.get('origin')
     const domain = req.headers['x-shopify-shop-domain'];
-    console.log("domain", domain);
     if (!domain) {
       return next(new UnauthorizedException());
     }
