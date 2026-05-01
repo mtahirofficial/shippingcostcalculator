@@ -1,9 +1,9 @@
 Header always unset X-Frame-Options
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
-PassengerAppRoot "/home/logicsar/nodejs/devrates"
+PassengerAppRoot "/home/logicsar/nodejs/shippingcostcalculator"
 PassengerBaseURI "/"
-PassengerNodejs "/home/logicsar/nodevenv/nodejs/devrates/20/bin/node"
+PassengerNodejs "/home/logicsar/nodevenv/nodejs/shippingcostcalculator/20/bin/node"
 PassengerAppType node
 PassengerStartupFile index.js
-PassengerAppLogFile "/home/logicsar/nodejs/devrates/passenger.log"
+PassengerAppLogFile "/home/logicsar/nodejs/shippingcostcalculator/passenger.log"
 # DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
