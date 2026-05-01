@@ -2,8 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
-const path,
-  { join } = require("path");
+const path = require("path");
+const { join } = require("path");
 const { ErrorsMiddleware, LoggerMiddleware } = require("./middleware");
 const { ConsoleLogger } = require("./core");
 
