@@ -1,157 +1,199 @@
-import React, { Suspense, useCallback, useEffect, useMemo, useState } from 'react'
-import './App.css';
-import { NavMenu, TitleBar, useAppBridge } from '@shopify/app-bridge-react';
-const AppRouter = React.lazy(() => import('./AppRouter'));
-import { Box, FooterHelp, Text } from '@shopify/polaris';
-import { Link, useLocation } from 'react-router-dom';
-import { useApp } from './providers/AppProvider';
-import axios from 'axios';
-import { request } from './core/api';
-import { endpoints } from './constants';
-import { formatTitle } from './utilis';
-const ShopifyModal = React.lazy(() => import('./components/ShopifyModal'));
+import React, {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import "./App.css";
+import { NavMenu, TitleBar, useAppBridge } from "@shopify/app-bridge-react";
+const AppRouter = React.lazy(() => import("./AppRouter"));
+import { Box, FooterHelp, Text } from "@shopify/polaris";
+import { Link, useLocation } from "react-router-dom";
+import { useApp } from "./providers/AppProvider";
+import axios from "axios";
+import { request } from "./core/api";
+import { endpoints } from "./constants";
+import { formatTitle } from "./utilis";
+const ShopifyModal = React.lazy(() => import("./components/ShopifyModal"));
 
 function App() {
-  const shopify = useAppBridge()
-  const { setStore, setCountries, setStates, setActivePlan, setFeatures, setActiveFeatures, modalActive, setModalActive, billingUrl, setBillingUrl } = useApp()
-  const location = useLocation()
-  const [_store, _setStore] = useState({})
-  const activePath = useMemo(() => location.pathname, [location.pathname])
+  const shopify = useAppBridge();
+  const {
+    setStore,
+    setCountries,
+    setStates,
+    setActivePlan,
+    setFeatures,
+    setActiveFeatures,
+    modalActive,
+    setModalActive,
+    billingUrl,
+    setBillingUrl,
+  } = useApp();
+  const location = useLocation();
+  const [_store, _setStore] = useState({});
+  const activePath = useMemo(() => location.pathname, [location.pathname]);
   const navLinks = useMemo(
     () => [
-      { to: '/home', label: 'Home' },
-      { to: '/home', label: 'Dashboard' },
-      { to: '/rules', label: 'Rules' },
-      { to: '/default_rule', label: 'Default Rule' },
-      { to: '/free_shipping_rule', label: 'Free Shipping Rule' },
-      { to: '/help-center', label: 'Help Center' },
+      { to: "/home", label: "Home" },
+      { to: "/home", label: "Dashboard" },
+      { to: "/rules", label: "Rules" },
+      { to: "/default_rule", label: "Default Rule" },
+      { to: "/free_shipping_rule", label: "Free Shipping Rule" },
+      { to: "/help-center", label: "Help Center" },
     ],
-    []
-  )
-
-  const getStore = useCallback(
-    async cancelToken => {
-      const domain = new URLSearchParams(location.search).get("shop")
-      const options = {
-        "method": "GET",
-        "cancelToken": cancelToken
-      }
-      const response = await request(endpoints.store + "?domain=" + domain, options)
-      if (response.store) {
-        setBillingUrl(`https://admin.shopify.com/store/${response.store?.name}/charges/${import.meta.env.VITE_APP_PATH}/pricing_plans`)
-        setStore({ ...response.store })
-        _setStore({ ...response.store })
-      }
-      let featuresList = response.features || []
-      if (response.features) {
-        featuresList = response.features.map(feature => feature.handle)
-        setFeatures(featuresList)
-      }
-
-      if (response.activePlan) {
-        setActivePlan(response.activePlan)
-        const features = {}
-        for (const feature of response.activePlan.features) {
-          features[feature.handle] = feature.handle
-        }
-        let activeFeatures = {}
-        for (const key in features) {
-          if (Object.prototype.hasOwnProperty.call(features, key)) {
-            const element = features[key];
-            activeFeatures[element] = featuresList.indexOf(element) > -1
-          }
-        }
-        setActiveFeatures(activeFeatures)
-      }
-
-      if (response.countries) {
-        setCountries([...response.countries])
-        setStates([...response.states])
-      }
-    },
     [],
-  )
+  );
+
+  const getStore = useCallback(async (cancelToken) => {
+    const domain = new URLSearchParams(location.search).get("shop");
+    const options = {
+      method: "GET",
+      cancelToken: cancelToken,
+    };
+    const response = await request(
+      endpoints.store + "?domain=" + domain,
+      options,
+    );
+    if (response.store) {
+      setBillingUrl(
+        `https://admin.shopify.com/store/${response.store?.name}/charges/${import.meta.env.VITE_APP_PATH}/pricing_plans`,
+      );
+      setStore({ ...response.store });
+      _setStore({ ...response.store });
+    }
+    let featuresList = response.features || [];
+    if (response.features) {
+      featuresList = response.features.map((feature) => feature.handle);
+      setFeatures(featuresList);
+    }
+
+    if (response.activePlan) {
+      setActivePlan(response.activePlan);
+      const features = {};
+      for (const feature of response.activePlan.features) {
+        features[feature.handle] = feature.handle;
+      }
+      let activeFeatures = {};
+      for (const key in features) {
+        if (Object.prototype.hasOwnProperty.call(features, key)) {
+          const element = features[key];
+          activeFeatures[element] = featuresList.indexOf(element) > -1;
+        }
+      }
+      setActiveFeatures(activeFeatures);
+    }
+
+    if (response.countries) {
+      setCountries([...response.countries]);
+      setStates([...response.states]);
+    }
+  }, []);
 
   useEffect(() => {
     if (modalActive["plans-modal"]) {
-      shopify.modal.show("plans-modal")
+      shopify.modal.show("plans-modal");
     }
 
     return () => {
       if (modalActive) {
-        shopify.modal.hide("plans-modal")
+        shopify.modal.hide("plans-modal");
       }
-    }
-  }, [modalActive])
-
+    };
+  }, [modalActive]);
 
   useEffect(() => {
-    const cancelToken = axios.CancelToken.source()
-    const run = () => getStore(cancelToken.token)
+    const cancelToken = axios.CancelToken.source();
+    const run = () => getStore(cancelToken.token);
 
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      window.requestIdleCallback(run, { timeout: 1500 })
+    if (typeof window !== "undefined" && "requestIdleCallback" in window) {
+      window.requestIdleCallback(run, { timeout: 1500 });
     } else {
-      setTimeout(run, 0)
+      setTimeout(run, 0);
     }
 
     return () => {
-      cancelToken.cancel()
-    }
-  }, [])
+      cancelToken.cancel();
+    };
+  }, []);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === "undefined") return;
     const prefetch = () => {
-      import('./AppRouter')
-      import('./components/ShopifyModal')
-    }
-    if ('requestIdleCallback' in window) {
-      window.requestIdleCallback(prefetch, { timeout: 2000 })
+      import("./AppRouter");
+      import("./components/ShopifyModal");
+    };
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(prefetch, { timeout: 2000 });
     } else {
-      setTimeout(prefetch, 0)
+      setTimeout(prefetch, 0);
     }
-  }, [])
+  }, []);
+  console.log("App.jsx");
 
   return (
     <React.Fragment>
       <NavMenu>
-        {navLinks.map(link => {
-          const isActive = activePath === link.to
+        {navLinks.map((link) => {
+          const isActive = activePath === link.to;
           return (
             <Link
               key={link.to + link.label}
               to={link.to}
-              rel={link.to === '/home' ? 'home' : undefined}
-              className={`nav-link${isActive ? ' nav-link--active' : ''}`}
+              rel={link.to === "/home" ? "home" : undefined}
+              className={`nav-link${isActive ? " nav-link--active" : ""}`}
             >
               {link.label}
             </Link>
-          )
+          );
         })}
         {/* <Link to="/zones">Zones</Link> */}
-        {_store?.email === "hmtahirs1@gmail.com" ? <>
-          <Link
-            to="/admin"
-            className={`nav-link${activePath === '/admin' ? ' nav-link--active' : ''}`}
-          >
-            Admin Area
-          </Link>
-        </> : null}
+        {_store?.email === "hmtahirs1@gmail.com" ? (
+          <>
+            <Link
+              to="/admin"
+              className={`nav-link${activePath === "/admin" ? " nav-link--active" : ""}`}
+            >
+              Admin Area
+            </Link>
+          </>
+        ) : null}
       </NavMenu>
 
-      <TitleBar title=''>
-        <button variant="primary" onClick={() => window.open("https://wa.me/923457699395", "_blank")}>Get Instant Support</button>
+      <TitleBar title="">
+        <button
+          variant="primary"
+          onClick={() => window.open("https://wa.me/923457699395", "_blank")}
+        >
+          Get Instant Support
+        </button>
       </TitleBar>
       <main className="app-shell" role="main">
-        <Suspense fallback={<div className="app-router-skeleton" role="status" aria-live="polite" />}>
+        <Suspense
+          fallback={
+            <div
+              className="app-router-skeleton"
+              role="status"
+              aria-live="polite"
+            />
+          }
+        >
           <AppRouter />
         </Suspense>
       </main>
       <Box paddingBlock={400} className="app-footer">
         <FooterHelp>
-          {import.meta.env.VITE_APP_NAME} {'\u00A9'} {new Date().getFullYear()} |{' '}
-          <a className='logicsarcade' href='https://logicsarcade.com/' target='_blank' rel="noreferrer">LogicsArcade</a>
+          {import.meta.env.VITE_APP_NAME} {"\u00A9"} {new Date().getFullYear()}{" "}
+          |{" "}
+          <a
+            className="logicsarcade"
+            href="https://logicsarcade.com/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            LogicsArcade
+          </a>
         </FooterHelp>
       </Box>
       {modalActive["plans-modal"] ? (
@@ -159,15 +201,15 @@ function App() {
           <ShopifyModal
             title={formatTitle("Upgrade Plans")}
             primaryAction={() => {
-              setModalActive(prev => ({ ...prev, "plans-modal": false }))
-              window.open(billingUrl, '_top')
+              setModalActive((prev) => ({ ...prev, "plans-modal": false }));
+              window.open(billingUrl, "_top");
             }}
             secondaryAction={() => {
-              setModalActive(prev => ({ ...prev, "plans-modal": false }))
+              setModalActive((prev) => ({ ...prev, "plans-modal": false }));
             }}
             id="plans-modal"
             handleHide={() => {
-              setModalActive(prev => ({ ...prev, "plans-modal": false }))
+              setModalActive((prev) => ({ ...prev, "plans-modal": false }));
             }}
             primaryBtnTxt="Plans & Pricing"
             secondaryBtnTxt="Cancel"
@@ -180,10 +222,12 @@ function App() {
                 </Text>
                 <Box paddingBlockStart="200">
                   <Text as="p" variant="bodyMd">
-                    This feature is not available on your current plan. To use it, please upgrade to a higher-tier plan.
+                    This feature is not available on your current plan. To use
+                    it, please upgrade to a higher-tier plan.
                   </Text>
                 </Box>
-              </>}
+              </>
+            }
           />
         </Suspense>
       ) : null}
