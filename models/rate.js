@@ -24,16 +24,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       get() {
         const shipTo = this.getDataValue('shipTo');
-        // console.log("shipTo", shipTo);
-
         let shipToValue = null;
         if (this.getDataValue('shipToValue')) {
           if (shipTo === "state") {
             shipToValue = ungroupedStates.filter(state => this.getDataValue('shipToValue').split(",").indexOf(state.value) !== -1);
-            console.log("shipToValue if", shipToValue);
           } else if (shipTo === "country") {
             shipToValue = countriesList.filter(country => this.getDataValue('shipToValue').split(",").indexOf(country.value) !== -1);
-            console.log("shipToValue else if", shipToValue);
           } else {
             shipToValue = this.getDataValue('shipToValue').split(",");
           }
