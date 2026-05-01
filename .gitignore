@@ -1,6 +1,6 @@
 yarn.lock
 node_modules
 .env
-build
+
 *.sql
 checkout.json
