@@ -2,97 +2,109 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const bodyParser = require("body-parser");
-const { join } = require("path");
-const {
-	ErrorsMiddleware,
-	LoggerMiddleware
-} = require("./middleware");
+const path,
+  { join } = require("path");
+const { ErrorsMiddleware, LoggerMiddleware } = require("./middleware");
 const { ConsoleLogger } = require("./core");
 
 class AppServer {
-	_app = express();
-	_port = process.env.PORT;
-	_server;
+  _app = express();
+  _port = process.env.PORT;
+  _server;
 
-	constructor(controllers = []) {
-		dotenv.config();
-		this.initMiddleWares();
-		this.enableStaticFile();
-		this.initLogger();
-		this.initializeControllers(controllers);
-		this.initErrorHandling();
-		if (process.env.IS_SSR) {
-			this.loadSSRView();
-		}
-	}
+  constructor(controllers = []) {
+    dotenv.config();
+    this.initMiddleWares();
+    this.enableStaticFile();
+    this.initLogger();
+    this.initializeControllers(controllers);
+    this.initErrorHandling();
+    if (process.env.IS_SSR) {
+      this.loadSSRView();
+    }
+  }
 
-	buildCorsOpt() {
-		const configCors = process.env.CORS_ALLOW_ORIGINS;
-		if (!configCors) {
-			throw new Error("ENV CORS not provider!");
-		}
-		return {
-			origin: configCors.toString().split(","),
-			methods: "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
-			preflightContinue: true,
-			optionsSuccessStatus: 204,
-			credentials: true,
-		};
-	}
+  buildCorsOpt() {
+    const configCors = process.env.CORS_ALLOW_ORIGINS;
+    if (!configCors) {
+      throw new Error("ENV CORS not provider!");
+    }
+    return {
+      origin: configCors.toString().split(","),
+      methods: "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE",
+      preflightContinue: true,
+      optionsSuccessStatus: 204,
+      credentials: true,
+    };
+  }
 
-	initMiddleWares() {
-		this._app.use((req, res, next) => {
-			const origin = req.headers.origin ?? req.headers.host;
+  initMiddleWares() {
+    this._app.use((req, res, next) => {
+      const origin = req.headers.origin ?? req.headers.host;
 
-			res.setHeader('Access-Control-Allow-Origin', origin);
-			res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-			res.setHeader('Access-Control-Allow-Headers', 'access-control-allow-origin, Content-Type, Authorization');
+      res.setHeader("Access-Control-Allow-Origin", origin);
+      res.setHeader(
+        "Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, OPTIONS",
+      );
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "access-control-allow-origin, Content-Type, Authorization",
+      );
 
-			if (req.method === 'OPTIONS') {
-				res.status(204).send(); // important for preflight
-			} else {
-				next();
-			}
-		});
+      if (req.method === "OPTIONS") {
+        res.status(204).send(); // important for preflight
+      } else {
+        next();
+      }
+    });
 
-		this._app.use(cors(this.buildCorsOpt()));
-		this._app.use(bodyParser.json());
-		this._app.options('*', cors(this.buildCorsOpt()));
-		this._app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }))
-	}
+    this._app.use(cors(this.buildCorsOpt()));
+    this._app.use(bodyParser.json());
+    this._app.options("*", cors(this.buildCorsOpt()));
+    this._app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
+  }
 
-	loadSSRView() {
-		this._app.use(express.static(join(__dirname, "build")));
-		this._app.get("*", (req, res) => {
-			res.removeHeader("X-Frame-Options")
-			res.sendFile(join(__dirname, "./build/index.html"));
-		});
-	}
+  loadSSRView() {
+    const buildPath = path.join(__dirname, "build");
 
-	initErrorHandling() {
-		this._app.use(ErrorsMiddleware);
-	}
+    this._app.use(express.static(buildPath));
 
-	initLogger() {
-		this._app.use(LoggerMiddleware);
-	}
+    // this._app.get("*", (req, res) => {
+    //   res.removeHeader("X-Frame-Options");
+    //   res.sendFile(path.join(buildPath, "index.html"));
+    // });
 
-	enableStaticFile() {
-		this._app.use(express.static(join(__dirname, "public")));
-	}
+    this._app.get(/^\/(?!assets).*/, (req, res) => {
+      res.removeHeader("X-Frame-Options");
+      res.sendFile(path.join(buildPath, "index.html"));
+    });
+  }
 
-	initializeControllers(controllers = []) {
-		controllers.forEach((c) => {
-			this._app.use("/", c._router);
-		});
-	}
+  initErrorHandling() {
+    this._app.use(ErrorsMiddleware);
+  }
 
-	startListening() {
-		const PORT = process.env.PORT || this._port;
-		this._server = this._app.listen(PORT, () => {
-			ConsoleLogger.info(`Server started on ${PORT}!`);
-		});
-	}
+  initLogger() {
+    this._app.use(LoggerMiddleware);
+  }
+
+  enableStaticFile() {
+    this._app.use(express.static(join(__dirname, "public")));
+  }
+
+  initializeControllers(controllers = []) {
+    controllers.forEach((c) => {
+      this._app.use("/", c._router);
+    });
+  }
+
+  startListening() {
+    const PORT = process.env.PORT || this._port;
+    this._server = this._app.listen(PORT, () => {
+      ConsoleLogger.info(`Server started on ${PORT}!`);
+    });
+  }
 }
 
 module.exports = AppServer;
