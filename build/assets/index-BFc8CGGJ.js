@@ -1,0 +1,1 @@
+import{G as e,F as s,a5 as o}from"./index-CPH87iC1.js";import"https://cdn.shopify.com/shopifycloud/app-bridge.js";const m=({children:a})=>{const{store:t}=e();return(t==null?void 0:t.email)==="hmtahirs1@gmail.com"?a:s.jsx(o,{to:"/zones",replace:!0})};export{m as default};

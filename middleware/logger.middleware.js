@@ -7,9 +7,11 @@ function LoggerMiddleware(request, response, next) {
     rejectObjEmpty(request.params) ||
     rejectObjEmpty(request.query);
 
-  ConsoleLogger.verbose(
-    `{${request.method}} ${request.path} : ${JSON.stringify(payload)} `
-  );
+  if (request.path !== "/" && !request.path.startsWith("/assets")) {
+    ConsoleLogger.verbose(
+      `{${request.method}} ${request.path} : ${JSON.stringify(payload)} `,
+    );
+  }
   next();
 }
 

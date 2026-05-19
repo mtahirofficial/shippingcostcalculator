@@ -4,10 +4,15 @@ const models = require("../models");
 const { Op } = require("sequelize");
 
 class StoreService extends Service {
-
-  async findOne(column, value) {
+  async findOne(column, value, excludeAccessToken = true) {
     try {
-      return await models.store.findOne({ "where": { [column]: value }, "attributes": { "exclude": ['accessToken'] } });
+      const options = {
+        where: { [column]: value },
+      };
+      if (excludeAccessToken) {
+        options.attributes = { exclude: ["accessToken"] };
+      }
+      return await models.store.findOne(options);
     } catch (e) {
       throw new Error(e.message);
     }
@@ -16,7 +21,7 @@ class StoreService extends Service {
   async addStore(store) {
     try {
       return await models.store.create({
-        ...store
+        ...store,
       });
     } catch (e) {
       throw new Error(e.message);
@@ -24,9 +29,12 @@ class StoreService extends Service {
   }
   async update(store, storeId) {
     try {
-      return await models.store.update({
-        ...store
-      }, { where: { storeId } });
+      return await models.store.update(
+        {
+          ...store,
+        },
+        { where: { storeId } },
+      );
     } catch (e) {
       throw new Error(e.message);
     }
@@ -34,14 +42,14 @@ class StoreService extends Service {
 
   async getStore(domain) {
     try {
-      const where = {}
+      const where = {};
       if (domain) {
-        where.domain = domain
+        where.domain = domain;
       }
       return await models.store.findOne({
-        "where": { [Op.or]: where },
-        "attributes": { "exclude": ['accessToken'] },
-        "order": [['id', 'DESC']]
+        where: { [Op.or]: where },
+        attributes: { exclude: ["accessToken"] },
+        order: [["id", "DESC"]],
       });
     } catch (e) {
       throw new Error(e.message);
@@ -50,7 +58,10 @@ class StoreService extends Service {
 
   async getAllStore(excludes) {
     try {
-      return await models.store.findAll({ "attributes": { "exclude": [...excludes] }, order: [['id', 'DESC']] });
+      return await models.store.findAll({
+        attributes: { exclude: [...excludes] },
+        order: [["id", "DESC"]],
+      });
     } catch (e) {
       throw new Error(e.message);
     }
@@ -58,7 +69,7 @@ class StoreService extends Service {
 
   async getStoreById(id) {
     try {
-      const store = await models.store.findOne({ "where": { "id": id } });
+      const store = await models.store.findOne({ where: { id: id } });
 
       if (!store) {
         throw new NotFoundException(`Store with id '${id}' not found`);

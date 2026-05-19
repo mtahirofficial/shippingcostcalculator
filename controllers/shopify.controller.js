@@ -23,7 +23,7 @@ class ShopifyController extends Controller {
       client_id: apiKey,
       client_secret: apiSecret,
       code,
-    }
+    };
     const options = {
       method: "POST",
       url: accessTokenRequestUrl,
@@ -31,19 +31,18 @@ class ShopifyController extends Controller {
     };
     ConsoleLogger.info(JSON.stringify(options));
     return await axios(options)
-      .then(response => response.data)
-      .catch(e => {
+      .then((response) => response.data)
+      .catch((e) => {
         // console.log(Object.keys(e.response));
         // console.log(e.response.data);
-        return e.response.data?.errors ?? {}
-      })
-
+        return e.response.data?.errors ?? {};
+      });
   }
 
   static async getShop(domain, accessToken) {
     const url = `https://${domain}/${API_VER}/shop.json`;
     const header = {
-      'X-Shopify-Access-Token': accessToken,
+      "X-Shopify-Access-Token": accessToken,
     };
 
     const options = {
@@ -52,34 +51,34 @@ class ShopifyController extends Controller {
       headers: header,
     };
     return await axios(options)
-      .then(response => response.data)
-      .catch(error => error.response.data.errors)
+      .then((response) => response.data)
+      .catch((error) => error.response.data.errors);
   }
 
   static async createPayment(shop_data, planName, price, interval, trialDays) {
     try {
       const variables = {
-        "name": planName,
-        "returnUrl": `${HOST}/payment/callback?shop_id=${shop_data.shop_id}`,
-        "test": shop_data.email === EMAIL,
-        "trialDays": trialDays,
-        "lineItems": [
+        name: planName,
+        returnUrl: `${HOST}/payment/callback?shop_id=${shop_data.shop_id}`,
+        test: shop_data.email === EMAIL,
+        trialDays: trialDays,
+        lineItems: [
           {
-            "plan": {
-              "appRecurringPricingDetails": {
-                "price": {
-                  "amount": price,
-                  "currencyCode": "USD"
+            plan: {
+              appRecurringPricingDetails: {
+                price: {
+                  amount: price,
+                  currencyCode: "USD",
                 },
-                "interval": interval
-              }
-            }
-          }
-        ]
-      }
+                interval: interval,
+              },
+            },
+          },
+        ],
+      };
 
       const data = JSON.stringify({
-        "query": `#graphql
+        query: `#graphql
         mutation AppSubscriptionCreate($name: String!, $lineItems: [AppSubscriptionLineItemInput!]!, $returnUrl: URL!, $trialDays: Int, $test: Boolean!){
                     appSubscriptionCreate(name: $name, returnUrl: $returnUrl, lineItems: $lineItems, trialDays: $trialDays, test: $test) {
                       userErrors {
@@ -114,28 +113,36 @@ class ShopifyController extends Controller {
                     }
                   }
                   `,
-        variables
+        variables,
       });
       const options = {
-        "method": "POST",
-        "url": `https://${shop_data.domain}/${API_VER}/graphql.json`,
-        "headers": {
+        method: "POST",
+        url: `https://${shop_data.domain}/${API_VER}/graphql.json`,
+        headers: {
           "content-type": "application/json",
           "X-Shopify-Access-Token": shop_data.access_token,
         },
-        "json": true,
-        "data": data
+        json: true,
+        data: data,
       };
 
       return await axios(options)
-        .then(response => {
-          const appSubscriptionCreate = response.data.data.appSubscriptionCreate
+        .then((response) => {
+          const appSubscriptionCreate =
+            response.data.data.appSubscriptionCreate;
           if (appSubscriptionCreate.userErrors?.length) {
-            return { "success": false, "message": appSubscriptionCreate?.userErrors[0]?.message }
+            return {
+              success: false,
+              message: appSubscriptionCreate?.userErrors[0]?.message,
+            };
           }
-          return ({ "success": true, "message": 'created', "data": response.data.data.appSubscriptionCreate })
+          return {
+            success: true,
+            message: "created",
+            data: response.data.data.appSubscriptionCreate,
+          };
         })
-        .catch(e => ({ "success": false, "message": e.message }))
+        .catch((e) => ({ success: false, message: e.message }));
     } catch (e) {
       res.json({ success: false, message: e.message });
     }
@@ -143,165 +150,183 @@ class ShopifyController extends Controller {
 
   static async getActivePaymentDetails(shop_data) {
     var data = JSON.stringify({
-      "query": `{
-                  appInstallation {
-                    activeSubscriptions {
-                      createdAt
-                      currentPeriodEnd
+      query: `{
+                appInstallation {
+                  activeSubscriptions {
+                    createdAt
+                    currentPeriodEnd
+                    id
+                    name
+                    returnUrl
+                    status
+                    test
+                    trialDays
+                    lineItems {
                       id
-                      name
-                      returnUrl
-                      status
-                      test
-                      trialDays
-                      lineItems {
-                        id
-                        plan {
-                          pricingDetails {
-                            ... on AppRecurringPricing {
-                              __typename
-                              interval
-                              price {
-                                amount
-                                currencyCode
-                              }
+                      plan {
+                        pricingDetails {
+                          ... on AppRecurringPricing {
+                            __typename
+                            interval
+                            price {
+                              amount
+                              currencyCode
                             }
                           }
                         }
                       }
                     }
                   }
-                }`,
+                }
+              }`,
     });
     const options = {
-      "method": "POST",
-      "url": `https://${shop_data.domain}/${API_VER}/graphql.json`,
-      "headers": {
+      method: "POST",
+      url: `https://${shop_data.myshopifyDomain}/${API_VER}/graphql.json`,
+      headers: {
         "content-type": "application/json",
-        "X-Shopify-Access-Token": shop_data.access_token,
+        "X-Shopify-Access-Token": shop_data.accessToken,
       },
-      "json": true,
-      "data": data
+      json: true,
+      data: data,
     };
 
     return await axios(options)
-      .then(response => ({ "success": response.status === 200, "message": 'Successful', "data": response.data.data }))
-      .catch(e => ({ "success": false, "message": e.message }))
-
+      .then((response) => ({
+        success: response.status === 200,
+        message: "Successful",
+        data: response.data.data,
+      }))
+      .catch((e) => ({ success: false, message: e.message }));
   }
 
   static async cancelPayment(charge_id, domain, access_token) {
     const options = {
-      "method": "DELETE",
-      "url": `https://${domain}/${API_VER}/recurring_application_charges/${charge_id}.json`,
-      "headers": {
+      method: "DELETE",
+      url: `https://${domain}/${API_VER}/recurring_application_charges/${charge_id}.json`,
+      headers: {
         "content-type": "application/json",
         "X-Shopify-Access-Token": access_token,
       },
-      "json": true,
+      json: true,
     };
 
     return await axios(options)
-      .then(response => {
-        return response.status
+      .then((response) => {
+        return response.status;
       })
-      .catch(error => {
-        return error.response.data
-      })
+      .catch((error) => {
+        return error.response.data;
+      });
   }
 
   static async getPayment(charge_id, domain, access_token) {
     const options = {
-      "method": "GET",
-      "url": `https://${domain}/${API_VER}/recurring_application_charges/${charge_id}.json`,
-      "headers": {
+      method: "GET",
+      url: `https://${domain}/${API_VER}/recurring_application_charges/${charge_id}.json`,
+      headers: {
         "content-type": "application/json",
         "X-Shopify-Access-Token": access_token,
       },
-      "json": true,
+      json: true,
     };
 
     return await axios(options)
-      .then(response => {
-        return response.data
+      .then((response) => {
+        return response.data;
       })
-      .catch(error => {
-        return error.response.data
-      })
+      .catch((error) => {
+        return error.response.data;
+      });
   }
 
   static async getCarrierService(accessToken, domain, storeId) {
     const options = {
-      "method": "GET",
-      "url": `https://${domain}/${API_VER}/carrier_services.json`,
-      "headers": {
+      method: "GET",
+      url: `https://${domain}/${API_VER}/carrier_services.json`,
+      headers: {
         "content-type": "application/json",
         "X-Shopify-Access-Token": accessToken,
       },
-      "json": true,
+      json: true,
     };
 
     return await axios(options)
-      .then(async response => {
+      .then(async (response) => {
         if (Object.hasOwnProperty.call(response.data, "carrier_services")) {
-          const filtered_service = response.data.carrier_services.filter(carrier_service => Object.hasOwnProperty.call(carrier_service, "callback_url"))
+          const filtered_service = response.data.carrier_services.filter(
+            (carrier_service) =>
+              Object.hasOwnProperty.call(carrier_service, "callback_url"),
+          );
           if (filtered_service.length) {
-            const service = filtered_service[0]
+            const service = filtered_service[0];
             console.log("service", service);
-            await models.store.update({ "serviceId": service.id }, { "where": { "storeId": storeId } })
+            await models.store.update(
+              { serviceId: service.id },
+              { where: { storeId: storeId } },
+            );
           }
         }
       })
-      .catch(async error => {
+      .catch(async (error) => {
         console.log(error.response.data.errors);
         // let message = error.response?.data?.errors?.base[0];
-        return false
-      })
-
+        return false;
+      });
   }
 
   static async createCarrierService(accessToken, domain, storeId) {
     try {
       const requestBody = {
-        "carrier_service": {
-          "name": APP_NAME,
-          "callback_url": `${HOST}/rate/checkout`,
-          "service_discovery": true
-        }
-      }
+        carrier_service: {
+          name: APP_NAME,
+          callback_url: `${HOST}/rate/checkout`,
+          service_discovery: true,
+        },
+      };
       const options = {
-        "method": "POST",
-        "url": `https://${domain}/${API_VER}/carrier_services.json`,
-        "headers": {
+        method: "POST",
+        url: `https://${domain}/${API_VER}/carrier_services.json`,
+        headers: {
           "content-type": "application/json",
           "X-Shopify-Access-Token": accessToken,
         },
-        "json": true,
-        "data": requestBody
+        json: true,
+        data: requestBody,
       };
 
-      let service = {}
+      let service = {};
       return await axios(options)
-        .then(async response => {
+        .then(async (response) => {
           if (response.data.carrier_service) {
-            service = response.data.carrier_service
-            await models.store.update({ "serviceId": service.id }, { "where": { "storeId": storeId } })
+            service = response.data.carrier_service;
+            await models.store.update(
+              { serviceId: service.id },
+              { where: { storeId: storeId } },
+            );
           }
-          return true
+          return true;
         })
-        .catch(async error => {
+        .catch(async (error) => {
           console.log(error.response.data.errors);
           let message = error.response?.data?.errors?.base[0];
-          let isTrue = (message === `${APP_NAME} is already configured` || message === `Shipping Cost Calculator is already configured`) ? true : false
+          let isTrue =
+            message === `${APP_NAME} is already configured` ||
+            message === `Shipping Cost Calculator is already configured`
+              ? true
+              : false;
           if (isTrue) {
-            await ShopifyController.getCarrierService(accessToken, domain, storeId)
+            await ShopifyController.getCarrierService(
+              accessToken,
+              domain,
+              storeId,
+            );
           }
-          return isTrue
-        })
-
+          return isTrue;
+        });
     } catch (error) {
       console.log(error);
-      return false
+      return false;
     }
   }
 
@@ -321,41 +346,224 @@ class ShopifyController extends Controller {
         }
       }
     }`,
-      variables: { "topic": "APP_SUBSCRIPTIONS_UPDATE", "webhookSubscription": { "callbackUrl": `${HOST}/webhook/app_subscriptions/update`, "format": "JSON" } }
+      variables: {
+        topic: "APP_SUBSCRIPTIONS_UPDATE",
+        webhookSubscription: {
+          callbackUrl: `${HOST}/webhook/app_subscriptions/update`,
+          format: "JSON",
+        },
+      },
     });
     const options = {
-      'method': 'POST',
-      'url': `https://${shop}/admin/api/2022-01/graphql.json`,
-      'headers': {
-        'content-type': 'application/json',
-        'X-Shopify-Access-Token': accessToken,
+      method: "POST",
+      url: `https://${shop}/admin/api/2022-01/graphql.json`,
+      headers: {
+        "content-type": "application/json",
+        "X-Shopify-Access-Token": accessToken,
       },
-      data: data
+      data: data,
     };
     return await axios(options)
-      .then(response => {
-        return response.data
+      .then((response) => {
+        return response.data;
       })
-      .catch(error => {
-        return error
-      })
+      .catch((error) => {
+        return error;
+      });
   }
 
   static async createWebhook(accessToken, shop, webhookType) {
-    const requestBody = JSON.stringify({ "webhook": { "topic": webhookType, "address": `${HOST}/webhook/${webhookType}`, "format": "json" } })
+    const requestBody = JSON.stringify({
+      webhook: {
+        topic: webhookType,
+        address: `${HOST}/webhook/${webhookType}`,
+        format: "json",
+      },
+    });
 
     const options = {
-      'method': 'POST',
-      'url': `https://${shop}/${API_VER}/webhooks.json`,
-      'headers': {
-        'content-type': 'application/json',
-        'X-Shopify-Access-Token': accessToken,
+      method: "POST",
+      url: `https://${shop}/${API_VER}/webhooks.json`,
+      headers: {
+        "content-type": "application/json",
+        "X-Shopify-Access-Token": accessToken,
       },
-      data: requestBody
+      data: requestBody,
     };
     return await axios(options)
-      .then(response => response.data)
-      .catch(error => error)
+      .then((response) => response.data)
+      .catch((error) => error);
+  }
+  static async getAppId(shopData) {
+    var data = JSON.stringify({
+      query: `#graphql
+        query {
+          currentAppInstallation {
+            id
+          }
+        }
+      `,
+    });
+    const options = {
+      method: "POST",
+      url: `https://${shopData.myshopifyDomain}/${API_VER}/graphql.json`,
+      headers: {
+        "content-type": "application/json",
+        "X-Shopify-Access-Token": shopData.accessToken,
+      },
+      json: true,
+      data: data,
+    };
+    try {
+      return await axios(options);
+    } catch (error) {
+      console.log("getAppId", error.message);
+      // res.json({ success: false, message: e.message });
+      return null;
+    }
+  }
+  static async addMetaFields(shopData, id, value = "true") {
+    try {
+      const variables = {
+        metafieldsSetInput: [
+          {
+            namespace: "shipping_rates",
+            key: "active",
+            type: "boolean",
+            value: value,
+            ownerId: id,
+          },
+        ],
+      };
+      const data = JSON.stringify({
+        query: `#graphql
+        mutation CreateAppDataMetafield($metafieldsSetInput: [MetafieldsSetInput!]!) {
+          metafieldsSet(metafields: $metafieldsSetInput) {
+            metafields {
+              id
+              namespace
+              key
+              type
+              value
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }`,
+        variables,
+      });
+      const options = {
+        method: "POST",
+        url: `https://${shopData.myshopifyDomain}/${API_VER}/graphql.json`,
+        headers: {
+          "content-type": "application/json",
+          "X-Shopify-Access-Token": shopData.accessToken,
+        },
+        json: true,
+        data: data,
+      };
+      // console.log(options);
+      return await axios(options);
+    } catch (e) {
+      console.log("addMetaFields", e.message);
+      return null;
+    }
+  }
+
+  static async deleteMetaFields(
+    shopData,
+    ownerId = null,
+    namespace = "shipping_rates",
+    key = "active",
+  ) {
+    try {
+      const queryVariables = { namespace, key, ownerId };
+      const query = JSON.stringify({
+        query: `#graphql
+          query GetMetafieldId($namespace: String!, $key: String!, $ownerId: ID) {
+            currentAppInstallation {
+              id
+              metafield(namespace: $namespace, key: $key) {
+                id
+              }
+            }
+            node(id: $ownerId) {
+              ... on AppInstallation {
+                metafield(namespace: $namespace, key: $key) {
+                  id
+                }
+              }
+            }
+          }
+        `,
+        variables: queryVariables,
+      });
+
+      const commonOptions = {
+        method: "POST",
+        url: `https://${shopData.myshopifyDomain}/${API_VER}/graphql.json`,
+        headers: {
+          "content-type": "application/json",
+          "X-Shopify-Access-Token": shopData.accessToken,
+        },
+        json: true,
+      };
+
+      const queryResponse = await axios({ ...commonOptions, data: query });
+      const metafieldId =
+        queryResponse?.data?.data?.node?.metafield?.id ||
+        queryResponse?.data?.data?.currentAppInstallation?.metafield?.id;
+
+      if (!metafieldId) {
+        return {
+          success: false,
+          message: "Metafield not found",
+          deletedId: null,
+        };
+      }
+
+      const deleteBody = JSON.stringify({
+        query: `#graphql
+          mutation DeleteMetafield($input: MetafieldDeleteInput!) {
+            metafieldDelete(input: $input) {
+              deletedId
+              userErrors {
+                field
+                message
+              }
+            }
+          }
+        `,
+        variables: { input: { id: metafieldId } },
+      });
+
+      const deleteResponse = await axios({
+        ...commonOptions,
+        data: deleteBody,
+      });
+      const result = deleteResponse?.data?.data?.metafieldDelete;
+
+      if (result?.userErrors?.length) {
+        return {
+          success: false,
+          message:
+            result.userErrors[0]?.message || "Failed to delete metafield",
+          deletedId: result.deletedId || null,
+          userErrors: result.userErrors,
+        };
+      }
+
+      return {
+        success: true,
+        message: "deleted",
+        deletedId: result?.deletedId || null,
+      };
+    } catch (e) {
+      console.log("deleteMetaFields", e.message);
+      return { success: false, message: e.message, deletedId: null };
+    }
   }
 }
 
